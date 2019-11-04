@@ -10,11 +10,15 @@
 <script>
 import * as _ from "lodash";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
+import { face } from "../../util/face";
 export default {
   data: () => {
     return {
       canvas_rect: {}
     };
+  },
+  mounted() {
+    face.init();
   },
   props: {
     rect: Object,
@@ -55,9 +59,13 @@ export default {
         rects.dh
       );
       ctx.restore();
+      this.faceDetect();
     },
     pix(n) {
       return n + "px";
+    },
+    faceDetect() {
+      face.getEyesPoints();
     }
   },
   watch: {
