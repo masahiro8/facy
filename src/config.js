@@ -10,24 +10,18 @@ export const WINDOW_HEIGHT = isPreview ? 812 : window.innerHeight;
 export const VIDEO_WIDTH = 640; //1280 , 1280
 export const VIDEO_HEIGHT = 480; //720  ,  960
 
-export let CANVAS_WIDTH = 1280;
-export let CANVAS_HEIGHT = 960;
-
 export const PIXELRATIO = window.devicePixelRatio;
 
-//画像の比率
-//基準の画像サイズ  750pxをベースにして調整
-//モバイルでは縮小する必要がある
-//cloudinaryで750pxに縮尺して返してる
-export const ASSRET_IMAGE_WIDTH = 750; //750
-// export const ASSRET_IMAGE_SHIFT = 200 * (ASSRET_IMAGE_WIDTH / 750);
-// export const ASSRET_IMAGE_SHIFT = 250 * (ASSRET_IMAGE_WIDTH / 750);
-export const ASSRET_IMAGE_SHIFT = 140 * (ASSRET_IMAGE_WIDTH / 750);
-
-//モバイルは大きく表示されるので調整する
-export const MOBILE_SCALE_RATE = 0.85;
-// export const MOBILE_SCALE_RATE = 0.65;
-
-//検出感覚
-// export const detectInterval = 150;
-export const detectInterval = 1000;
+//FaceAPI設定
+export const FACEAPI_OPTION = {
+  // size at which image is processed, the smaller the faster,
+  // but less precise in detecting smaller faces, must be divisible
+  // by 32, common sizes are 128, 160, 224, 320, 416, 512, 608,
+  // for face tracking via webcam I would recommend using smaller sizes,
+  // e.g. 128, 160, for detecting smaller faces use larger sizes, e.g. 512, 608
+  // default: 416
+  inputSize: 416, //128
+  // minimum confidence threshold
+  // default: 0.5
+  scoreThreshold: 0.5 //0.3
+};

@@ -37,6 +37,7 @@ export default {
       this.rect = value.rect;
       this.src = value.src;
     },
+    //カメラ撮影
     async shoot() {
       this.onFlash = true;
       await wait(100);
@@ -44,6 +45,7 @@ export default {
       await wait(300);
       this.onFlash = false;
     },
+    //ここで両目の頂点情報を取得
     getPoints(points) {
       console.log("points", points);
     }

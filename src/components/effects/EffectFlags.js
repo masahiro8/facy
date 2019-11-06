@@ -21,7 +21,7 @@ const _EffectFlags = () => {
     center: true,
     vertical: true,
     horizonta: false,
-    line: true,
+    line: false,
     point: false
   };
 

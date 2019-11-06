@@ -20,6 +20,7 @@ export const Effects = (ctx, left_eye_rect, right_eye_rect) => {
 
   //グレー
   if (EffectFlags.getValue(FLAG_KEYS.GRAY.key)) {
+    console.log('effect:gray');
     const gray_left = Grayscale(ctx, left_eye_rect, 10);
     const gray_right = Grayscale(ctx, right_eye_rect, 10);
     ctx.putImageData(gray_left, left_eye_rect.x, left_eye_rect.y);
@@ -28,6 +29,7 @@ export const Effects = (ctx, left_eye_rect, right_eye_rect) => {
 
   //ここから２値化
   if (EffectFlags.getValue(FLAG_KEYS.BW.key)) {
+    console.log('effect:bw');
     const col2_left = Color2Value(ctx, left_eye_rect);
     const col2_right = Color2Value(ctx, right_eye_rect);
     ctx.putImageData(col2_left, left_eye_rect.x, left_eye_rect.y);
@@ -36,6 +38,7 @@ export const Effects = (ctx, left_eye_rect, right_eye_rect) => {
 
   //中央だけ残す
   if (EffectFlags.getValue(FLAG_KEYS.CENT.key)) {
+    console.log('effect:center');
     const center_left = Center(ctx, left_eye_rect);
     const center_right = Center(ctx, right_eye_rect);
     ctx.putImageData(center_left, left_eye_rect.x, left_eye_rect.y);
@@ -44,6 +47,7 @@ export const Effects = (ctx, left_eye_rect, right_eye_rect) => {
 
   //ここから中央値
   if (EffectFlags.getValue(FLAG_KEYS.MEDI.key)) {
+    console.log('effect:median');
     let md_left = Median(ctx, left_eye_rect);
     let md_right = Median(ctx, right_eye_rect);
     ctx.putImageData(md_left, left_eye_rect.x, left_eye_rect.y);
@@ -57,6 +61,7 @@ export const Effects = (ctx, left_eye_rect, right_eye_rect) => {
 
   //まぶた周辺を消す
   if (EffectFlags.getValue(FLAG_KEYS.VERT.key)) {
+    console.log('effect:vertical');
     const vertical_left = Vertical(ctx, left_eye_rect);
     const vertical_right = Vertical(ctx, right_eye_rect);
     ctx.putImageData(vertical_left, left_eye_rect.x, left_eye_rect.y);
@@ -65,6 +70,7 @@ export const Effects = (ctx, left_eye_rect, right_eye_rect) => {
 
   //塊排除
   if (EffectFlags.getValue(FLAG_KEYS.HORI.key)) {
+    console.log('effect:horizontal');
     const clear_left = Horizontal(ctx, left_eye_rect);
     const clear_right = Horizontal(ctx, right_eye_rect);
     ctx.putImageData(clear_left, left_eye_rect.x, left_eye_rect.y);

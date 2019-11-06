@@ -2,17 +2,18 @@
 import { getRect } from '../util/canvasUtil';
 import { LEFT_EYE, RIGHT_EYE } from '../constants/face';
 import { Effects } from '../components/effects/Effects';
+import { FACEAPI_OPTION } from '../config';
 
 const _face = () => {
-  let isActive = false;
-  let src = null;
-  let overlay = null;
+  let src = null; //video
+  let overlay = null; //canvas
   let options = null;
 
   const init = (_src, _overlay) => {
     overlay = _overlay;
     src = _src;
     console.log('load models');
+    //FaceAPiのモジュールを取得
     return new Promise(async resolved => {
       await faceapi.loadTinyFaceDetectorModel(
         '/js/tiny_face_detector_model-weights_manifest.json'
@@ -20,11 +21,7 @@ const _face = () => {
       await faceapi.loadFaceLandmarkTinyModel(
         '/js/face_landmark_68_tiny_model-weights_manifest.json'
       );
-      options = new faceapi.TinyFaceDetectorOptions({
-        inputSize: 128,
-        scoreThreshold: 0.3
-      });
-      isActive = true;
+      options = new faceapi.TinyFaceDetectorOptions(FACEAPI_OPTION);
       console.log('loaded models');
       resolved();
     });
@@ -36,8 +33,8 @@ const _face = () => {
       dimensions instanceof HTMLVideoElement
         ? faceapi.getMediaDimensions(dimensions)
         : dimensions;
-    canvas.width = width;
-    canvas.height = height;
+    // canvas.width = width;
+    // canvas.height = height;
     return results.map(res => res.forSize(width, height));
   };
 
@@ -45,8 +42,12 @@ const _face = () => {
     const resizedResults = resizeCanvasAndResults(video, canvas, results);
     const faceLandmarks = resizedResults.map(det => det.landmarks);
     //faceapiで線を描画しているので、faceLandmarksから目の座標を取り出して、自前でキャンバスに描画をする
-    // const drawLandmarksOptions = { lineWidth: 2, drawLines: true, color: 'green' }
-    // faceapi.drawLandmarks(canvas, faceLandmarks, drawLandmarksOptions);
+    const drawLandmarksOptions = {
+      lineWidth: 2,
+      drawLines: true,
+      color: 'green'
+    };
+    faceapi.drawLandmarks(canvas, faceLandmarks, drawLandmarksOptions);
 
     //ここから自前で描画
     const rect = canvas.getBoundingClientRect();
@@ -59,7 +60,7 @@ const _face = () => {
 
     const shift = faceLandmarks[0].shift;
 
-    console.log('face', faceLandmarks[0].relativePositions, LEFT_EYE);
+    // console.log('face', faceLandmarks[0].relativePositions, LEFT_EYE);
 
     //目のポイントから範囲の２点を取得
     const left_eye_points = getRect(
@@ -115,7 +116,6 @@ const _face = () => {
         .detectSingleFace(overlay, options)
         .withFaceLandmarks(true);
       if (result) {
-        console.log('result = ', [result]);
         // //検出したデータから描画
         const {
           left_eye_rect,
@@ -124,18 +124,18 @@ const _face = () => {
           right_eye_points,
           rate,
           shift
-        } = drawLandmarks(overlay, overlay, [result]);
+        } = drawLandmarks(src, overlay, [result]);
 
-        console.log('left_eye_rect = ', left_eye_rect);
+        console.log('eyes', left_eye_rect, right_eye_rect);
 
-        // //両目の頂点情報
+        //ここから画像処理
         const effects = Effects(
           overlay.getContext('2d'),
           left_eye_rect,
           right_eye_rect
         );
+        //両目の頂点情報
         const points = effects.getPoints();
-        console.log('points = ', points);
         resolved(points);
       }
     });
