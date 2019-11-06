@@ -768,6 +768,16 @@
     error-stack-parser "^2.0.0"
     string-width "^2.0.0"
 
+"@tensorflow-models/coco-ssd@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@tensorflow-models/coco-ssd/-/coco-ssd-2.0.0.tgz#6dbba903a86d5fbd2c65532aa44f821c56516fb4"
+  integrity sha512-JexMswea9a5k8//sdImcxdVaofejkzUzJA8cpDBOZSauBkBM34M3c1YoEUrFuJSa5sKxgMu5TwMPWbJ59A7IVA==
+
+"@tensorflow/tfjs-converter@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@tensorflow/tfjs-converter/-/tfjs-converter-1.3.1.tgz#4e08e07621f43690a0b69c345cd63bc1f6974879"
+  integrity sha512-8IHzcIZwqCofcRBhaCTN6W73m2RGdBDH6BEORf0KDdbgbz4DouItVcKX692PrA8gchY+Xy8ZHMpj93PcAOs17g==
+
 "@tensorflow/tfjs-core@1.2.9":
   version "1.2.9"
   resolved "https://registry.yarnpkg.com/@tensorflow/tfjs-core/-/tfjs-core-1.2.9.tgz#125830270a0bdd0e856914778a300c4ad6f51e21"
@@ -780,7 +790,7 @@
     node-fetch "~2.1.2"
     seedrandom "2.4.3"
 
-"@tensorflow/tfjs-core@^1.2.9":
+"@tensorflow/tfjs-core@^1.2.9", "@tensorflow/tfjs-core@^1.3.1":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@tensorflow/tfjs-core/-/tfjs-core-1.3.1.tgz#89e3253f320233120ee24d4ae62fca65c315580f"
   integrity sha512-X4MKhpg1gLEZetKUMeQNW6diP3gbFFddeF6UT816sH8jOenX/8x2HnVmANpNnUxCTPhDniY3V9zhBWwbl13+Yg==

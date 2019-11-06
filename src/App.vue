@@ -3,7 +3,7 @@
     <!-- 動画 -->
     <Vid @ready="readyVideo" />
     <!-- 撮影した写真を表示 -->
-    <Overlay ref="overlay" :src="src" :rect="rect" />
+    <Overlay ref="overlay" :src="src" :rect="rect" @callbackPoints="getPoints" />
     <!-- 撮影ボタン -->
     <Shoot @shoot="shoot" />
     <!-- フラッシュ -->
@@ -43,6 +43,9 @@ export default {
       this.$refs.overlay.shoot();
       await wait(300);
       this.onFlash = false;
+    },
+    getPoints(points) {
+      console.log("points", points);
     }
   }
 };

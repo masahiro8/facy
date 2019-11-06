@@ -1,11 +1,20 @@
 <template>
-  <canvas
-    ref="overlay"
-    class="overlay"
-    id="overlay"
-    :width="pix(canvas_rect.width)"
-    :height="pix(canvas_rect.height)"
-  ></canvas>
+  <div>
+    <canvas
+      ref="image"
+      class="overlay"
+      id="image"
+      :width="pix(canvas_rect.width)"
+      :height="pix(canvas_rect.height)"
+    />
+    <canvas
+      ref="overlay"
+      class="overlay"
+      id="overlay"
+      :width="pix(canvas_rect.width)"
+      :height="pix(canvas_rect.height)"
+    />
+  </div>
 </template>
 <script>
 import * as _ from "lodash";
@@ -18,7 +27,7 @@ export default {
     };
   },
   mounted() {
-    face.init();
+    console.log("overlay mounted");
   },
   props: {
     rect: Object,
@@ -43,7 +52,7 @@ export default {
         dh: WINDOW_HEIGHT
       };
 
-      const overlay = this.$refs.overlay;
+      //ここから画像処理用
       const ctx = this.$refs.overlay.getContext("2d");
       ctx.clearRect(0, 0, this.canvas_rect.width, this.canvas_rect.height);
       ctx.save();
@@ -59,16 +68,46 @@ export default {
         rects.dh
       );
       ctx.restore();
+
+      //ここから顔
+      const ctx_img = this.$refs.image.getContext("2d");
+      ctx_img.clearRect(0, 0, this.canvas_rect.width, this.canvas_rect.height);
+      ctx_img.save();
+      ctx_img.drawImage(
+        this.src,
+        rects.sx,
+        rects.sy,
+        rects.sw,
+        rects.sh,
+        0,
+        0,
+        rects.dw,
+        rects.dh
+      );
+      ctx_img.restore();
       this.faceDetect();
     },
     pix(n) {
       return n + "px";
     },
-    faceDetect() {
-      face.getEyesPoints();
+    async faceDetect() {
+      //ここで頂点を取得
+      const points = await face.getEyesPoints();
+      console.log("points ", points);
+
+      this.$emit("callbackPoints", points);
     }
   },
   watch: {
+    src: {
+      immediate: true,
+      handler(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          this.src = newValue;
+          face.init(this.src, this.$refs.overlay);
+        }
+      }
+    },
     rect: {
       immediate: true,
       handler(newValue, oldValue) {
@@ -86,7 +125,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .overlay {
-  border: 1px solid red;
   position: absolute;
   z-index: 2;
   top: 0;
