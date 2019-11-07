@@ -4,6 +4,8 @@
     <Vid @ready="readyVideo" />
     <!-- 撮影した写真を表示 -->
     <Overlay ref="overlay" :src="src" :rect="rect" @callbackPoints="getPoints" />
+    <!-- コンタクトレンズ -->
+    <Eyes :src="src" :rect="rect" :points="points" />
     <!-- 撮影ボタン -->
     <Shoot @shoot="shoot" />
     <!-- フラッシュ -->
@@ -15,6 +17,7 @@
 import Vid from "./components/video/Video";
 import Overlay from "./components/video/Overlay";
 import Shoot from "./components/shoot/Shoot";
+import Eyes from "./components/video/Eyes";
 import { wait } from "./util/wait";
 
 export default {
@@ -23,13 +26,15 @@ export default {
     return {
       src: null,
       rect: {},
+      points: {},
       onFlash: false
     };
   },
   components: {
     Vid,
     Shoot,
-    Overlay
+    Overlay,
+    Eyes
   },
   mounted() {},
   methods: {
@@ -46,8 +51,14 @@ export default {
       this.onFlash = false;
     },
     //ここで両目の頂点情報を取得
-    getPoints(points) {
-      console.log("points", points);
+    getPoints(points, face_eyes_data) {
+      this.points = {
+        eyes: points,
+        face: face_eyes_data.points,
+        shift: face_eyes_data.shift,
+        rate: face_eyes_data.rate
+      };
+      console.log("points", points, face_eyes_data);
     }
   }
 };

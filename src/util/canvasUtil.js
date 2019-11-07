@@ -10,6 +10,13 @@ const getRect = (landmarks, partsIndex) => {
   const extend_x = 0.05;
   const extend_y = 0.07;
 
+  //partsIndexのポイントを全て取得
+  const getPartsPoints = part => {
+    return _.map(partsIndex, index => {
+      return { index, point: landmarks[index] };
+    });
+  };
+
   //２点座標で範囲を取得
   const get2Points = part => {
     const parts = _.map(partsIndex, index => {
@@ -42,7 +49,8 @@ const getRect = (landmarks, partsIndex) => {
   };
 
   return {
-    get2Points
+    get2Points,
+    getPartsPoints
   };
 };
 

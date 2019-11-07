@@ -8,6 +8,9 @@ const _face = () => {
   let src = null; //video
   let overlay = null; //canvas
   let options = null;
+  let face_eyes_points = {};
+  let shift = {};
+  let rate = {};
 
   const init = (_src, _overlay) => {
     overlay = _overlay;
@@ -53,14 +56,14 @@ const _face = () => {
     const rect = canvas.getBoundingClientRect();
 
     //縮尺計算
-    const rate = {
+    rate = {
       x: faceLandmarks[0].imageWidth / rect.width,
       y: faceLandmarks[0].imageHeight / rect.height
     };
 
-    const shift = faceLandmarks[0].shift;
+    shift = faceLandmarks[0].shift;
 
-    // console.log('face', faceLandmarks[0].relativePositions, LEFT_EYE);
+    console.log('face', faceLandmarks[0].relativePositions, shift);
 
     //目のポイントから範囲の２点を取得
     const left_eye_points = getRect(
@@ -71,6 +74,17 @@ const _face = () => {
       faceLandmarks[0].relativePositions,
       RIGHT_EYE
     ).get2Points();
+
+    //目の全頂点
+    const left_face_eye_points = getRect(
+      faceLandmarks[0].relativePositions,
+      LEFT_EYE
+    ).getPartsPoints();
+
+    const right_face_eye_points = getRect(
+      faceLandmarks[0].relativePositions,
+      RIGHT_EYE
+    ).getPartsPoints();
 
     const left_eye_rect = {
       x: Math.floor(rect.width * left_eye_points.x * rate.x + shift.x),
@@ -103,9 +117,18 @@ const _face = () => {
       right_eye_rect,
       left_eye_points,
       right_eye_points,
+      left_face_eye_points,
+      right_face_eye_points,
       rate,
       shift
     };
+  };
+
+  /**
+   * FaceAPiの両目の頂点
+   */
+  const getFaceEyesData = () => {
+    return { points: face_eyes_points, shift, rate };
   };
 
   const getEyesPoints = () => {
@@ -122,11 +145,18 @@ const _face = () => {
           right_eye_rect,
           left_eye_points,
           right_eye_points,
+          left_face_eye_points,
+          right_face_eye_points,
           rate,
           shift
         } = drawLandmarks(src, overlay, [result]);
 
-        console.log('eyes', left_eye_rect, right_eye_rect);
+        console.log('eyes', left_face_eye_points, right_face_eye_points);
+
+        face_eyes_points = {
+          left: left_face_eye_points,
+          right: right_face_eye_points
+        };
 
         //ここから画像処理
         const effects = Effects(
@@ -143,6 +173,7 @@ const _face = () => {
 
   return {
     init,
+    getFaceEyesData,
     getEyesPoints
   };
 };

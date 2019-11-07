@@ -4,15 +4,15 @@
       ref="image"
       class="overlay"
       id="image"
-      :width="pix(canvas_rect.width)"
-      :height="pix(canvas_rect.height)"
+      :width="canvas_rect.width+'px'"
+      :height="canvas_rect.height+'px'"
     />
     <canvas
       ref="overlay"
       class="overlay"
       id="overlay"
-      :width="pix(canvas_rect.width)"
-      :height="pix(canvas_rect.height)"
+      :width="canvas_rect.width+'px'"
+      :height="canvas_rect.height+'px'"
       :class="showDetection?'show':'hide'"
     />
     <div class="btn">
@@ -25,7 +25,6 @@
 import * as _ from "lodash";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
 import { face } from "../../util/face";
-import { adjustVideoSize } from "../../util/adjustVideoSize";
 
 export default {
   data: () => {
@@ -107,6 +106,8 @@ export default {
     async faceDetect() {
       //ここで頂点を取得
       const points = await face.getEyesPoints();
+      //ここでfaceAPiの両目のポイントを取得
+      const eyes_points_data = face.getFaceEyesData();
       //リサイズ
       const _width = this.rect.width - this.rect.x * 2;
       this.canvas_rect = {
@@ -114,7 +115,7 @@ export default {
         height: this.rect.height
       };
       console.log("faceDetect");
-      this.$emit("callbackPoints", points);
+      this.$emit("callbackPoints", points, eyes_points_data);
     }
   },
   watch: {
@@ -144,19 +145,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.overlay {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  left: 0;
-  transform: scale(-1, 1);
-  &.show {
-    visibility: visible;
-  }
-  &.hide {
-    visibility: hidden;
-  }
-}
+@import "./canvas.scss";
 .btn {
   position: absolute;
   z-index: 3;
