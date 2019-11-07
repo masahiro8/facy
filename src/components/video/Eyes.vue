@@ -55,11 +55,18 @@ export default {
           const rate = newValue.rate;
           clearLense(this.$refs.canvas);
           //canvasclip()
-          drawLense(this.$refs.canvas, left);
-          drawLense(this.$refs.canvas, right);
+
+          //左目
           //マスク
           maskDraw(this.$refs.canvas, newValue.face.left, shift, rate);
-          maskDraw(this.$refs.canvas, newValue.face.right, shift, rate);
+          //レンzを描画
+          drawLense(this.$refs.canvas, left);
+
+          //右目
+          //マスク
+          // maskDraw(this.$refs.canvas, newValue.face.right, shift, rate, right);
+          //レンズを描画
+          // drawLense(this.$refs.canvas, right);
         }
       }
     }
