@@ -5,7 +5,8 @@
     <!-- 撮影した写真を表示 -->
     <Overlay ref="overlay" :src="src" :rect="rect" @callbackPoints="getPoints" />
     <!-- コンタクトレンズ -->
-    <Eyes :src="src" :rect="rect" :points="points" />
+    <Eyes :src="src" :rect="rect" :points="points" left_right="left" />
+    <Eyes :src="src" :rect="rect" :points="points" left_right="right" />
     <!-- 撮影ボタン -->
     <Shoot @shoot="shoot" />
     <!-- フラッシュ -->

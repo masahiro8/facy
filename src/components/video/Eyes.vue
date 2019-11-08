@@ -21,7 +21,8 @@ export default {
   props: {
     rect: Object,
     src: HTMLVideoElement,
-    points: Object
+    points: Object,
+    left_right: String
   },
   watch: {
     rect: {
@@ -48,6 +49,7 @@ export default {
           JSON.stringify(newValue) !== JSON.stringify(oldValue) &&
           Object.keys(newValue).length > 0
         ) {
+          const eye = this.left_right;
           console.log("Eyes shift rate", newValue.shift.x, newValue.rate.x);
           const left = houghTransform(newValue.eyes.left);
           const right = houghTransform(newValue.eyes.right);
@@ -57,16 +59,25 @@ export default {
           //canvasclip()
 
           //左目
-          //マスク
-          maskDraw(this.$refs.canvas, newValue.face.left, shift, rate);
-          //レンzを描画
-          drawLense(this.$refs.canvas, left);
-
+          if (eye == "left") {
+            //マスク
+            maskDraw(this.$refs.canvas, newValue.face.left, shift, rate);
+            //レンzを描画
+            drawLense(this.$refs.canvas, left);
+          }
           //右目
-          //マスク
-          // maskDraw(this.$refs.canvas, newValue.face.right, shift, rate, right);
-          //レンズを描画
-          // drawLense(this.$refs.canvas, right);
+          if (eye == "right") {
+            //マスク
+            maskDraw(
+              this.$refs.canvas,
+              newValue.face.right,
+              shift,
+              rate,
+              right
+            );
+            //レンズを描画
+            drawLense(this.$refs.canvas, right);
+          }
         }
       }
     }
