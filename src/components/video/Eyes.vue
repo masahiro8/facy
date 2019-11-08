@@ -58,18 +58,25 @@ export default {
           clearLense(this.$refs.canvas);
           //canvasclip()
 
-          //左目
+          //両目の大きさを揃える
+          if (left.r > right.r) {
+            right.r = left.r;
+          } else if (right.r > left.r) {
+            left.r = right.r;
+          }
+
+          //左目の描画
           if (eye == "left") {
             //マスク
             maskDraw(this.$refs.canvas, newValue.face.left, shift, rate);
-            //レンzを描画
+            //レンズ
             drawLense(this.$refs.canvas, left);
           }
-          //右目
+          //右目の描画
           if (eye == "right") {
             //マスク
             maskDraw(this.$refs.canvas, newValue.face.right, shift, rate);
-            //レンズを描画
+            //レンズ
             drawLense(this.$refs.canvas, right);
           }
         }
