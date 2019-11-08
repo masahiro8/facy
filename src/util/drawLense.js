@@ -40,11 +40,11 @@ export const drawLense = (canvas, circle) => {
   );
   grd.addColorStop(0, 'rgba(13,13,13,0.5)');
   grd.addColorStop(0.5, 'rgba(242,172,87,0.75)');
-  grd.addColorStop(1, 'rgba(115, 110, 110, 0.65)');
+  grd.addColorStop(1, 'rgba(115, 83, 44, 0.65)');
   ctx.fillStyle = grd;
 
   ctx.beginPath();
-  ctx.arc(circle.p, circle.q, circle.r * 1.02, 0, 2 * Math.PI);
+  ctx.arc(circle.p, circle.q, circle.r * 1.4, 0, 2 * Math.PI);
   ctx.fill();
 };
 
