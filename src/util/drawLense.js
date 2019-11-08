@@ -7,6 +7,7 @@ export const maskDraw = (canvas, points, shift, rate) => {
   const rect = canvas.getBoundingClientRect();
   const ctx = canvas.getContext('2d');
   ctx.strokeStyle = 'red';
+  ctx.save();
   ctx.beginPath();
   for (let i = 0; i < points.length; i++) {
     if (i == 0) {
@@ -46,6 +47,7 @@ export const drawLense = (canvas, circle) => {
   ctx.beginPath();
   ctx.arc(circle.p, circle.q, circle.r * 1.4, 0, 2 * Math.PI);
   ctx.fill();
+  ctx.restore();
 };
 
 export const clearLense = canvas => {
