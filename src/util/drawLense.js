@@ -26,6 +26,8 @@ export const maskDraw = (canvas, points, shift, rate) => {
   ctx.clip();
 };
 
+const SCALE = 1.0;
+
 export const drawLense = (canvas, circle) => {
   const rect = canvas.getBoundingClientRect();
   const ctx = canvas.getContext('2d');
@@ -45,7 +47,7 @@ export const drawLense = (canvas, circle) => {
   ctx.fillStyle = grd;
 
   ctx.beginPath();
-  ctx.arc(circle.p, circle.q, circle.r * 1.4, 0, 2 * Math.PI);
+  ctx.arc(circle.p, circle.q, circle.r * SCALE, 0, 2 * Math.PI);
   ctx.fill();
   ctx.restore();
 };

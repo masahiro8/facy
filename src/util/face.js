@@ -2,7 +2,7 @@
 import { getRect } from '../util/canvasUtil';
 import { LEFT_EYE, RIGHT_EYE } from '../constants/face';
 import { Effects } from '../components/effects/Effects';
-import { FACEAPI_OPTION } from '../config';
+import { FACEAPI_OPTION, MODEL_LOAD_PATH } from '../config';
 
 const _face = () => {
   let src = null; //video
@@ -19,10 +19,10 @@ const _face = () => {
     //FaceAPiのモジュールを取得
     return new Promise(async resolved => {
       await faceapi.loadTinyFaceDetectorModel(
-        '/js/tiny_face_detector_model-weights_manifest.json'
+        `${MODEL_LOAD_PATH}/js/tiny_face_detector_model-weights_manifest.json`
       );
       await faceapi.loadFaceLandmarkTinyModel(
-        '/js/face_landmark_68_tiny_model-weights_manifest.json'
+        `${MODEL_LOAD_PATH}/js/face_landmark_68_tiny_model-weights_manifest.json`
       );
       options = new faceapi.TinyFaceDetectorOptions(FACEAPI_OPTION);
       console.log('loaded models');
