@@ -68,13 +68,7 @@ export default {
           //右目
           if (eye == "right") {
             //マスク
-            maskDraw(
-              this.$refs.canvas,
-              newValue.face.right,
-              shift,
-              rate,
-              right
-            );
+            maskDraw(this.$refs.canvas, newValue.face.right, shift, rate);
             //レンズを描画
             drawLense(this.$refs.canvas, right);
           }
