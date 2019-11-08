@@ -87,4 +87,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "./canvas.scss";
+.overlay {
+  mix-blend-mode: soft-light;
+}
 </style>
