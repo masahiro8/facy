@@ -75,7 +75,6 @@ const _face = () => {
         drawLandmarksOptions
       );
       console.log('resizedResults', resizedResults);
-
       resolved();
     });
   };
@@ -89,7 +88,6 @@ const _face = () => {
     canvas.width = width;
     canvas.height = height;
     return faceapi.resizeResults(results, { width, height });
-    // return results.map(res => res.forSize(width, height));
   };
 
   const drawLandmarks = (video, canvas, results) => {
@@ -101,7 +99,7 @@ const _face = () => {
       drawLines: true,
       color: 'green'
     };
-    faceapi.drawLandmarks(canvas, faceLandmarks, drawLandmarksOptions);
+    faceapi.draw.drawFaceLandmarks(canvas, faceLandmarks, drawLandmarksOptions);
 
     //ここから自前で描画
     const rect = canvas.getBoundingClientRect();
@@ -188,10 +186,8 @@ const _face = () => {
       //faceapiの検出結果を取得
 
       let result = await faceapi
-        .detectSingleFace(image, options)
+        .detectSingleFace(overlay, options)
         .withFaceLandmarks(true);
-
-      console.log('results', results);
 
       if (result) {
         // //検出したデータから描画

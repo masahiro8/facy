@@ -17,9 +17,9 @@ const _EffectFlags = () => {
     bw: true,
     gray: false,
     col2: false,
-    median: true,
+    median: false,
     center: true,
-    vertical: true,
+    vertical: false,
     horizonta: false,
     line: false,
     point: false
