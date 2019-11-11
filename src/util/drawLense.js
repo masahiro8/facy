@@ -41,9 +41,9 @@ export const drawLense = (canvas, circle) => {
     circle.q,
     circle.r
   );
-  grd.addColorStop(0, 'rgba(13,13,13,0.5)');
-  grd.addColorStop(0.5, 'rgba(242,172,87,0.75)');
-  grd.addColorStop(1, 'rgba(115, 83, 44, 0.65)');
+  grd.addColorStop(0, 'rgba(13,13,13,1)');
+  grd.addColorStop(0.5, 'rgba(242,172,87,1)');
+  grd.addColorStop(1, 'rgba(115, 83, 44, 1)');
   ctx.fillStyle = grd;
 
   ctx.beginPath();
