@@ -30,15 +30,66 @@ const _face = () => {
     });
   };
 
+  //検出
+  const DetectFaceAndLandmarkTiny = () => {
+    return new Promise(async resolved => {
+      //モデルの読み込み
+      const dir = isGhPages ? '/eyetrack-dev' : '.';
+      await faceapi.loadTinyFaceDetectorModel(
+        `${dir}/tiny_face_detector_model-weights_manifest.json`
+      );
+      await faceapi.loadFaceLandmarkTinyModel(
+        `${dir}/face_landmark_68_tiny_model-weights_manifest.json`
+      );
+
+      const options = new faceapi.TinyFaceDetectorOptions({
+        inputSize: 128,
+        scoreThreshold: 0.5
+      });
+      let results = await faceapi
+        .detectSingleFace(picture, options)
+        .withFaceLandmarks(true);
+
+      console.log('results', results);
+
+      //videoからcanvasサイズを変換
+      const resizeCanvasAndResults = (dimensions, canvas, results) => {
+        const { width, height } =
+          dimensions instanceof HTMLVideoElement
+            ? faceapi.getMediaDimensions(dimensions)
+            : dimensions;
+        canvas.width = width;
+        canvas.height = height;
+        return faceapi.resizeResults(results, { width, height });
+      };
+      const resizedResults = resizeCanvasAndResults(video, overlay, [results]);
+      const faceLandmarks = resizedResults.map(det => det.landmarks);
+      const drawLandmarksOptions = {
+        lineWidth: 2,
+        drawLines: true,
+        color: 'green'
+      };
+      faceapi.draw.drawFaceLandmarks(
+        overlay,
+        faceLandmarks,
+        drawLandmarksOptions
+      );
+      console.log('resizedResults', resizedResults);
+
+      resolved();
+    });
+  };
+
   //videoからcanvasサイズを変換
   const resizeCanvasAndResults = (dimensions, canvas, results) => {
     const { width, height } =
       dimensions instanceof HTMLVideoElement
         ? faceapi.getMediaDimensions(dimensions)
         : dimensions;
-    // canvas.width = width;
-    // canvas.height = height;
-    return results.map(res => res.forSize(width, height));
+    canvas.width = width;
+    canvas.height = height;
+    return faceapi.resizeResults(results, { width, height });
+    // return results.map(res => res.forSize(width, height));
   };
 
   const drawLandmarks = (video, canvas, results) => {
@@ -63,6 +114,7 @@ const _face = () => {
 
     shift = faceLandmarks[0].shift;
 
+    console.log('ここまでOK?');
     console.log('face', faceLandmarks[0].relativePositions, shift);
 
     //目のポイントから範囲の２点を取得
@@ -136,8 +188,11 @@ const _face = () => {
       //faceapiの検出結果を取得
 
       let result = await faceapi
-        .detectSingleFace(overlay, options)
+        .detectSingleFace(image, options)
         .withFaceLandmarks(true);
+
+      console.log('results', results);
+
       if (result) {
         // //検出したデータから描画
         const {
