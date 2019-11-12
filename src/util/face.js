@@ -15,7 +15,7 @@ const _face = () => {
   const init = (_src, _overlay) => {
     overlay = _overlay;
     src = _src;
-    console.log('load models');
+    // console.log("load models");
     //FaceAPiのモジュールを取得
     return new Promise(async resolved => {
       await faceapi.loadTinyFaceDetectorModel(
@@ -26,55 +26,6 @@ const _face = () => {
       );
       options = new faceapi.TinyFaceDetectorOptions(FACEAPI_OPTION);
       console.log('loaded models');
-      resolved();
-    });
-  };
-
-  //検出
-  const DetectFaceAndLandmarkTiny = () => {
-    return new Promise(async resolved => {
-      //モデルの読み込み
-      const dir = isGhPages ? '/eyetrack-dev' : '.';
-      await faceapi.loadTinyFaceDetectorModel(
-        `${dir}/tiny_face_detector_model-weights_manifest.json`
-      );
-      await faceapi.loadFaceLandmarkTinyModel(
-        `${dir}/face_landmark_68_tiny_model-weights_manifest.json`
-      );
-
-      const options = new faceapi.TinyFaceDetectorOptions({
-        inputSize: 128,
-        scoreThreshold: 0.5
-      });
-      let results = await faceapi
-        .detectSingleFace(picture, options)
-        .withFaceLandmarks(true);
-
-      console.log('results', results);
-
-      //videoからcanvasサイズを変換
-      const resizeCanvasAndResults = (dimensions, canvas, results) => {
-        const { width, height } =
-          dimensions instanceof HTMLVideoElement
-            ? faceapi.getMediaDimensions(dimensions)
-            : dimensions;
-        canvas.width = width;
-        canvas.height = height;
-        return faceapi.resizeResults(results, { width, height });
-      };
-      const resizedResults = resizeCanvasAndResults(video, overlay, [results]);
-      const faceLandmarks = resizedResults.map(det => det.landmarks);
-      const drawLandmarksOptions = {
-        lineWidth: 2,
-        drawLines: true,
-        color: 'green'
-      };
-      faceapi.draw.drawFaceLandmarks(
-        overlay,
-        faceLandmarks,
-        drawLandmarksOptions
-      );
-      console.log('resizedResults', resizedResults);
       resolved();
     });
   };
@@ -112,8 +63,8 @@ const _face = () => {
 
     shift = faceLandmarks[0].shift;
 
-    console.log('ここまでOK?');
-    console.log('face', faceLandmarks[0].relativePositions, shift);
+    //console.log('ここまでOK?');
+    //console.log('face', faceLandmarks[0].relativePositions, shift);
 
     //目のポイントから範囲の２点を取得
     const left_eye_points = getRect(
@@ -201,8 +152,6 @@ const _face = () => {
           rate,
           shift
         } = drawLandmarks(src, overlay, [result]);
-
-        console.log('eyes', left_face_eye_points, right_face_eye_points);
 
         face_eyes_points = {
           left: left_face_eye_points,

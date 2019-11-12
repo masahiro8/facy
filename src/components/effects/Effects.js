@@ -29,9 +29,9 @@ export const Effects = (ctx, left_eye_rect, right_eye_rect) => {
 
   //ここから２値化
   if (EffectFlags.getValue(FLAG_KEYS.BW.key)) {
-    console.log('effect:bw');
     const col2_left = Color2Value(ctx, left_eye_rect);
     const col2_right = Color2Value(ctx, right_eye_rect);
+    console.log('effect:bw');
     ctx.putImageData(col2_left, left_eye_rect.x, left_eye_rect.y);
     ctx.putImageData(col2_right, right_eye_rect.x, right_eye_rect.y);
   }

@@ -5,8 +5,8 @@
     <!-- 撮影した写真を表示 -->
     <Overlay ref="overlay" :src="src" :rect="rect" @callbackPoints="getPoints" />
     <!-- コンタクトレンズ -->
-    <Eyes :src="src" :rect="rect" :points="points" left_right="left" />
-    <Eyes :src="src" :rect="rect" :points="points" left_right="right" />
+    <!-- <Eyes :src="src" :rect="rect" :points="points" left_right="left" />
+    <Eyes :src="src" :rect="rect" :points="points" left_right="right" />-->
     <!-- 撮影ボタン -->
     <Shoot @shoot="shoot" />
     <!-- フラッシュ -->
@@ -15,14 +15,15 @@
 </template>
 
 <script>
-import Vid from "./components/video/Video";
-import Overlay from "./components/video/Overlay";
-import Shoot from "./components/shoot/Shoot";
-import Eyes from "./components/video/Eyes";
-import { wait } from "./util/wait";
+import Vid from './components/video/Video';
+import Overlay from './components/video/Overlay';
+import Shoot from './components/shoot/Shoot';
+import Eyes from './components/video/Eyes';
+import { wait } from './util/wait';
+import { requestAnimation } from './util/requestAnimation';
 
 export default {
-  name: "app",
+  name: 'app',
   data: () => {
     return {
       src: null,
@@ -34,14 +35,20 @@ export default {
   components: {
     Vid,
     Shoot,
-    Overlay,
-    Eyes
+    Overlay
+    // Eyes
   },
   mounted() {},
   methods: {
     readyVideo(value) {
       this.rect = value.rect;
       this.src = value.src;
+
+      //アニメーションで検出
+      requestAnimation.setCallback(() => {
+        this.$refs.overlay.shoot();
+      });
+      requestAnimation.start();
     },
     //カメラ撮影
     async shoot() {
@@ -59,7 +66,7 @@ export default {
         shift: face_eyes_data.shift,
         rate: face_eyes_data.rate
       };
-      console.log("points", points, face_eyes_data);
+      // console.log("points", points, face_eyes_data);
     }
   }
 };

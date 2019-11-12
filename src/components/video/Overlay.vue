@@ -22,19 +22,20 @@
   </div>
 </template>
 <script>
-import * as _ from "lodash";
-import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
-import { face } from "../../util/face";
+import * as _ from 'lodash';
+import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../config';
+import { face } from '../../util/face';
 
 export default {
   data: () => {
     return {
+      loadedModel: false,
       showDetection: false,
       canvas_rect: {}
     };
   },
   mounted() {
-    console.log("overlay mounted");
+    // console.log("overlay mounted");
   },
   props: {
     rect: Object,
@@ -46,26 +47,51 @@ export default {
     },
     //撮影
     shoot() {
-      console.log("shoot");
+      if (!this.loadedModel) return;
+
+      // console.log("shoot");
       const size = {
         w: this.canvas_rect.width,
         h: this.canvas_rect.height
       };
 
       const rects = {
+        //s = src image
         sx: this.rect.x / this.rect.rate,
         sy: 0,
         sw: size.w / this.rect.rate,
         sh: size.h / this.rect.rate,
+        //d =  destination image
         dx: 0,
         dy: 0,
         dw: WINDOW_WIDTH,
         dh: WINDOW_HEIGHT
       };
 
+      // console.log(
+      //   "this.rect.x",
+      //   this.rect.x,
+      //   "this.rect.width",
+      //   this.rect.width,
+      //   "rate  / ",
+      //   this.rect.rate,
+      //   " = rects.sx",
+      //   rects.sx,
+      //   "WINDOW_WIDTH",
+      //   WINDOW_WIDTH,
+      //   "Overlay size.w",
+      //   size.w,
+      //   "rects.sx",
+      //   rects.sx,
+      //   "rects.sw",
+      //   rects.sw,
+      //   "rects.dw",
+      //   rects.dw
+      // );
+
       //ここから画像処理用オーバーレイ
       //video(this.src)画像をoverlayに描画
-      const ctx = this.$refs.overlay.getContext("2d");
+      const ctx = this.$refs.overlay.getContext('2d');
       ctx.clearRect(0, 0, this.canvas_rect.width, this.canvas_rect.height);
       ctx.save();
       ctx.drawImage(
@@ -83,7 +109,7 @@ export default {
 
       //ここから顔画像
       //video(this.src)画像をoverlayに描画
-      const ctx_img = this.$refs.image.getContext("2d");
+      const ctx_img = this.$refs.image.getContext('2d');
       ctx_img.clearRect(0, 0, this.canvas_rect.width, this.canvas_rect.height);
       ctx_img.save();
       ctx_img.drawImage(
@@ -101,7 +127,7 @@ export default {
       this.faceDetect();
     },
     pix(n) {
-      return n + "px";
+      return n + 'px';
     },
     async faceDetect() {
       //ここで頂点を取得
@@ -114,18 +140,19 @@ export default {
         width: _width,
         height: this.rect.height
       };
-      console.log("faceDetect");
-      this.$emit("callbackPoints", points, eyes_points_data);
+      // console.log('faceDetect');
+      this.$emit('callbackPoints', points, eyes_points_data);
     }
   },
   watch: {
     src: {
       immediate: true,
-      handler(newValue, oldValue) {
+      async handler(newValue, oldValue) {
         if (newValue !== oldValue) {
           this.src = newValue;
           //faceAPiに取得用imageと描画用canvasを渡す
-          face.init(this.$refs.image, this.$refs.overlay);
+          await face.init(this.$refs.image, this.$refs.overlay);
+          this.loadedModel = true;
         }
       }
     },
@@ -145,7 +172,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "./canvas.scss";
+@import './canvas.scss';
 .btn {
   position: absolute;
   z-index: 3;

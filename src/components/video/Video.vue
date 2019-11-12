@@ -5,19 +5,19 @@
   </div>
 </template>
 <script>
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../config";
-import { adjustVideoSize } from "../../util/adjustVideoSize";
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from '../../config';
+import { adjustVideoSize } from '../../util/adjustVideoSize';
 
 export default {
-  name: "vid",
+  name: 'vid',
   data: () => {
     return {};
   },
   async mounted() {
     await this.initCamera(this.$refs.video);
     const info = adjustVideoSize(this.$refs.video);
-    console.log("ready", info);
-    this.$emit("ready", info);
+    // console.log("ready", info);
+    this.$emit('ready', info);
   },
   methods: {
     //カメラを起動
@@ -26,7 +26,7 @@ export default {
         let media = navigator.mediaDevices.getUserMedia({
           audio: false,
           video: {
-            facingMode: "user"
+            facingMode: 'user'
           }
         });
         media

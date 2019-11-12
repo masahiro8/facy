@@ -25,7 +25,7 @@ export const FACEAPI_OPTION = {
   // for face tracking via webcam I would recommend using smaller sizes,
   // e.g. 128, 160, for detecting smaller faces use larger sizes, e.g. 512, 608
   // default: 416
-  inputSize: 416, //128
+  inputSize: 128, //128
   // minimum confidence threshold
   // default: 0.5
   scoreThreshold: 0.5 //0.3
