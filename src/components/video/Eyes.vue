@@ -3,8 +3,8 @@
     <canvas
       ref="canvas"
       class="overlay"
-      :width="canvas_rect.width+'px'"
-      :height="canvas_rect.height+'px'"
+      :width="canvas_rect.width + 'px'"
+      :height="canvas_rect.height + 'px'"
     />
   </div>
 </template>
@@ -88,6 +88,6 @@ export default {
 <style lang="scss" scoped>
 @import "./canvas.scss";
 .overlay {
-  mix-blend-mode: soft-light;
+  // mix-blend-mode: soft-light;
 }
 </style>
