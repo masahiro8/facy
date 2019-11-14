@@ -2,9 +2,15 @@
   <div>
     <canvas
       ref="canvas"
-      class="overlay"
-      :width="canvas_rect.width+'px'"
-      :height="canvas_rect.height+'px'"
+      class="overlay base"
+      :width="canvas_rect.width + 'px'"
+      :height="canvas_rect.height + 'px'"
+    />
+    <canvas
+      ref="canvas2"
+      class="overlay over"
+      :width="canvas_rect.width + 'px'"
+      :height="canvas_rect.height + 'px'"
     />
   </div>
 </template>
@@ -83,6 +89,9 @@ export default {
             maskDraw(this.$refs.canvas, newValue.face.left, shift, rate);
             //レンズ
             drawLense(this.$refs.canvas, left, lensImg);
+
+            maskDraw(this.$refs.canvas2, newValue.face.left, shift, rate);
+            drawLense(this.$refs.canvas2, left, lensImg);
           }
           //右目の描画
           if (eye == "right") {
@@ -90,6 +99,9 @@ export default {
             maskDraw(this.$refs.canvas, newValue.face.right, shift, rate);
             //レンズ
             drawLense(this.$refs.canvas, right, lensImg);
+
+            maskDraw(this.$refs.canvas2, newValue.face.right, shift, rate);
+            drawLense(this.$refs.canvas2, right, lensImg);
           }
         }
       }
@@ -99,4 +111,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "./canvas.scss";
+.overlay {
+  &.base {
+    mix-blend-mode: screen;
+    opacity: 0.4;
+  }
+  &.over {
+    mix-blend-mode: soft-light;
+    opacity: 0.3;
+  }
+}
 </style>
