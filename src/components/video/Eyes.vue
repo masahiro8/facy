@@ -12,10 +12,20 @@
 import * as _ from "lodash";
 import { houghTransform } from "../../util/houghTransform";
 import { drawLense, clearLense, maskDraw } from "../../util/drawLense";
+import {
+  lens01,
+  lens02,
+  lens03,
+  lens04,
+  lens05,
+  lens06,
+  lens07
+} from "../../util/lensImages";
 export default {
   data: () => {
     return {
-      canvas_rect: {}
+      canvas_rect: {},
+      lensImage: { lens01, lens02, lens03, lens04, lens05, lens06, lens07 } //レンズの画像データ
     };
   },
   props: {
@@ -55,6 +65,8 @@ export default {
           const right = houghTransform(newValue.eyes.right);
           const shift = newValue.shift;
           const rate = newValue.rate;
+          const lensImg = this.$data.lensImage.lens02; //レンズの画像指定
+          // const lensImgR = this.$data.lensImage.lens05;
           clearLense(this.$refs.canvas);
           //canvasclip()
 
@@ -70,14 +82,14 @@ export default {
             //マスク
             maskDraw(this.$refs.canvas, newValue.face.left, shift, rate);
             //レンズ
-            drawLense(this.$refs.canvas, left);
+            drawLense(this.$refs.canvas, left, lensImg);
           }
           //右目の描画
           if (eye == "right") {
             //マスク
             maskDraw(this.$refs.canvas, newValue.face.right, shift, rate);
             //レンズ
-            drawLense(this.$refs.canvas, right);
+            drawLense(this.$refs.canvas, right, lensImg);
           }
         }
       }
