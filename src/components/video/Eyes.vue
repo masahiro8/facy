@@ -110,7 +110,7 @@ export default {
   }
   &.over {
     mix-blend-mode: soft-light;
-    opacity: 0.3;
+    opacity: 0.4;
   }
 }
 </style>
