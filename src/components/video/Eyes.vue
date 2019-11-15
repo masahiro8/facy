@@ -23,7 +23,7 @@ export default {
   data: () => {
     return {
       canvas_rect: {},
-      lensImage: { lens01, lens02, lens03, lens04, lens05, lens06, lens07 } //レンズの画像データ
+      lensImage: { lens02 } //レンズの画像データ
     };
   },
   props: {
