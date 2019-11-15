@@ -18,15 +18,7 @@
 import * as _ from "lodash";
 import { houghTransform } from "../../util/houghTransform";
 import { drawLense, clearLense, maskDraw } from "../../util/drawLense";
-import {
-  lens01,
-  lens02,
-  lens03,
-  lens04,
-  lens05,
-  lens06,
-  lens07
-} from "../../util/lensImages";
+import { lens02 } from "../../util/lensImages";
 export default {
   data: () => {
     return {
