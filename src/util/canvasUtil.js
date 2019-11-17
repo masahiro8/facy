@@ -1,6 +1,6 @@
-import * as _ from 'lodash';
-import { getColorDistance } from './imageUtil';
-import { exIndexOf } from './util';
+import * as _ from "lodash";
+import { getColorDistance } from "./imageUtil";
+import { exIndexOf } from "./util";
 
 /**
  * ２点座標で範囲を取得
@@ -94,7 +94,7 @@ const getPixels = (rect, elem) => {
   config.hideline = 30; //排除する上下の行数
   config.showPoints = true; //頂点を描画するかどうか
 
-  const ctx = elem.getContext('2d');
+  const ctx = elem.getContext("2d");
   let imageData = ctx.getImageData(rect.x, rect.y, rect.width, rect.height);
   let data = imageData.data;
 
@@ -175,23 +175,49 @@ const getPixels = (rect, elem) => {
 
 const drawPoint = (canvas, point, rate, shift, color) => {
   const rect = canvas.getBoundingClientRect();
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
+  const x = rect.width * point.x * rate.x + shift.x - 2;
+  const y = rect.height * point.y * rate.y + shift.y - 2;
   ctx.fillStyle = color;
-  ctx.fillRect(
-    rect.width * point.x * rate.x + shift.x - 2,
-    rect.height * point.y * rate.y + shift.y - 2,
-    4,
-    4
-  );
+  ctx.fillRect(x, y, 4, 4);
+};
+
+const drawPointByRate = (canvas, point, rate, shift, color) => {
+  const rect = canvas.getBoundingClientRect();
+  const ctx = canvas.getContext("2d");
+  const x = rect.width * point.x * rate.x + shift.x - 2;
+  const y = rect.height * point.y * rate.y + shift.y - 2;
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y, 4, 4);
+};
+
+const drawPointByPosition = (canvas, point, color) => {
+  const rect = canvas.getBoundingClientRect();
+  const ctx = canvas.getContext("2d");
+  const x = point.x - 2;
+  const y = point.y - 2;
+  // const x = 30;
+  // const y = 30;
+  ctx.fillStyle = color;
+  console.log("drawPointByPosition", rect, x, y);
+  ctx.fillRect(x, y, 4, 4);
 };
 
 const drawPoints = (canvas, points, color) => {
   const rect = canvas.getBoundingClientRect();
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
   ctx.fillStyle = color;
   _.map(points, point => {
     ctx.fillRect(point.x, point.y, 1, 1);
   });
 };
 
-export { getRect, getHideLineIndex, getPixels, drawPoint, drawPoints };
+export {
+  getRect,
+  getHideLineIndex,
+  getPixels,
+  drawPoint,
+  drawPoints,
+  drawPointByRate,
+  drawPointByPosition
+};

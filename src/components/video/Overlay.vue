@@ -4,16 +4,16 @@
       ref="image"
       class="overlay"
       id="image"
-      :width="canvas_rect.width+'px'"
-      :height="canvas_rect.height+'px'"
+      :width="canvas_rect.width + 'px'"
+      :height="canvas_rect.height + 'px'"
     />
     <canvas
       ref="overlay"
       class="overlay"
       id="overlay"
-      :width="canvas_rect.width+'px'"
-      :height="canvas_rect.height+'px'"
-      :class="showDetection?'show':'hide'"
+      :width="canvas_rect.width + 'px'"
+      :height="canvas_rect.height + 'px'"
+      :class="showDetection ? 'show' : 'hide'"
     />
     <div class="btn">
       visible
@@ -24,17 +24,21 @@
 <script>
 import * as _ from "lodash";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
-import { face } from "../../util/face";
+// import { face } from "../../util/face";
+import { pose } from "../../components/posenet/pose";
 
 export default {
   data: () => {
     return {
       showDetection: false,
-      canvas_rect: {}
+      canvas_rect: {},
+      pose: null
     };
   },
-  mounted() {
+  async mounted() {
     console.log("overlay mounted");
+    this.pose = pose;
+    await this.pose.init();
   },
   props: {
     rect: Object,
@@ -47,6 +51,7 @@ export default {
     //撮影
     shoot() {
       console.log("shoot");
+      console.log("rate rect", this.rect);
       const size = {
         w: this.canvas_rect.width,
         h: this.canvas_rect.height
@@ -82,7 +87,7 @@ export default {
       ctx.restore();
 
       //ここから顔画像
-      //video(this.src)画像をoverlayに描画
+      //video(this.src)画像をimageに描画
       const ctx_img = this.$refs.image.getContext("2d");
       ctx_img.clearRect(0, 0, this.canvas_rect.width, this.canvas_rect.height);
       ctx_img.save();
@@ -98,24 +103,38 @@ export default {
         rects.dh
       );
       ctx_img.restore();
-      this.faceDetect();
+
+      // this.faceDetect();
+      this.poseDetect();
     },
     pix(n) {
       return n + "px";
     },
+
     async faceDetect() {
-      //ここで頂点を取得
-      const points = await face.getEyesPoints();
-      //ここでfaceAPiの両目のポイントを取得
-      const eyes_points_data = face.getFaceEyesData();
-      //リサイズ
-      const _width = this.rect.width - this.rect.x * 2;
-      this.canvas_rect = {
-        width: _width,
-        height: this.rect.height
-      };
-      console.log("faceDetect");
-      this.$emit("callbackPoints", points, eyes_points_data);
+      // //ここで頂点を取得
+      // const points = await face.getEyesPoints();
+      // //ここでfaceAPiの両目のポイントを取得
+      // const eyes_points_data = face.getFaceEyesData();
+      // //リサイズ
+      // const _width = this.rect.width - this.rect.x * 2;
+      // this.canvas_rect = {
+      //   width: _width,
+      //   height: this.rect.height
+      // };
+      // console.log("faceDetect");
+      // this.$emit("callbackPoints", points, eyes_points_data);
+    },
+
+    async poseDetect() {
+      console.log("poseDetect");
+      await this.pose.predict(this.$refs.image);
+      const points = await this.pose.getEyesPoints(this.$refs.overlay);
+      this.$emit("callbackPoints", points, {
+        points: {},
+        shift: { x: 0, y: 0 },
+        rate: { x: 1, y: 1 }
+      });
     }
   },
   watch: {
@@ -125,7 +144,7 @@ export default {
         if (newValue !== oldValue) {
           this.src = newValue;
           //faceAPiに取得用imageと描画用canvasを渡す
-          face.init(this.$refs.image, this.$refs.overlay);
+          // face.init(this.$refs.image, this.$refs.overlay);
         }
       }
     },

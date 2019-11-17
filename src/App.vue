@@ -3,12 +3,17 @@
     <!-- 動画 -->
     <Vid @ready="readyVideo" />
     <!-- 撮影した写真を表示 -->
-    <Overlay ref="overlay" :src="src" :rect="rect" @callbackPoints="getPoints" />
+    <Overlay
+      ref="overlay"
+      :src="src"
+      :rect="rect"
+      @callbackPoints="getPoints"
+    />
     <!-- コンタクトレンズ -->
     <Eyes :src="src" :rect="rect" :points="points" left_right="left" />
     <Eyes :src="src" :rect="rect" :points="points" left_right="right" />
     <!-- 撮影ボタン -->
-    <Shoot @shoot="shoot" />
+    <Shoot v-if="isShoot" @shoot="shoot" />
     <!-- フラッシュ -->
     <div v-if="onFlash" id="white"></div>
   </div>
@@ -19,6 +24,7 @@ import Vid from "./components/video/Video";
 import Overlay from "./components/video/Overlay";
 import Shoot from "./components/shoot/Shoot";
 import Eyes from "./components/video/Eyes";
+import { pose } from "./components/posenet/pose";
 import { wait } from "./util/wait";
 
 export default {
@@ -28,7 +34,8 @@ export default {
       src: null,
       rect: {},
       points: {},
-      onFlash: false
+      onFlash: false,
+      isShoot: false
     };
   },
   components: {
@@ -37,7 +44,12 @@ export default {
     Overlay,
     Eyes
   },
-  mounted() {},
+  mounted() {
+    pose.didLoadedModel(() => {
+      console.log("isShoot");
+      this.isShoot = true;
+    });
+  },
   methods: {
     readyVideo(value) {
       this.rect = value.rect;

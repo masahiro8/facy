@@ -58,7 +58,9 @@ export default {
           Object.keys(newValue).length > 0
         ) {
           const eye = this.left_right;
+          console.log("Eyes", newValue.eyes);
           console.log("Eyes shift rate", newValue.shift.x, newValue.rate.x);
+
           const left = houghTransform(newValue.eyes.left);
           const right = houghTransform(newValue.eyes.right);
           const shift = newValue.shift;
@@ -78,21 +80,21 @@ export default {
           //左目の描画
           if (eye == "left") {
             //マスク
-            maskDraw(this.$refs.canvas, newValue.face.left, shift, rate);
+            // maskDraw(this.$refs.canvas, newValue.face.left, shift, rate);
             //レンズ
             drawLense(this.$refs.canvas, left, lensImg);
 
-            maskDraw(this.$refs.canvas2, newValue.face.left, shift, rate);
+            // maskDraw(this.$refs.canvas2, newValue.face.left, shift, rate);
             drawLense(this.$refs.canvas2, left, lensImg);
           }
           //右目の描画
           if (eye == "right") {
             //マスク
-            maskDraw(this.$refs.canvas, newValue.face.right, shift, rate);
+            // maskDraw(this.$refs.canvas, newValue.face.right, shift, rate);
             //レンズ
             drawLense(this.$refs.canvas, right, lensImg);
 
-            maskDraw(this.$refs.canvas2, newValue.face.right, shift, rate);
+            // maskDraw(this.$refs.canvas2, newValue.face.right, shift, rate);
             drawLense(this.$refs.canvas2, right, lensImg);
           }
         }
@@ -105,12 +107,12 @@ export default {
 @import "./canvas.scss";
 .overlay {
   &.base {
-    mix-blend-mode: screen;
-    opacity: 0.4;
+    // mix-blend-mode: screen;
+    opacity: 0.5;
   }
   &.over {
     mix-blend-mode: soft-light;
-    opacity: 0.4;
+    opacity: 0.7;
   }
 }
 </style>
