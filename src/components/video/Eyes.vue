@@ -77,6 +77,9 @@ export default {
             left.r = right.r;
           }
 
+          //pose-netでは目の輪郭を取得できないので、ここではマスクはコメントアウト
+          //画像処理で目の輪郭を抽出する
+
           //左目の描画
           if (eye == "left") {
             //マスク
