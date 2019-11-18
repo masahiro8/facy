@@ -4,9 +4,13 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title>eyetrack</title>
-    <script src="./js/face-api.js"></script>
+    <script src="./js/tfjs/tf-core.js"></script>
+    <script src="./js/tfjs-converter/tf-converter.js"></script>
+    <script src="./js/posenet/posenet.js"></script>
+    <!-- <script src="./js/face-api.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script> -->
   </head>
   <body>
     <noscript>
@@ -16,6 +20,5 @@
       >
     </noscript>
     <div id="app"></div>
-    <!-- built files will be auto injected -->
   </body>
 </html>
