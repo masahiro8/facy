@@ -55,7 +55,7 @@ export const drawLense = (canvas, circle, data) => {
   const ctx = canvas.getContext("2d");
 
   lens.onload = function() {
-    ctx.globalCompositeOperation = "source-in";
+    // ctx.globalCompositeOperation = "source-in"; //マスク領域と重なり合う部分のみ描画
     // ctx.globalAlpha = 0.8; //透明度
     ctx.drawImage(
       lens,
