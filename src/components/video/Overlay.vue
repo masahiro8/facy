@@ -4,16 +4,16 @@
       ref="image"
       class="overlay"
       id="image"
-      :width="canvas_rect.width+'px'"
-      :height="canvas_rect.height+'px'"
+      :width="canvas_rect.width + 'px'"
+      :height="canvas_rect.height + 'px'"
     />
     <canvas
       ref="overlay"
       class="overlay"
       id="overlay"
-      :width="canvas_rect.width+'px'"
-      :height="canvas_rect.height+'px'"
-      :class="showDetection?'show':'hide'"
+      :width="canvas_rect.width + 'px'"
+      :height="canvas_rect.height + 'px'"
+      :class="showDetection ? 'show' : 'hide'"
     />
     <div class="btn">
       visible

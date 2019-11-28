@@ -1,0 +1,41 @@
+<template>
+  <button class="shoot-button" @click="shoot">
+    <div class="icon"><Camera :size="20" /></div>
+  </button>
+</template>
+
+<script>
+import Camera from "vue-material-design-icons/Camera.vue";
+export default {
+  components: {
+    Camera
+  },
+  methods: {
+    shoot() {
+      this.$emit("shoot");
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+@import "../../style/config.scss";
+
+.shoot-button {
+  position: relative;
+  padding: $padding-20;
+  outline: none;
+  border-radius: 100px;
+  background: linear-gradient(
+    143.65deg,
+    $color-base-20 14.87%,
+    $color-base-30 70.49%
+  );
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
+  font-size: $font-60;
+  letter-spacing: 8px;
+  line-height: $label;
+  text-align: center;
+  color: white;
+}
+</style>
