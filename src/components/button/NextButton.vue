@@ -1,5 +1,5 @@
 <template>
-  <button class="next-button">
+  <button class="next-button" @click="$emit('goNext')">
     <p>NEXT</p>
     <div class="icon"><Navigation :size="20" /></div>
   </button>

@@ -1,14 +1,14 @@
 <template>
-  <div class="about">
+  <div class="start">
     <Header />
     <div class="content">
       <div class="eyes-position">
         <EyesPosition />
       </div>
       <p>目の位置を<br />合わせてください</p>
-    </div>
-    <div class="button-area">
-      <NextButton />
+      <div class="button-area">
+        <NextButton @goNext="goNext" />
+      </div>
     </div>
   </div>
 </template>
@@ -22,23 +22,29 @@ export default {
     Header,
     EyesPosition,
     NextButton
+  },
+  methods: {
+    goNext() {
+      this.$router.push("/photo-shoot");
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../style/config.scss";
-.about {
+.start {
   height: 100vh;
   background-color: $color-bg;
 }
 
 .content {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: calc(100% - 138px);
+  height: calc(100% - 38px);
 }
 
 .eyes-position {
@@ -48,6 +54,9 @@ export default {
 }
 
 .button-area {
+  position: absolute;
+  bottom: 0;
+  z-index: 10;
   padding-bottom: 50px;
   width: 100%;
 }

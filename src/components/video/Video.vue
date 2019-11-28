@@ -59,6 +59,8 @@ export default {
 
 .videoFrame {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 375px;
   height: 812px;
   overflow: hidden;

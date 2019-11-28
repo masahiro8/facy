@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Preview from "../views/Preview.vue";
 import Home from "../views/Home.vue";
-import About from "../views/About.vue";
+import Start from "../views/Start.vue";
 import Shoot from "../views/PhotoShoot.vue";
 import Select from "../views/Select.vue";
 
@@ -16,9 +16,9 @@ const routes = [
     component: Home
   },
   {
-    path: "/about",
-    name: "about",
-    component: About
+    path: "/start",
+    name: "start",
+    component: Start
   },
   {
     path: "/photo-shoot",
