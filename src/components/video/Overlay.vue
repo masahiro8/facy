@@ -15,10 +15,10 @@
       :height="canvas_rect.height + 'px'"
       :class="showDetection ? 'show' : 'hide'"
     />
-    <div class="btn">
+    <!-- <div class="btn">
       visible
       <input type="checkbox" @change="toggle" />
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -98,25 +98,40 @@ export default {
         rects.dh
       );
       ctx_img.restore();
-      this.faceDetect();
+      // this.faceDetect();
+
+      const getBlob = base64 => {
+        if (!Object.keys(base64).length) return null;
+        const image = base64.match(/image\/(.+);/);
+        const type = image[1];
+        const bin = atob(base64.replace(/^.*,/, ""));
+        var buffer = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) {
+          buffer[i] = bin.charCodeAt(i);
+        }
+
+        return new Blob([buffer.buffer], { type: `image/${type}` });
+      };
+      const blob = getBlob(this.$refs.image.toDataURL());
+      console.log(blob.type);
     },
     pix(n) {
       return n + "px";
-    },
-    async faceDetect() {
-      //ここで頂点を取得
-      const points = await face.getEyesPoints();
-      //ここでfaceAPiの両目のポイントを取得
-      const eyes_points_data = face.getFaceEyesData();
-      //リサイズ
-      const _width = this.rect.width - this.rect.x * 2;
-      this.canvas_rect = {
-        width: _width,
-        height: this.rect.height
-      };
-      console.log("faceDetect");
-      this.$emit("callbackPoints", points, eyes_points_data);
     }
+    // async faceDetect() {
+    //   //ここで頂点を取得
+    //   const points = await face.getEyesPoints();
+    //   //ここでfaceAPiの両目のポイントを取得
+    //   const eyes_points_data = face.getFaceEyesData();
+    //   //リサイズ
+    //   const _width = this.rect.width - this.rect.x * 2;
+    //   this.canvas_rect = {
+    //     width: _width,
+    //     height: this.rect.height
+    //   };
+    //   console.log("faceDetect");
+    //   this.$emit("callbackPoints", points, eyes_points_data);
+    // }
   },
   watch: {
     src: {

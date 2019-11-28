@@ -4,6 +4,7 @@ import Preview from "../views/Preview.vue";
 import Home from "../views/Home.vue";
 import About from "../views/About.vue";
 import Shoot from "../views/PhotoShoot.vue";
+import Select from "../views/Select.vue";
 
 Vue.use(VueRouter);
 
@@ -23,6 +24,11 @@ const routes = [
     path: "/photo-shoot",
     name: "shoot",
     component: Shoot
+  },
+  {
+    path: "/select",
+    name: "select",
+    component: Select
   }
 ];
 

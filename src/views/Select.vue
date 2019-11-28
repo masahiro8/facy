@@ -1,11 +1,17 @@
 <template>
-  <div class="select-lens">
+  <div class="select">
     <p>レンズ選択</p>
+    <Item />
   </div>
 </template>
 
 <script>
-export default {};
+import Item from "../components/products/ItemCard.vue";
+export default {
+  components: {
+    Item
+  }
+};
 </script>
 
 <style lang="scss" scoped>
