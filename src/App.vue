@@ -1,9 +1,15 @@
 <template>
   <div id="app">
+    <Header />
     <!-- 動画 -->
     <Vid @ready="readyVideo" />
     <!-- 撮影した写真を表示 -->
-    <Overlay ref="overlay" :src="src" :rect="rect" @callbackPoints="getPoints" />
+    <Overlay
+      ref="overlay"
+      :src="src"
+      :rect="rect"
+      @callbackPoints="getPoints"
+    />
     <!-- コンタクトレンズ -->
     <Eyes :src="src" :rect="rect" :points="points" left_right="left" />
     <Eyes :src="src" :rect="rect" :points="points" left_right="right" />
@@ -15,6 +21,7 @@
 </template>
 
 <script>
+import Header from "./components/header/Header.vue";
 import Vid from "./components/video/Video";
 import Overlay from "./components/video/Overlay";
 import Shoot from "./components/shoot/Shoot";
@@ -32,6 +39,7 @@ export default {
     };
   },
   components: {
+    Header,
     Vid,
     Shoot,
     Overlay,
@@ -66,9 +74,14 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/style/ress.scss";
+@import "@/style/config.scss";
+
 body {
-  margin: 0;
+  text-align: center;
+  color: $color-base-10;
 }
+
 #white {
   position: fixed;
   left: 0;
