@@ -21,6 +21,7 @@ import EyesPosition from "../components/EyesPosition.vue";
 import Vid from "../components/video/Video.vue";
 import Overlay from "../components/video/Overlay.vue";
 import ShootButton from "../components/button/ShootButton.vue";
+
 export default {
   data: () => {
     return {

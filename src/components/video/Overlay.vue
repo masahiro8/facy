@@ -25,6 +25,7 @@
 import * as _ from "lodash";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
 import { face } from "../../util/face";
+import { imageStore } from "../../util/imageStore";
 
 export default {
   data: () => {
@@ -100,11 +101,14 @@ export default {
       ctx_img.restore();
       // this.faceDetect();
 
-      const getBlob = base64 => {
-        if (!Object.keys(base64).length) return null;
-        const image = base64.match(/image\/(.+);/);
+      const base64 = this.$refs.image.toDataURL();
+      const data = imageStore.setImage(base64);
+
+      const getBlob = base => {
+        if (!Object.keys(base).length) return null;
+        const image = base.match(/image\/(.+);/);
         const type = image[1];
-        const bin = atob(base64.replace(/^.*,/, ""));
+        const bin = atob(base.replace(/^.*,/, ""));
         var buffer = new Uint8Array(bin.length);
         for (var i = 0; i < bin.length; i++) {
           buffer[i] = bin.charCodeAt(i);
@@ -112,8 +116,9 @@ export default {
 
         return new Blob([buffer.buffer], { type: `image/${type}` });
       };
-      const blob = getBlob(this.$refs.image.toDataURL());
-      console.log(blob.type);
+
+      const blob = getBlob(base64);
+      console.log(blob);
     },
     pix(n) {
       return n + "px";

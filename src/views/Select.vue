@@ -2,7 +2,13 @@
   <div class="select">
     <Header />
     <div class="content">
-      <p>撮影した写真を表示</p>
+      <canvas
+        ref="image"
+        id="image"
+        class="image"
+        :width="canvas_rect.width"
+        :height="canvas_rect.height"
+      />
       <div class="select-area">
         <ProductList :items="products" />
         <ToggleButton @toggle="show = !show" :isOpen="show" />
@@ -15,10 +21,14 @@
 </template>
 
 <script>
+import * as _ from "lodash";
+import { imageStore } from "../util/imageStore";
+import { face } from "../util/face";
 import Header from "../components/header/Header.vue";
 import ProductList from "../components/products/ProductList.vue";
 import ToggleButton from "../components/button/ToggleButton.vue";
 import CategoryList from "../components/category/CategoryList.vue";
+
 export default {
   components: {
     Header,
@@ -29,6 +39,8 @@ export default {
   data: () => {
     return {
       show: false,
+      rect: {},
+      canvas_rect: {},
       products: [
         {
           id: 1,
@@ -93,6 +105,38 @@ export default {
         }
       ]
     };
+  },
+  mounted() {
+    const data = imageStore.getImage();
+
+    let img = new Image();
+    img.src = data;
+
+    this.$nextTick(() => {
+      const ctx = this.$refs.image.getContext("2d");
+
+      img.onload = () => {
+        ctx.clearRect(0, 0, img.width, img.height);
+        ctx.save();
+        ctx.drawImage(
+          img,
+          0,
+          0,
+          img.width,
+          img.height,
+          0,
+          0,
+          img.width,
+          img.height
+        );
+        ctx.restore();
+      };
+
+      this.canvas_rect = {
+        width: img.width,
+        height: img.height
+      };
+    });
   }
 };
 </script>
@@ -111,6 +155,13 @@ export default {
   justify-content: center;
   align-items: center;
   height: calc(100% - 38px);
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: scale(-1, 1);
 }
 
 .select-area {
