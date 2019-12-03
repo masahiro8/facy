@@ -17,7 +17,13 @@
     <Shoot v-if="!shooted" @shoot="shoot" />
 
     <!-- 商品リスト -->
-    <ProductList v-if="shooted" :items="products" />
+    <div v-if="shooted" class="select-lens-area">
+      <ProductList :items="products" />
+      <ToggleButton @toggle="show = !show" :isOpen="show" />
+      <transition name="slide-fade">
+        <CategoryList :items="categories" v-if="show" />
+      </transition>
+    </div>
     <!-- フラッシュ -->
     <div v-if="onFlash" id="white"></div>
   </div>
@@ -30,6 +36,8 @@ import Overlay from "./components/video/Overlay";
 import Shoot from "./components/shoot/Shoot";
 import Eyes from "./components/video/Eyes";
 import ProductList from "./components/products/ProductList.vue";
+import ToggleButton from "./components/button/CategoryToggleButton.vue";
+import CategoryList from "./components/category/CategoryList.vue";
 import { wait } from "./util/wait";
 
 export default {
@@ -41,6 +49,7 @@ export default {
       points: {},
       onFlash: false,
       shooted: false,
+      show: false,
       products: [
         {
           id: 1,
@@ -112,7 +121,9 @@ export default {
     Shoot,
     Overlay,
     Eyes,
-    ProductList
+    ProductList,
+    ToggleButton,
+    CategoryList
   },
   mounted() {},
   methods: {
@@ -162,5 +173,25 @@ body {
   height: 100vh;
   background-color: white;
   z-index: 99;
+}
+
+.select-lens-area {
+  z-index: 10;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.4s ease;
+}
+// .slide-fade-leave-active {
+//   transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 0.5);
+// }
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateY(10px);
+  opacity: 0;
 }
 </style>

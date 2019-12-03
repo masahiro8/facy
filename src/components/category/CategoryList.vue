@@ -1,13 +1,13 @@
 <template>
-  <ul class="product-list">
+  <ul class="category-list">
     <li class="list-item" v-for="item in items" :key="item.id">
-      <Product :item="item" />
+      <Category :item="item" />
     </li>
   </ul>
 </template>
 
 <script>
-import Product from "./Product.vue";
+import Category from "./Category.vue";
 export default {
   props: {
     items: {
@@ -15,7 +15,7 @@ export default {
     }
   },
   components: {
-    Product
+    Category
   }
 };
 </script>
@@ -23,13 +23,12 @@ export default {
 <style lang="scss" scoped>
 @import "@/style/config.scss";
 
-.product-list {
+.category-list {
   overflow: scroll;
+  padding: $padding-20 $padding-10;
   list-style-type: none;
   display: flex;
-  align-items: center;
-  padding: $padding-20;
-  height: 194px;
+  background-color: white;
 }
 
 .list-item {
