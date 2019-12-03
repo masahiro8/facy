@@ -1,0 +1,61 @@
+@charset "utf-8";
+//-------------------------------
+// 基本設定
+//-------------------------------
+
+//色の設定 -----------------------
+
+/* グレー */
+$color-gray-10: #333;
+$color-gray-20: #666;
+$color-gray-30: #bbb;
+$color-gray-40: #ccc;
+$color-gray-50: #eee;
+
+/* 基本色 */
+$color-base-10: #398d9f;
+$color-base-20: #40d0ae;
+$color-base-30: #76d5b8;
+$color-base-40: #9bdeea;
+$color-base-50: #e4f0f2;
+
+$color-bg: #e4f0f2; //背景色
+
+//------------------------------
+
+//スペース ----------------------
+
+$padding-5: 4px;
+$padding-10: 8px;
+$padding-15: 12px;
+$padding-20: 16px;
+$padding-25: 20px;
+$padding-30: 24px;
+$padding-40: 32px;
+$padding-50: 40px;
+
+//------------------------------
+
+//フォントの設定 ------------------
+
+$font-10: 8px;
+$font-20: 10px;
+$font-30: 12px;
+$font-40: 14px;
+$font-50: 16px;
+$font-60: 18px;
+$font-70: 20px;
+$font-80: 22px;
+$font-90: 24px;
+$font-100: 26px;
+$font-110: 28px;
+$font-120: 30px;
+$font-130: 32px;
+
+//line-height
+$label: 1; //1行のもの
+$description: 1.5; //行間狭め
+$note: 1.8; //行間やや狭め
+$body: 2; //本文用
+
+//------------------------------
