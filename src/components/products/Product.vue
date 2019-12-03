@@ -2,7 +2,7 @@
   <div
     class="product"
     :class="selected ? 'selected' : ''"
-    @click="selected = !selected"
+    @click="selectedLens()"
   >
     <transition name="rotate-fade">
       <CheckCircle v-if="selected" class="icon" :size="24" />
@@ -38,6 +38,13 @@ export default {
   methods: {
     getImagePath: item => {
       return `${window.location.origin}/images/${item.category}/${item.image}`;
+    },
+    selectedLens() {
+      this.selected = !this.selected;
+      if (this.selected) {
+        console.log(this.item.id);
+        this.$emit("setLensColor", this.item.id);
+      }
     }
   }
 };

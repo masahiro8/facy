@@ -1,7 +1,7 @@
 <template>
   <ul class="product-list">
     <li class="list-item" v-for="item in items" :key="item.id">
-      <Product :item="item" />
+      <Product :item="item" @setLensColor="setLensColor" />
     </li>
   </ul>
 </template>
@@ -16,6 +16,13 @@ export default {
   },
   components: {
     Product
+  },
+  methods: {
+    setLensColor(id) {
+      this.id = id;
+      console.log("set lens" + id);
+      this.$emit("setLensColor", this.id);
+    }
   }
 };
 </script>

@@ -18,7 +18,8 @@
 
     <!-- 商品リスト -->
     <div v-if="shooted" class="select-lens-area">
-      <ProductList :items="products" />
+      <ProductList :items="products" @setLensColor="setLensColor" />
+
       <ToggleButton @toggle="show = !show" :isOpen="show" />
       <transition name="slide-fade">
         <CategoryList :items="categories" v-if="show" />
@@ -50,6 +51,7 @@ export default {
       onFlash: false,
       shooted: false,
       show: false,
+      lensColor: null,
       products: [
         {
           id: 1,
@@ -149,6 +151,11 @@ export default {
         rate: face_eyes_data.rate
       };
       console.log("points", points, face_eyes_data);
+    },
+    setLensColor(id) {
+      this.id = id;
+      // console.log("set lens0" + id);
+      return this.id;
     }
   }
 };
