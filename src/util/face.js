@@ -1,8 +1,8 @@
 /* eslint-disable */
-import { getRect } from '../util/canvasUtil';
-import { LEFT_EYE, RIGHT_EYE } from '../constants/face';
-import { Effects } from '../components/effects/Effects';
-import { FACEAPI_OPTION, MODEL_LOAD_PATH } from '../config';
+import { getRect } from "../util/canvasUtil";
+import { LEFT_EYE, RIGHT_EYE, FULL_FACE } from "../constants/face";
+import { Effects } from "../components/effects/Effects";
+import { FACEAPI_OPTION, MODEL_LOAD_PATH } from "../config";
 
 const _face = () => {
   let src = null; //video
@@ -15,7 +15,7 @@ const _face = () => {
   const init = (_src, _overlay) => {
     overlay = _overlay;
     src = _src;
-    console.log('load models');
+    console.log("load models");
     //FaceAPiのモジュールを取得
     return new Promise(async resolved => {
       await faceapi.loadTinyFaceDetectorModel(
@@ -25,7 +25,7 @@ const _face = () => {
         `${MODEL_LOAD_PATH}/js/face_landmark_68_tiny_model-weights_manifest.json`
       );
       options = new faceapi.TinyFaceDetectorOptions(FACEAPI_OPTION);
-      console.log('loaded models');
+      console.log("loaded models");
       resolved();
     });
   };
@@ -34,7 +34,7 @@ const _face = () => {
   const DetectFaceAndLandmarkTiny = () => {
     return new Promise(async resolved => {
       //モデルの読み込み
-      const dir = isGhPages ? '/eyetrack-dev' : '.';
+      const dir = isGhPages ? "/eyetrack-dev" : ".";
       await faceapi.loadTinyFaceDetectorModel(
         `${dir}/tiny_face_detector_model-weights_manifest.json`
       );
@@ -50,7 +50,7 @@ const _face = () => {
         .detectSingleFace(picture, options)
         .withFaceLandmarks(true);
 
-      console.log('results', results);
+      console.log("results", results);
 
       //videoからcanvasサイズを変換
       const resizeCanvasAndResults = (dimensions, canvas, results) => {
@@ -67,14 +67,14 @@ const _face = () => {
       const drawLandmarksOptions = {
         lineWidth: 2,
         drawLines: true,
-        color: 'green'
+        color: "green"
       };
       faceapi.draw.drawFaceLandmarks(
         overlay,
         faceLandmarks,
         drawLandmarksOptions
       );
-      console.log('resizedResults', resizedResults);
+      console.log("resizedResults", resizedResults);
       resolved();
     });
   };
@@ -97,7 +97,7 @@ const _face = () => {
     const drawLandmarksOptions = {
       lineWidth: 2,
       drawLines: true,
-      color: 'green'
+      color: "green"
     };
     faceapi.draw.drawFaceLandmarks(canvas, faceLandmarks, drawLandmarksOptions);
 
@@ -112,8 +112,14 @@ const _face = () => {
 
     shift = faceLandmarks[0].shift;
 
-    console.log('ここまでOK?');
-    console.log('face', faceLandmarks[0].relativePositions, shift);
+    return { rate, shift, results };
+
+    // console.log('ここまでOK?');
+    // console.log('face', faceLandmarks[0].relativePositions, shift);
+    const full_face_points = getRect(
+      faceLandmarks[0].relativePositions,
+      FULL_FACE
+    ).getPartsPoints();
 
     //目のポイントから範囲の２点を取得
     const left_eye_points = getRect(
@@ -169,6 +175,7 @@ const _face = () => {
       right_eye_points,
       left_face_eye_points,
       right_face_eye_points,
+      full_face_points,
       rate,
       shift
     };
@@ -177,6 +184,11 @@ const _face = () => {
   /**
    * FaceAPiの両目の頂点
    */
+
+  const getFullFacePoints = () => {
+    return { points: full_face_points, shift, rate };
+  };
+
   const getFaceEyesData = () => {
     return { points: face_eyes_points, shift, rate };
   };
@@ -191,39 +203,31 @@ const _face = () => {
 
       if (result) {
         // //検出したデータから描画
-        const {
-          left_eye_rect,
-          right_eye_rect,
-          left_eye_points,
-          right_eye_points,
-          left_face_eye_points,
-          right_face_eye_points,
-          rate,
-          shift
-        } = drawLandmarks(src, overlay, [result]);
+        const { rate, shift } = drawLandmarks(src, overlay, [result]);
 
-        console.log('eyes', left_face_eye_points, right_face_eye_points);
+        // console.log("eyes", left_face_eye_points, right_face_eye_points);
 
-        face_eyes_points = {
-          left: left_face_eye_points,
-          right: right_face_eye_points
-        };
+        // face_eyes_points = {
+        //   left: left_face_eye_points,
+        //   right: right_face_eye_points
+        // };
 
         //ここから画像処理
-        const effects = Effects(
-          overlay.getContext('2d'),
-          left_eye_rect,
-          right_eye_rect
-        );
+        // const effects = Effects(
+        //   overlay.getContext("2d"),
+        //   left_eye_rect,
+        //   right_eye_rect
+        // );
         //両目の頂点情報
-        const points = effects.getPoints();
-        resolved(points);
+        // const points = effects.getPoints();
+        resolved({ result, rate, shift });
       }
     });
   };
 
   return {
     init,
+    getFullFacePoints,
     getFaceEyesData,
     getEyesPoints
   };

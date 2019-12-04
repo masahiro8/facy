@@ -7,6 +7,25 @@
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title>eyetrack</title>
     <script src="./js/face-api.js"></script>
+    <script
+      data-src="./shader/vertex.js"
+      charset="utf-8"
+      data-name="myShader"
+      type="x-shader/x-vertex"
+    ></script>
+    <script
+      data-src="./shader/fragment.js"
+      charset="utf-8"
+      data-name="myShader"
+      type="x-shader/x-fragment"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <script src="./js/ShaderLoader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
   </head>
   <body>
     <noscript>

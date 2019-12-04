@@ -4,17 +4,18 @@
       ref="image"
       class="overlay"
       id="image"
-      :width="canvas_rect.width+'px'"
-      :height="canvas_rect.height+'px'"
+      :width="canvas_rect.width + 'px'"
+      :height="canvas_rect.height + 'px'"
     />
     <canvas
       ref="overlay"
       class="overlay"
       id="overlay"
-      :width="canvas_rect.width+'px'"
-      :height="canvas_rect.height+'px'"
-      :class="showDetection?'show':'hide'"
+      :width="canvas_rect.width + 'px'"
+      :height="canvas_rect.height + 'px'"
+      :class="showDetection ? 'show' : 'hide'"
     />
+
     <div class="btn">
       visible
       <input type="checkbox" @change="toggle" />
@@ -106,6 +107,7 @@ export default {
     async faceDetect() {
       //ここで頂点を取得
       const points = await face.getEyesPoints();
+      //points.resultで全部の点取れる
       //ここでfaceAPiの両目のポイントを取得
       const eyes_points_data = face.getFaceEyesData();
       //リサイズ
