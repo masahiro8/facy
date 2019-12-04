@@ -13,8 +13,7 @@
     <!-- <Eyes :src="src" :rect="rect" :points="points" left_right="left" />
     <Eyes :src="src" :rect="rect" :points="points" left_right="right" />-->
     <!-- 顔の3Dモデル -->
-    <canvas id="face"></canvas>
-
+    <Face ref="face" :rect="rect" @callbackPoints="facePoints" />
     <!-- 撮影ボタン -->
     <Shoot @shoot="shoot" />
     <!-- フラッシュ -->
@@ -27,7 +26,7 @@ import Vid from './components/video/Video';
 import Overlay from './components/video/Overlay';
 import Shoot from './components/shoot/Shoot';
 import Eyes from './components/video/Eyes';
-// import Face from './components/faceModel/Face.vue';
+import Face from './components/faceModel/Face.vue';
 import { wait } from './util/wait';
 import { requestAnimation } from './util/requestAnimation';
 
@@ -44,9 +43,9 @@ export default {
   components: {
     Vid,
     Shoot,
-    Overlay
+    Overlay,
     // Eyes
-    // Face
+    Face
   },
   mounted() {},
   methods: {
@@ -77,6 +76,9 @@ export default {
         rate: face_eyes_data.rate
       };
       // console.log('points', points, face_eyes_data);
+    },
+    facePoints(face_points) {
+      this.points = { face: face_points };
     }
   }
 };
