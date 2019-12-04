@@ -3,10 +3,18 @@
     <!-- 動画 -->
     <Vid @ready="readyVideo" />
     <!-- 撮影した写真を表示 -->
-    <Overlay ref="overlay" :src="src" :rect="rect" @callbackPoints="getPoints" />
+    <Overlay
+      ref="overlay"
+      :src="src"
+      :rect="rect"
+      @callbackPoints="getPoints"
+    />
     <!-- コンタクトレンズ -->
     <!-- <Eyes :src="src" :rect="rect" :points="points" left_right="left" />
     <Eyes :src="src" :rect="rect" :points="points" left_right="right" />-->
+    <!-- 顔の3Dモデル -->
+    <canvas id="face"></canvas>
+
     <!-- 撮影ボタン -->
     <Shoot @shoot="shoot" />
     <!-- フラッシュ -->
@@ -19,6 +27,7 @@ import Vid from './components/video/Video';
 import Overlay from './components/video/Overlay';
 import Shoot from './components/shoot/Shoot';
 import Eyes from './components/video/Eyes';
+// import Face from './components/faceModel/Face.vue';
 import { wait } from './util/wait';
 import { requestAnimation } from './util/requestAnimation';
 
@@ -37,6 +46,7 @@ export default {
     Shoot,
     Overlay
     // Eyes
+    // Face
   },
   mounted() {},
   methods: {
@@ -66,7 +76,7 @@ export default {
         shift: face_eyes_data.shift,
         rate: face_eyes_data.rate
       };
-      // console.log("points", points, face_eyes_data);
+      // console.log('points', points, face_eyes_data);
     }
   }
 };
