@@ -54,6 +54,8 @@ export default {
     },
     //カメラ撮影
     async shoot() {
+      /* eslint-disable */
+
       this.onFlash = true;
       await wait(100);
       this.$refs.overlay.shoot();

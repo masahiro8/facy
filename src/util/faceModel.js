@@ -1,5 +1,5 @@
 /* eslint-disable */
-import SHADER_LOADER from "../../public/js/ShaderLoader.min";
+import ShaderLoader from "./ShaderLoader.min";
 
 export const drawFaceMask = points => {
   //中点を求める
@@ -75,7 +75,7 @@ export const drawFaceMask = points => {
 
     // カメラを作成
     const camera = new THREE.PerspectiveCamera(45, w / h, 1, 10000);
-    camera.position.set(0, 0, +2);
+    camera.position.set(0, 0, +1000);
     camera.lookAt(scene.position);
 
     //軸オブジェクトの生成
