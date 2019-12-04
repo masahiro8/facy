@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="pictureFrame" class="pictureFrame">
     <canvas
       ref="image"
       class="overlay"
@@ -7,46 +7,28 @@
       :width="canvas_rect.width + 'px'"
       :height="canvas_rect.height + 'px'"
     />
-    <canvas
-      ref="overlay"
-      class="overlay"
-      id="overlay"
-      :width="canvas_rect.width + 'px'"
-      :height="canvas_rect.height + 'px'"
-      :class="showDetection ? 'show' : 'hide'"
-    />
-    <!-- <div class="btn">
-      visible
-      <input type="checkbox" @change="toggle" />
-    </div> -->
   </div>
 </template>
 <script>
 import * as _ from "lodash";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
-import { face } from "../../util/face";
+import { adjustVideoSize } from "../../util/adjustVideoSize";
+import faceStore from "../../services/faceStore";
 
 export default {
   data: () => {
     return {
-      showDetection: false,
       canvas_rect: {}
     };
   },
-  mounted() {
-    console.log("overlay mounted");
-  },
+  mounted() {},
   props: {
     rect: Object,
     src: HTMLVideoElement
   },
   methods: {
-    toggle(e) {
-      this.showDetection = !this.showDetection;
-    },
     //撮影
-    shoot() {
-      console.log("shoot");
+    async shoot() {
       const size = {
         w: this.canvas_rect.width,
         h: this.canvas_rect.height
@@ -62,24 +44,6 @@ export default {
         dw: WINDOW_WIDTH,
         dh: WINDOW_HEIGHT
       };
-
-      //ここから画像処理用オーバーレイ
-      //video(this.src)画像をoverlayに描画
-      const ctx = this.$refs.overlay.getContext("2d");
-      ctx.clearRect(0, 0, this.canvas_rect.width, this.canvas_rect.height);
-      ctx.save();
-      ctx.drawImage(
-        this.src,
-        rects.sx,
-        rects.sy,
-        rects.sw,
-        rects.sh,
-        0,
-        0,
-        rects.dw,
-        rects.dh
-      );
-      ctx.restore();
 
       //ここから顔画像
       //video(this.src)画像をoverlayに描画
@@ -97,26 +61,15 @@ export default {
         rects.dw,
         rects.dh
       );
-      ctx_img.restore();
-      this.faceDetect();
+
+      //basee64に変換
+      // const base64 = ctx_img.toDataURL("image/jpeg");
+      // const result = await faceStore.uploadImage({ base64 });
+      // if (!result.result) {
+      //   alert("通信エラー");
+      // }
     },
-    pix(n) {
-      return n + "px";
-    },
-    async faceDetect() {
-      //ここで頂点を取得
-      const points = await face.getEyesPoints();
-      //ここでfaceAPiの両目のポイントを取得
-      const eyes_points_data = face.getFaceEyesData();
-      //リサイズ
-      const _width = this.rect.width - this.rect.x * 2;
-      this.canvas_rect = {
-        width: _width,
-        height: this.rect.height
-      };
-      console.log("faceDetect");
-      this.$emit("callbackPoints", points, eyes_points_data);
-    }
+    async getPoints() {}
   },
   watch: {
     src: {
@@ -124,15 +77,23 @@ export default {
       handler(newValue, oldValue) {
         if (newValue !== oldValue) {
           this.src = newValue;
-          //faceAPiに取得用imageと描画用canvasを渡す
-          face.init(this.$refs.image, this.$refs.overlay);
         }
       }
     },
     rect: {
       immediate: true,
       handler(newValue, oldValue) {
-        if (newValue !== oldValue && this.$refs.overlay) {
+        if (newValue !== oldValue) {
+          console.log("picture rect", newValue);
+          //フレーム
+          const rect = this.$refs.pictureFrame.getBoundingClientRect();
+          const frame = {
+            left: (WINDOW_WIDTH - rect.width) / 2
+          };
+          this.$refs.pictureFrame.style.left = `${frame.left}px`;
+          this.$refs.image.style.left = `-${frame.left}px`;
+
+          //画像
           const _width = newValue.width - newValue.x * 2;
           this.canvas_rect = {
             width: _width,
@@ -146,6 +107,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "./canvas.scss";
+.pictureFrame {
+  position: absolute;
+  width: 375px;
+  height: 812px;
+  overflow: hidden;
+}
 .btn {
   position: absolute;
   z-index: 3;

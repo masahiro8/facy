@@ -1,5 +1,5 @@
 <template>
-  <div class="videoFrame">
+  <div ref="videoframe" class="videoFrame">
     <!-- 取り込むカメラ映像 -->
     <video id="srcVideo" class="video" ref="video" playsinline muted autoplay />
   </div>
@@ -15,11 +15,17 @@ export default {
   },
   async mounted() {
     await this.initCamera(this.$refs.video);
-    const info = adjustVideoSize(this.$refs.video);
-    console.log("ready", info);
+    const { left } = this.videoFramAdjust();
+    const info = adjustVideoSize(this.$refs.video, { left });
     this.$emit("ready", info);
   },
   methods: {
+    videoFramAdjust() {
+      const rect = this.$refs.videoframe.getBoundingClientRect();
+      const left = (WINDOW_WIDTH - rect.width) / 2;
+      this.$refs.videoframe.style.left = `${left}px`;
+      return { left };
+    },
     //カメラを起動
     initCamera(video) {
       return new Promise((resolved, rejected) => {
@@ -53,7 +59,6 @@ export default {
   left: 0;
   top: 0;
   z-index: 1;
-  // filter: brightness(130%) saturate(80%);
   transform: scale(-1, 1);
 }
 

@@ -4,22 +4,22 @@
     <!-- 動画 -->
     <Vid @ready="readyVideo" />
     <!-- 撮影した写真を表示 -->
-    <Overlay
-      ref="overlay"
+    <Picture
+      ref="picture"
       :src="src"
       :rect="rect"
       @callbackPoints="getPoints"
     />
-    <!-- コンタクトレンズ -->
-    <Eyes :src="src" :rect="rect" :points="points" left_right="left" />
-    <Eyes :src="src" :rect="rect" :points="points" left_right="right" />
+    <ContextConsumer :contextKey="[FACE_POINTS]" v-slot="{ context }">
+      <!-- 目 -->
+      <Eyes :rect="rect" :points="context[FACE_POINTS]" :zIndex="4" />
+    </ContextConsumer>
     <!-- 撮影ボタン -->
     <Shoot v-if="!shooted" @shoot="shoot" />
 
     <!-- 商品リスト -->
     <div v-if="shooted" class="select-lens-area">
       <ProductList :items="products" @setLensColor="setLensColor" />
-
       <ToggleButton @toggle="show = !show" :isOpen="show" />
       <transition name="slide-fade">
         <CategoryList :items="categories" v-if="show" />
@@ -33,13 +33,15 @@
 <script>
 import Header from "./components/header/Header.vue";
 import Vid from "./components/video/Video";
-import Overlay from "./components/video/Overlay";
+import Picture from "./components/video/Picture";
 import Shoot from "./components/shoot/Shoot";
-import Eyes from "./components/video/Eyes";
 import ProductList from "./components/products/ProductList.vue";
 import ToggleButton from "./components/button/CategoryToggleButton.vue";
 import CategoryList from "./components/category/CategoryList.vue";
 import { wait } from "./util/wait";
+import { FACE_STORE_CONTEXT_KEYS } from "./services/faceStore";
+import ContextConsumer from "./context/Context";
+import { Eyes } from "./components/faceOverlay/Eyes";
 
 export default {
   name: "app",
@@ -52,84 +54,26 @@ export default {
       shooted: false,
       show: false,
       lensColor: null,
-      products: [
-        {
-          id: 1,
-          category: "candy",
-          color: "brown mariage",
-          image: "lens01_brownmariage.png",
-          url: "http://backham.me/"
-        },
-        {
-          id: 2,
-          category: "candy",
-          color: "sheer lueur",
-          image: "lens02_sheerlueur.png",
-          url: "http://backham.me/"
-        },
-        {
-          id: 3,
-          category: "candy",
-          color: "innocent glam",
-          image: "lens03_innocentglam.png",
-          url: "http://backham.me/"
-        },
-        {
-          id: 4,
-          category: "candy",
-          color: "silhouette duo",
-          image: "lens04_silhouetteduo.png",
-          url: "http://backham.me/"
-        },
-        {
-          id: 5,
-          category: "yummy",
-          color: "antique beige",
-          image: "lens05_01_antiquebeige.png",
-          url: "http://backham.me/"
-        },
-        {
-          id: 6,
-          category: "yummy",
-          color: "chiffon brown",
-          image: "lens05_02_chiffonbrown.png",
-          url: "http://backham.me/"
-        },
-        {
-          id: 7,
-          category: "yummy",
-          color: "urban noir",
-          image: "lens05_03_urbannoir.png",
-          url: "http://backham.me/"
-        }
-      ],
-      categories: [
-        {
-          id: 1,
-          category: "candy",
-          image: "tough2_bt.png"
-        },
-        {
-          id: 2,
-          category: "yummy",
-          image: "yummy_n2_bt.png"
-        }
-      ]
+      products: [],
+      categories: [],
+      FACE_POINTS: FACE_STORE_CONTEXT_KEYS
     };
   },
   components: {
     Header,
     Vid,
     Shoot,
-    Overlay,
-    Eyes,
+    Picture,
     ProductList,
     ToggleButton,
-    CategoryList
+    CategoryList,
+    ContextConsumer,
+    Eyes
   },
   mounted() {},
   methods: {
     readyVideo(value) {
+      console.log("readyVideo", value.rect);
       this.rect = value.rect;
       this.src = value.src;
     },
@@ -137,7 +81,7 @@ export default {
     async shoot() {
       this.onFlash = true;
       await wait(100);
-      this.$refs.overlay.shoot();
+      this.$refs.picture.shoot();
       await wait(240);
       this.onFlash = false;
       this.shooted = true;
