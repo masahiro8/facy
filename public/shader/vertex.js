@@ -8,5 +8,5 @@ void main()	{
   // vColor = color;
   //テクスチャ座標を受け渡す
   vUv = uv;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position*350.0, 1.0);
 }

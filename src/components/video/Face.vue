@@ -39,6 +39,7 @@ export default {
             width: _width,
             height: newValue.height
           };
+          console.log("canvas_rect", this.canvas_rect);
         }
       }
     },
@@ -50,22 +51,28 @@ export default {
           JSON.stringify(newValue) !== JSON.stringify(oldValue) &&
           Object.keys(newValue).length > 0
         ) {
-          console.log("rate", newValue);
-          // console.log("newValue", newValue.eyes.result.landmarks.positions);
-          const _points = newValue.eyes.result.landmarks.positions;
+          console.log("newValue", newValue);
+          console.log(
+            "newValue relative positions",
+            newValue.eyes.result.landmarks.relativePositions
+          );
+          const _points = newValue.eyes.result.landmarks.relativePositions;
           let points = [];
           const shift = newValue.shift;
           const rate = newValue.rate;
           for (let i = 0; i < _points.length; i++) {
             points.push({
-              x: _points[i].x + shift.x,
-              y: _points[i].y + shift.y
+              x: _points[i]._x,
+              y: _points[i]._y
             });
           }
 
-          // console.log(points);
-          // eslint-disable-next-line
-          drawFaceMask(points); // eslint-disable-line
+          const boxWidth = newValue.eyes.result.landmarks.imageWidth;
+          const boxHeight = newValue.eyes.result.landmarks.imageHeight;
+
+          console.log(boxWidth, boxHeight);
+
+          drawFaceMask(points, shift, boxWidth, boxHeight); // eslint-disable-line
         }
       }
     }
@@ -76,7 +83,7 @@ export default {
 @import "./canvas.scss";
 .overlay {
   &.face {
-    // mix-blend-mode: multiply;
+    mix-blend-mode: multiply;
   }
 }
 </style>

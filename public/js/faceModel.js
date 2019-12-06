@@ -1,5 +1,7 @@
-function drawFaceMask(points) {
+function drawFaceMask(points, shift, boxWidth, boxHeight) {
   console.log("points", points);
+  console.log("shift", shift);
+
   //中点を求める
   const getMidPoint = (startPoint, endPoint) => {
     let newPoint = {};
@@ -33,7 +35,6 @@ function drawFaceMask(points) {
     x: (points[39].x + points[42].x + points[30].x) / 3,
     y: (points[39].y + points[42].y + points[30].y) / 3
   };
-  // console.log(centerPoint);
 
   for (let i = 0; i < points.length; i++) {
     points[i].z = 0;
@@ -76,10 +77,10 @@ function drawFaceMask(points) {
       w / 2,
       h / 2,
       -h / 2,
-      1,
-      1000
+      -500,
+      500
     );
-    camera.position.set(0, 0, +10);
+    camera.position.set(0, 0, 1);
     camera.lookAt(scene.position);
 
     //軸オブジェクトの生成
@@ -100,6 +101,8 @@ function drawFaceMask(points) {
     for (let i = 0; i < points.length; i++) {
       positions[i * 3] = points[i].x - centerPoint.x;
       positions[i * 3 + 1] = -(points[i].y - centerPoint.y);
+      // positions[i * 3] = points[i].x;
+      // positions[i * 3 + 1] = -points[i].y;
       positions[i * 3 + 2] = points[i].z;
 
       colors[i * 3] = 1.0;
@@ -631,10 +634,185 @@ function drawFaceMask(points) {
     indexes[382] = 12;
     indexes[383] = 54;
 
+    //TODO テクスチャが上下逆さま。要修正。
+    const uvsCoord = [
+      0.01,
+      0.24,
+      0.02,
+      0.38,
+      0.04,
+      0.52,
+      0.08,
+      0.64,
+      0.12,
+      0.76,
+      0.18,
+      0.86,
+      0.26,
+      0.92,
+      0.36,
+      0.96,
+      0.5,
+      0.98,
+      0.64,
+      0.96,
+      0.74,
+      0.92,
+      0.82,
+      0.86,
+      0.88,
+      0.76,
+      0.92,
+      0.64,
+      0.96,
+      0.52,
+      0.98,
+      0.38,
+      0.99,
+      0.24,
+      0.08,
+      0.1,
+      0.15,
+      0.04,
+      0.22,
+      0.01,
+      0.3,
+      0.01,
+      0.38,
+      0.04,
+      0.62,
+      0.04,
+      0.7,
+      0.01,
+      0.78,
+      0.01,
+      0.85,
+      0.04,
+      0.92,
+      0.1,
+      0.5,
+      0.18,
+      0.5,
+      0.26,
+      0.5,
+      0.34,
+      0.5,
+      0.42,
+      0.43,
+      0.48,
+      0.46,
+      0.49,
+      0.5,
+      0.5,
+      0.54,
+      0.49,
+      0.57,
+      0.48,
+      0.2,
+      0.2,
+      0.26,
+      0.16,
+      0.32,
+      0.16,
+      0.38,
+      0.2,
+      0.32,
+      0.24,
+      0.26,
+      0.24,
+      0.62,
+      0.2,
+      0.68,
+      0.16,
+      0.74,
+      0.16,
+      0.8,
+      0.2,
+      0.74,
+      0.24,
+      0.68,
+      0.24,
+      0.32,
+      0.68,
+      0.39,
+      0.63,
+      0.45,
+      0.6,
+      0.5,
+      0.62,
+      0.55,
+      0.6,
+      0.61,
+      0.63,
+      0.68,
+      0.68,
+      0.64,
+      0.71,
+      0.59,
+      0.74,
+      0.53,
+      0.76,
+      0.47,
+      0.76,
+      0.41,
+      0.74,
+      0.36,
+      0.71,
+      0.41,
+      0.66,
+      0.47,
+      0.65,
+      0.53,
+      0.65,
+      0.59,
+      0.66,
+      0.55,
+      0.69,
+      0.5,
+      0.7,
+      0.45,
+      0.69,
+      0.45,
+      0.34,
+      0.38,
+      0.34,
+      0.35,
+      0.35,
+      0.32,
+      0.35,
+      0.29,
+      0.34,
+      0.2,
+      0.36,
+      0.21,
+      0.43,
+      0.22,
+      0.5,
+      0.24,
+      0.56,
+      0.55,
+      0.34,
+      0.62,
+      0.34,
+      0.65,
+      0.35,
+      0.68,
+      0.35,
+      0.71,
+      0.34,
+      0.8,
+      0.36,
+      0.79,
+      0.43,
+      0.78,
+      0.5,
+      0.76,
+      0.56
+    ];
+
     // 各頂点のテクスチャ座標
-    for (let i = 0; i < points.length; i++) {
-      uvs[i * 2] = points[i].x;
-      uvs[i * 2 + 1] = points[i].y;
+    for (let i = 0; i < uvsCoord.length; i++) {
+      uvs[i] = uvsCoord[i];
     }
 
     // console.log(positions);
@@ -651,7 +829,7 @@ function drawFaceMask(points) {
 
     //テクスチャの読み込み
     const loader = new THREE.TextureLoader();
-    const texture = loader.load("../img/texture01.jpg");
+    const texture = loader.load("../img/eyeshadow01.png");
     texture.minFilter = THREE.LinearFilter;
     texture.magFilter = THREE.LinearFilter;
 
@@ -664,20 +842,29 @@ function drawFaceMask(points) {
     const material = new THREE.ShaderMaterial({
       vertexShader: vs,
       fragmentShader: fs,
-      uniforms: uniforms
+      uniforms: uniforms,
+      blending: THREE.AdditiveBlending,
+      depthWrite: true,
+      transparent: true,
+      side: THREE.DoubleSide
     });
 
     //オブジェクト生成
-    const plane = new THREE.Mesh(geometry, material);
+    const face = new THREE.Mesh(geometry, material);
+    face.position.set(
+      -w / 2 + shift.x + centerPoint.x * boxWidth,
+      h / 2 - shift.y - centerPoint.y * boxHeight,
+      0
+    );
 
     //オブジェクトをシーンへ追加
-    scene.add(plane);
+    scene.add(face);
 
     tick();
 
     // 毎フレーム時に実行されるループイベント
     function tick() {
-      // plane.rotation.y += 0.02;
+      // face.rotation.y += 0.02;
       renderer.render(scene, camera); // レンダリング
       const sec = performance.now() / 1000;
       requestAnimationFrame(tick);
