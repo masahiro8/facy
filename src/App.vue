@@ -1,30 +1,34 @@
 <template>
   <div id="app">
     <Header />
-    <!-- 動画 -->
-    <Vid @ready="readyVideo" />
-    <!-- 撮影した写真を表示 -->
-    <Picture
-      ref="picture"
-      :src="src"
-      :rect="rect"
-      @callbackPoints="getPoints"
-    />
-    <ContextConsumer :contextKey="[FACE_POINTS]" v-slot="{ context }">
-      <!-- 目 -->
-      <Eyes :rect="rect" :points="context[FACE_POINTS]" :zIndex="4" />
-    </ContextConsumer>
+    <AppFrame :rect="rect">
+      <!-- 動画 -->
+      <Vid @ready="readyVideo" />
+      <!-- 撮影した写真を表示 -->
+      <Picture ref="picture" :src="src" :rect="rect" @callbackPoints="getPoints" />
+      <ContextConsumer :contextKey="[FACE_POINTS,'PRODUCT_ID']" v-slot="{ context }">
+        <!-- 目 -->
+        <Eyes
+          :rect="rect"
+          :points="context[FACE_POINTS]"
+          :lensId="context['PRODUCT_ID']"
+          :zIndex="4"
+        />
+      </ContextConsumer>
+    </AppFrame>
     <!-- 撮影ボタン -->
     <Shoot v-if="!shooted" @shoot="shoot" />
-
     <!-- 商品リスト -->
-    <div v-if="shooted" class="select-lens-area">
-      <ProductList :items="products" @setLensColor="setLensColor" />
-      <ToggleButton @toggle="show = !show" :isOpen="show" />
-      <transition name="slide-fade">
-        <CategoryList :items="categories" v-if="show" />
-      </transition>
-    </div>
+    <ProductFrame :rect="rect">
+      <div v-if="shooted" class="select-lens-area">
+        <ProductList :productType="PRODUCT_TYPE.LENS" @setProductId="setProductId" />
+        <!-- とりあえずカテゴリは非表示 -->
+        <!-- <ToggleButton @toggle="show = !show" :isOpen="show" /> -->
+        <transition name="slide-fade">
+          <CategoryList :items="categories" v-if="show" />
+        </transition>
+      </div>
+    </ProductFrame>
     <!-- フラッシュ -->
     <div v-if="onFlash" id="white"></div>
   </div>
@@ -36,12 +40,16 @@ import Vid from "./components/video/Video";
 import Picture from "./components/video/Picture";
 import Shoot from "./components/shoot/Shoot";
 import ProductList from "./components/products/ProductList.vue";
-import ToggleButton from "./components/button/CategoryToggleButton.vue";
+// import ToggleButton from "./components/button/CategoryToggleButton.vue";
 import CategoryList from "./components/category/CategoryList.vue";
 import { wait } from "./util/wait";
 import { FACE_STORE_CONTEXT_KEYS } from "./services/faceStore";
 import ContextConsumer from "./context/Context";
+import { ContextStore } from "./context/Store";
 import { Eyes } from "./components/faceOverlay/Eyes";
+import AppFrame from "./components/frame/AppFrame";
+import ProductFrame from "./components/frame/ProductFrame";
+import { PRODUCT_TYPE } from "./constants";
 
 export default {
   name: "app",
@@ -56,16 +64,19 @@ export default {
       lensColor: null,
       products: [],
       categories: [],
-      FACE_POINTS: FACE_STORE_CONTEXT_KEYS
+      FACE_POINTS: FACE_STORE_CONTEXT_KEYS,
+      PRODUCT_TYPE: PRODUCT_TYPE
     };
   },
   components: {
     Header,
+    AppFrame,
+    ProductFrame,
     Vid,
     Shoot,
     Picture,
     ProductList,
-    ToggleButton,
+    // ToggleButton,
     CategoryList,
     ContextConsumer,
     Eyes
@@ -73,7 +84,7 @@ export default {
   mounted() {},
   methods: {
     readyVideo(value) {
-      console.log("readyVideo", value.rect);
+      // console.log("readyVideo", value.rect);
       this.rect = value.rect;
       this.src = value.src;
     },
@@ -96,10 +107,9 @@ export default {
       };
       console.log("points", points, face_eyes_data);
     },
-    setLensColor(id) {
-      this.id = id;
-      // console.log("set lens0" + id);
-      return this.id;
+    setProductId({ productId, productType }) {
+      ContextStore.setContext("PRODUCT_ID", productId);
+      // console.log("product", productId, productType);
     }
   }
 };
@@ -128,7 +138,7 @@ body {
 
 .select-lens-area {
   z-index: 10;
-  position: fixed;
+  position: absolute;
   bottom: 0;
   width: 100%;
 }

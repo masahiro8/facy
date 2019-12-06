@@ -1,49 +1,48 @@
 <template>
-  <div
-    class="product"
-    :class="selected ? 'selected' : ''"
-    @click="selectedLens()"
-  >
+  <div class="product" :class="selectSelf ? 'selected' : ''" @click="selectedProduct()">
     <transition name="rotate-fade">
-      <CheckCircle v-if="selected" class="icon" :size="24" />
+      <CheckCircle v-if="selectSelf" class="icon" :size="24" />
     </transition>
     <div class="product-image">
       <img :src="getImagePath(item)" />
     </div>
     <p class="description">{{ item.color }}</p>
     <transition name="slide-fade">
-      <a class="shop-link" :href="item.url" target="_blank" v-if="selected"
-        >Buy now !</a
-      >
+      <a class="shop-link" :href="item.url" target="_blank" v-if="selectSelf">Buy now !</a>
     </transition>
   </div>
 </template>
-
 <script>
 import CheckCircle from "vue-material-design-icons/CheckCircle.vue";
 export default {
+  data: () => {
+    return {
+      selectSelf: false
+    };
+  },
   props: {
     item: {
       type: Object
-    }
+    },
+    selected: Number
   },
   components: {
     CheckCircle
-  },
-  data: () => {
-    return {
-      selected: false
-    };
   },
   methods: {
     getImagePath: item => {
       return `${window.location.origin}/images/${item.category}/${item.image}`;
     },
-    selectedLens() {
-      this.selected = !this.selected;
-      if (this.selected) {
-        console.log(this.item.id);
-        this.$emit("setLensColor", this.item.id);
+    selectedProduct() {
+      this.selectSelf = !this.selectSelf;
+      this.$emit("setProductId", this.selectSelf ? this.item.id : null);
+    }
+  },
+  watch: {
+    selected: {
+      immediate: true,
+      handler(newValue) {
+        this.selectSelf = newValue === this.item.id;
       }
     }
   }

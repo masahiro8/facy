@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import api from "./constants";
+import { faceapi } from "./api";
 import { ContextStore } from "../context/Store";
 
 export const FACE_STORE_CONTEXT_KEYS = {
@@ -20,14 +20,16 @@ const _faceStore = () => {
    *
    * @param {base64} param0
    */
-  const uploadImage = ({ base64 }) => {
+  const uploadImage = params => {
     return new Promise(async resolved => {
-      const response = await api.post("face", base64);
+      // console.log("uploadimage", params);
+      const response = await faceapi.post("/face", params);
       if (response.result) {
         let data = { ...formats };
-        data.points = response.points;
-        data.base64 = base64;
+        data.points = JSON.parse(response.data)["points"];
+        data.base64 = params.face_image;
         data.id = _.random(9999999999);
+        // console.log("data", data);
         images.push(data);
         ContextStore.setContext(
           FACE_STORE_CONTEXT_KEYS.FACE_POINTS,

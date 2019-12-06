@@ -1,69 +1,27 @@
-[
-  {
-    "lends": {
-      "products": [
-        {
-          "id": 1,
-          "category": "candy",
-          "color": "brown mariage",
-          "image": "lens01_brownmariage.png",
-          "url": "http://backham.me/"
-        },
-        {
-          "id": 2,
-          "category": "candy",
-          "color": "sheer lueur",
-          "image": "lens02_sheerlueur.png",
-          "url": "http://backham.me/"
-        },
-        {
-          "id": 3,
-          "category": "candy",
-          "color": "innocent glam",
-          "image": "lens03_innocentglam.png",
-          "url": "http://backham.me/"
-        },
-        {
-          "id": 4,
-          "category": "candy",
-          "color": "silhouette duo",
-          "image": "lens04_silhouetteduo.png",
-          "url": "http://backham.me/"
-        },
-        {
-          "id": 5,
-          "category": "yummy",
-          "color": "antique beige",
-          "image": "lens05_01_antiquebeige.png",
-          "url": "http://backham.me/"
-        },
-        {
-          "id": 6,
-          "category": "yummy",
-          "color": "chiffon brown",
-          "image": "lens05_02_chiffonbrown.png",
-          "url": "http://backham.me/"
-        },
-        {
-          "id": 7,
-          "category": "yummy",
-          "color": "urban noir",
-          "image": "lens05_03_urbannoir.png",
-          "url": "http://backham.me/"
-        }
-      ],
-      "category": [
-        {
-          "id": 1,
-          "category": "candy",
-          "image": "tough2_bt.png"
-        },
-        {
-          "id": 2,
-          "category": "yummy",
-          "image": "yummy_n2_bt.png"
-        }
-      ]
-    }
+{
+  "lens": {
+    "products": [
+      {
+        "id": 1,
+        "category": "candy",
+        "color": "brown mariage",
+        "image": "lens01_brownmariage.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 2,
+        "category": "candy",
+        "color": "sheer lueur",
+        "image": "lens02_sheerlueur.png",
+        "url": "http://backham.me/"
+      }
+    ],
+    "category": [
+      {
+        "id": 1,
+        "category": "candy",
+        "image": "tough2_bt.png"
+      }
+    ]
   }
-]
+}

@@ -1,10 +1,11 @@
 import axios from "axios";
-import { ENDPOINT } from "./constants";
+import { POINTS, PRODUCT } from "./endpoints";
 
 const request = options => {
   const onSuccess = response => {
+    console.log("onSuccess !! ", response);
     //ここでステータスを判定
-    if (response.data.status === 200) {
+    if (response.status === 200) {
       // console.log("onSuccess !! ", response);
       return {
         result: true,
@@ -13,7 +14,7 @@ const request = options => {
     } else {
       // console.log('onError !! ', response.data);
       if (response.data.status === 503) {
-        vAlert.show("メンテナンス中");
+        alert("メンテナンス中");
       }
       return {
         result: false,
@@ -35,47 +36,84 @@ const request = options => {
     .catch(onError);
 };
 
-export default {
-  get: async (service, params = {}) => {
+const connect = {
+  get: async (url, params = {}) => {
     //キャッシュ
-    const URL = ENDPOINT.face + service;
     const response = await request({
       method: "GET",
-      url: URL,
+      url: url,
       params: params
     });
     return response;
   },
 
-  post: (service, params) => {
-    // console.log('post api params', params);
+  post: (url, params) => {
+    console.log("post", params);
     return request({
       method: "POST",
-      url: ENDPOINT.face + service,
+      url: url,
       data: params,
       headers: {
         "Content-type": "application/json; charset=UTF-8"
       }
     });
   },
-  put: (service, id, params) => {
+  put: (url, params) => {
     return request({
       method: "POST",
-      url: ENDPOINT.face + service + "/" + id,
+      url: url,
       data: params,
       headers: {
         "Content-type": "application/json; charset=UTF-8"
       }
     });
   },
-  delete: (service, params) => {
+  delete: (url, params) => {
     return request({
       method: "DELETE",
-      url: ENDPOINT.face + service,
+      url: url,
       data: params,
       headers: {
         "Content-type": "application/json; charset=UTF-8"
       }
     });
+  }
+};
+
+export const faceapi = {
+  get: (service, params) => {
+    const URL = POINTS + service;
+    return connect.get(URL, params);
+  },
+  post: (service, params) => {
+    const URL = POINTS + service;
+    return connect.post(URL, params);
+  },
+  put: async (service, id, params) => {
+    const URL = POINTS + service + "/" + id;
+    return connect.post(URL, params);
+  },
+  delete: async (service, params) => {
+    const URL = POINTS + service;
+    return connect.post(URL, params);
+  }
+};
+
+export const productapi = {
+  get: async (service, params) => {
+    const URL = PRODUCT + service;
+    return await connect.get(URL, params);
+  },
+  post: (service, params) => {
+    const URL = PRODUCT + service;
+    return connect.post(URL, params);
+  },
+  put: async (service, id, params) => {
+    const URL = PRODUCT + service + "/" + id;
+    return connect.post(URL, params);
+  },
+  delete: async (service, params) => {
+    const URL = PRODUCT + service;
+    return connect.post(URL, params);
   }
 };

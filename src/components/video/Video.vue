@@ -23,7 +23,7 @@ export default {
     videoFramAdjust() {
       const rect = this.$refs.videoframe.getBoundingClientRect();
       const left = (WINDOW_WIDTH - rect.width) / 2;
-      this.$refs.videoframe.style.left = `${left}px`;
+      // this.$refs.videoframe.style.left = `${left}px`;
       return { left };
     },
     //カメラを起動
@@ -65,7 +65,8 @@ export default {
 .videoFrame {
   position: absolute;
   width: 375px;
-  height: 812px;
+  height: 100%;
+  // height: 812px;
   overflow: hidden;
 }
 </style>

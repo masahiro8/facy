@@ -5,7 +5,6 @@
     </li>
   </ul>
 </template>
-
 <script>
 import Category from "./Category.vue";
 export default {

@@ -1,23 +1,28 @@
 <template>
   <div ref="pictureFrame" class="pictureFrame">
-    <canvas
-      ref="image"
-      class="overlay"
-      id="image"
-      :width="canvas_rect.width + 'px'"
-      :height="canvas_rect.height + 'px'"
-    />
+    <LoadingOverlay :loading="loading" v-slot="{ context }">
+      <canvas
+        ref="image"
+        class="overlay"
+        :class="context"
+        id="image"
+        :width="canvas_rect.width + 'px'"
+        :height="canvas_rect.height + 'px'"
+      />
+    </LoadingOverlay>
   </div>
 </template>
 <script>
 import * as _ from "lodash";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
 import { adjustVideoSize } from "../../util/adjustVideoSize";
-import faceStore from "../../services/faceStore";
+import { faceStore } from "../../services/faceStore";
+import LoadingOverlay from "../loadingOverlay/LoadingOverlay";
 
 export default {
   data: () => {
     return {
+      loading: false,
       canvas_rect: {}
     };
   },
@@ -25,6 +30,9 @@ export default {
   props: {
     rect: Object,
     src: HTMLVideoElement
+  },
+  components: {
+    LoadingOverlay
   },
   methods: {
     //撮影
@@ -63,11 +71,19 @@ export default {
       );
 
       //basee64に変換
-      // const base64 = ctx_img.toDataURL("image/jpeg");
-      // const result = await faceStore.uploadImage({ base64 });
-      // if (!result.result) {
-      //   alert("通信エラー");
-      // }
+      const base64 = this.$refs.image.toDataURL("image/jpeg").split(",")[1];
+      const result = await faceStore.uploadImage({
+        face_image: base64
+      });
+      if (!result.result) {
+        alert("通信エラー");
+      }
+
+      //仮通信
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
+      }, 1000);
     },
     async getPoints() {}
   },
@@ -90,7 +106,7 @@ export default {
           const frame = {
             left: (WINDOW_WIDTH - rect.width) / 2
           };
-          this.$refs.pictureFrame.style.left = `${frame.left}px`;
+          // this.$refs.pictureFrame.style.left = `${frame.left}px`;
           this.$refs.image.style.left = `-${frame.left}px`;
 
           //画像
@@ -110,8 +126,14 @@ export default {
 .pictureFrame {
   position: absolute;
   width: 375px;
-  height: 812px;
+  height: 100%;
+  // height: 812px;
   overflow: hidden;
+}
+.overlay {
+  &.is {
+    filter: grayscale(0.5) blur(8px);
+  }
 }
 .btn {
   position: absolute;

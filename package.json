@@ -18,7 +18,8 @@
     "node-sass": "^4.13.0",
     "sass-loader": "^8.0.0",
     "vue": "^2.6.10",
-    "vue-material-design-icons": "^4.3.0"
+    "vue-material-design-icons": "^4.3.0",
+    "vue2-touch-events": "^2.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.0.0",
@@ -41,6 +42,7 @@
     ],
     "rules": {
       "no-console": 0,
+      "no-debugger": 0,
       "no-unused-vars": "off",
       "no-unused-components": 0
     },
