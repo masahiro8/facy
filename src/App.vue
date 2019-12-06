@@ -6,12 +6,13 @@
       <Vid @ready="readyVideo" />
       <!-- 撮影した写真を表示 -->
       <Picture ref="picture" :src="src" :rect="rect" @callbackPoints="getPoints" />
-      <ContextConsumer :contextKey="[FACE_POINTS,'PRODUCT_ID']" v-slot="{ context }">
+      <ContextConsumer :contextKey="[POINTS_KEY,'PRODUCT_ID','PRODUCTS']" v-slot="{ context }">
         <!-- 目 -->
         <Eyes
           :rect="rect"
-          :points="context[FACE_POINTS]"
-          :lensId="context['PRODUCT_ID']"
+          :products="context['PRODUCTS']"
+          :points="context[POINTS_KEY]"
+          :productId="context['PRODUCT_ID']"
           :zIndex="4"
         />
       </ContextConsumer>
@@ -46,7 +47,7 @@ import { wait } from "./util/wait";
 import { FACE_STORE_CONTEXT_KEYS } from "./services/faceStore";
 import ContextConsumer from "./context/Context";
 import { ContextStore } from "./context/Store";
-import { Eyes } from "./components/faceOverlay/Eyes";
+import Eyes from "./components/faceOverlay/Eyes.vue";
 import AppFrame from "./components/frame/AppFrame";
 import ProductFrame from "./components/frame/ProductFrame";
 import { PRODUCT_TYPE } from "./constants";
@@ -64,7 +65,7 @@ export default {
       lensColor: null,
       products: [],
       categories: [],
-      FACE_POINTS: FACE_STORE_CONTEXT_KEYS,
+      POINTS_KEY: FACE_STORE_CONTEXT_KEYS.EYES,
       PRODUCT_TYPE: PRODUCT_TYPE
     };
   },
@@ -84,7 +85,6 @@ export default {
   mounted() {},
   methods: {
     readyVideo(value) {
-      // console.log("readyVideo", value.rect);
       this.rect = value.rect;
       this.src = value.src;
     },
@@ -105,11 +105,9 @@ export default {
         shift: face_eyes_data.shift,
         rate: face_eyes_data.rate
       };
-      console.log("points", points, face_eyes_data);
     },
     setProductId({ productId, productType }) {
-      ContextStore.setContext("PRODUCT_ID", productId);
-      // console.log("product", productId, productType);
+      ContextStore.setContext("PRODUCT_ID", { productId });
     }
   }
 };

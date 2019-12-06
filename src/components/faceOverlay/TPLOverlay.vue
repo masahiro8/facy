@@ -18,6 +18,7 @@ export default {
   props: {
     rect: Object,
     points: Object,
+    productId: Number,
     zIndex: {
       type: Number,
       default: 3
@@ -27,9 +28,16 @@ export default {
     draw() {}
   },
   watch: {
+    productId: {
+      immediate: true,
+      handler(newValue, oldValue) {
+        console.log("Overlays productId", newValue);
+      }
+    },
     points: {
       immediate: true,
       handler(newValue, oldValue) {
+        console.log("Overlays points", newValue);
         if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
           this.draw();
         }
@@ -38,6 +46,7 @@ export default {
     rect: {
       immediate: true,
       handler(newValue, oldValue) {
+        console.log("Overlays rect", newValue);
         if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
           const _width = newValue.width - newValue.x * 2;
           this.canvas_rect = {

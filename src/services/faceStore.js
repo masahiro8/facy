@@ -3,7 +3,7 @@ import { faceapi } from "./api";
 import { ContextStore } from "../context/Store";
 
 export const FACE_STORE_CONTEXT_KEYS = {
-  FACE_POINTS: "FACE_POINTS"
+  EYES: "eyes"
 };
 
 const _faceStore = () => {
@@ -29,12 +29,9 @@ const _faceStore = () => {
         data.points = JSON.parse(response.data)["points"];
         data.base64 = params.face_image;
         data.id = _.random(9999999999);
-        // console.log("data", data);
+        console.log("data", data);
         images.push(data);
-        ContextStore.setContext(
-          FACE_STORE_CONTEXT_KEYS.FACE_POINTS,
-          data.points
-        );
+        ContextStore.setContext(FACE_STORE_CONTEXT_KEYS.EYES, data.points);
         resolved({ result: true });
       } else {
         resolved({ result: false });

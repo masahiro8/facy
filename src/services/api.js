@@ -3,7 +3,7 @@ import { POINTS, PRODUCT } from "./endpoints";
 
 const request = options => {
   const onSuccess = response => {
-    console.log("onSuccess !! ", response);
+    // console.log("onSuccess !! ", response);
     //ここでステータスを判定
     if (response.status === 200) {
       // console.log("onSuccess !! ", response);
@@ -48,7 +48,6 @@ const connect = {
   },
 
   post: (url, params) => {
-    console.log("post", params);
     return request({
       method: "POST",
       url: url,

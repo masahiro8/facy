@@ -10,6 +10,7 @@
 import Product from "./Product.vue";
 import { productapi } from "../../services/api";
 import { PRODUCT_TYPE } from "../../constants";
+import { ContextStore } from "../../context/Store";
 
 export default {
   data: () => {
@@ -50,6 +51,7 @@ export default {
     async loadProducts() {
       const result = await productapi.get("", {});
       this.items = result.data[this.productType].products;
+      ContextStore.setContext("PRODUCTS", this.items);
     }
   }
 };
