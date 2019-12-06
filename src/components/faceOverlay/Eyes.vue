@@ -96,14 +96,14 @@ export default {
       };
 
       drawMask(this.$refs.canvas_left, left.eyelid);
-      // drawCenter(this.$refs.canvas_left, left.pupil);
+      drawCenter(this.$refs.canvas_left, left.pupil);
       if (image) {
-        drawImage(this.$refs.canvas_left, left.pupil, image);
+        // drawImage(this.$refs.canvas_left, left.pupil, image);
       }
       drawMask(this.$refs.canvas_right, right.eyelid);
-      // drawCenter(this.$refs.canvas_right, right.pupil);
+      drawCenter(this.$refs.canvas_right, right.pupil);
       if (image) {
-        drawImage(this.$refs.canvas_right, right.pupil, image);
+        // drawImage(this.$refs.canvas_right, right.pupil, image);
       }
     }
   },
