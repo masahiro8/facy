@@ -21,6 +21,7 @@ import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
 export default {
   data: () => {
     return {
+      frame_rect: null,
       bottom: 0,
       limitTop: 64,
       limitBottom: -64
@@ -32,7 +33,18 @@ export default {
   components: {
     AreaSwipe
   },
+  mounted() {
+    this.frame_rect = this.$refs.appframe.getBoundingClientRect();
+    this.layoutUpdate();
+  },
   methods: {
+    //レイアウトを更新
+    layoutUpdate() {
+      if (this.rect && this.frame_rect) {
+        const shift_left = (WINDOW_WIDTH - this.frame_rect.width) / 2;
+        this.$refs.appframe.style.left = `${shift_left}px`;
+      }
+    },
     getGesture({ gesture, position }) {
       console.log(gesture, position.y);
       //移動
@@ -46,15 +58,7 @@ export default {
     rect: {
       immediate: true,
       handler(newValue, oldValue) {
-        if (newValue !== oldValue) {
-          //フレーム
-          const rect = this.$refs.appframe.getBoundingClientRect();
-          const frame = {
-            left: (WINDOW_WIDTH - rect.width) / 2
-          };
-          this.$refs.appframe.style.left = `${frame.left}px`;
-          console.log("productframe rect", newValue, rect);
-        }
+        this.layoutUpdate();
       }
     }
   }

@@ -15,29 +15,39 @@ import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
 export default {
   data: () => {
     return {
+      frame_rect: null,
       bottom: 0,
       limitTop: 64,
       limitBottom: -64
     };
   },
   props: {
-    rect: Object
+    rect: {
+      type: Object,
+      default: null
+    }
   },
   components: {},
-  methods: {},
+  mounted() {
+    this.$nextTick(() => {
+      this.frame_rect = this.$refs.appframe.getBoundingClientRect();
+      this.layoutUpdate();
+    });
+  },
+  methods: {
+    //レイアウトを更新
+    layoutUpdate() {
+      if (this.rect && this.frame_rect) {
+        const shift_left = (WINDOW_WIDTH - this.frame_rect.width) / 2;
+        this.$refs.appframe.style.left = `${shift_left}px`;
+      }
+    }
+  },
   watch: {
     rect: {
       immediate: true,
       handler(newValue, oldValue) {
-        if (newValue !== oldValue) {
-          //フレーム
-          const rect = this.$refs.appframe.getBoundingClientRect();
-          const frame = {
-            left: (WINDOW_WIDTH - rect.width) / 2
-          };
-          this.$refs.appframe.style.left = `${frame.left}px`;
-          console.log("appframe rect", newValue, rect);
-        }
+        this.layoutUpdate();
       }
     }
   }

@@ -4,15 +4,15 @@
       ref="canvas_left"
       class="overlay"
       :style="getStyle"
-      :width="canvas_rect.width + 'px'"
-      :height="canvas_rect.height + 'px'"
+      :width="frame_rect.width + 'px'"
+      :height="frame_rect.height + 'px'"
     />
     <canvas
       ref="canvas_right"
       class="overlay"
       :style="getStyle"
-      :width="canvas_rect.width + 'px'"
-      :height="canvas_rect.height + 'px'"
+      :width="frame_rect.width + 'px'"
+      :height="frame_rect.height + 'px'"
     />
   </div>
 </template>
@@ -23,16 +23,26 @@ import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
 export default {
   data: () => {
     return {
+      frame_rect: {
+        width: 0,
+        height: 0
+      },
       product: null,
       lens_image: "",
       canvas_rect: {}
     };
   },
 
-  mounted() {},
+  mounted() {
+    this.frame_rect = this.$refs.overlayFrame.getBoundingClientRect();
+    this.layoutUpdate();
+  },
 
   props: {
-    rect: Object,
+    rect: {
+      type: Object,
+      default: null
+    },
     points: Object,
     productId: Object,
     products: Object,
@@ -98,12 +108,30 @@ export default {
       drawMask(this.$refs.canvas_left, left.eyelid);
       drawCenter(this.$refs.canvas_left, left.pupil);
       if (image) {
-        // drawImage(this.$refs.canvas_left, left.pupil, image);
+        drawImage(this.$refs.canvas_left, left.pupil, image);
       }
       drawMask(this.$refs.canvas_right, right.eyelid);
       drawCenter(this.$refs.canvas_right, right.pupil);
       if (image) {
-        // drawImage(this.$refs.canvas_right, right.pupil, image);
+        drawImage(this.$refs.canvas_right, right.pupil, image);
+      }
+    },
+    layoutUpdate() {
+      if (this.rect && this.frame_rect.width && this.frame_rect.height) {
+        const frame = {
+          left: (WINDOW_WIDTH - this.frame_rect.width) / 2
+        };
+        this.$refs.canvas_left.style.width = `${this.frame_rect.width}px`;
+        this.$refs.canvas_left.style.height = `${this.frame_rect.height}px`;
+        this.$refs.canvas_right.style.width = `${this.frame_rect.width}px`;
+        this.$refs.canvas_right.style.height = `${this.frame_rect.height}px`;
+
+        //画像
+        const _width = this.rect.width - this.rect.x * 2;
+        this.canvas_rect = {
+          width: _width,
+          height: this.rect.height
+        };
       }
     }
   },
@@ -125,22 +153,7 @@ export default {
     rect: {
       immediate: true,
       handler(newValue, oldValue) {
-        if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-          //フレーム
-          const rect = this.$refs.overlayFrame.getBoundingClientRect();
-          const frame = {
-            left: (WINDOW_WIDTH - rect.width) / 2
-          };
-          this.$refs.canvas_left.style.left = `-${frame.left}px`;
-          this.$refs.canvas_right.style.left = `-${frame.left}px`;
-
-          //画像
-          const _width = newValue.width - newValue.x * 2;
-          this.canvas_rect = {
-            width: _width,
-            height: newValue.height
-          };
-        }
+        this.layoutUpdate();
       }
     }
   },
@@ -155,6 +168,12 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.overlayFrame {
+  position: absolute;
+  width: 375px;
+  height: 100%;
+  overflow: hidden;
+}
 .overlay {
   position: absolute;
   top: 0;

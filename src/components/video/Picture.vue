@@ -1,14 +1,7 @@
 <template>
   <div ref="pictureFrame" class="pictureFrame">
     <LoadingOverlay :loading="loading" v-slot="{ context }">
-      <canvas
-        ref="image"
-        class="overlay"
-        :class="context"
-        id="image"
-        :width="canvas_rect.width + 'px'"
-        :height="canvas_rect.height + 'px'"
-      />
+      <canvas ref="image2" class="clopImage" :class="context" id="image2" width="375" height="652" />
     </LoadingOverlay>
   </div>
 </template>
@@ -23,10 +16,13 @@ export default {
   data: () => {
     return {
       loading: false,
-      canvas_rect: {}
+      frame_rect: null
     };
   },
-  mounted() {},
+  mounted() {
+    this.frame_rect = this.$refs.pictureFrame.getBoundingClientRect();
+    this.layoutUpdate();
+  },
   props: {
     rect: Object,
     src: HTMLVideoElement
@@ -35,43 +31,46 @@ export default {
     LoadingOverlay
   },
   methods: {
+    //レイアウト更新
+    layoutUpdate() {
+      if (this.rect && this.frame_rect) {
+        this.frame_rect.shift_left = (WINDOW_WIDTH - this.frame_rect.width) / 2;
+      }
+    },
     //撮影
     async shoot() {
-      const size = {
-        w: this.canvas_rect.width,
-        h: this.canvas_rect.height
-      };
+      //仮通信
+      this.loading = true;
 
-      const rects = {
-        sx: this.rect.x / this.rect.rate,
+      const rects2 = {
+        sx: (this.rect.x + this.frame_rect.shift_left) / this.rect.rate,
         sy: 0,
-        sw: size.w / this.rect.rate,
-        sh: size.h / this.rect.rate,
+        sw: this.frame_rect.width / this.rect.rate,
+        sh: this.frame_rect.height / this.rect.rate,
         dx: 0,
         dy: 0,
-        dw: WINDOW_WIDTH,
-        dh: WINDOW_HEIGHT
+        dw: this.frame_rect.width,
+        dh: this.frame_rect.height
       };
 
-      //ここから顔画像
       //video(this.src)画像をoverlayに描画
-      const ctx_img = this.$refs.image.getContext("2d");
-      ctx_img.clearRect(0, 0, this.canvas_rect.width, this.canvas_rect.height);
-      ctx_img.save();
-      ctx_img.drawImage(
+      const ctx_img2 = this.$refs.image2.getContext("2d");
+      ctx_img2.clearRect(0, 0, this.frame_rect.width, this.frame_rect.height);
+      ctx_img2.save();
+      ctx_img2.drawImage(
         this.src,
-        rects.sx,
-        rects.sy,
-        rects.sw,
-        rects.sh,
-        0,
-        0,
-        rects.dw,
-        rects.dh
+        rects2.sx,
+        rects2.sy,
+        rects2.sw,
+        rects2.sh,
+        rects2.dx,
+        rects2.dy,
+        rects2.dw,
+        rects2.dh
       );
 
       //basee64に変換
-      const base64 = this.$refs.image.toDataURL("image/jpeg").split(",")[1];
+      const base64 = this.$refs.image2.toDataURL("image/jpeg").split(",")[1];
       const result = await faceStore.uploadImage({
         face_image: base64
       });
@@ -79,8 +78,6 @@ export default {
         alert("通信エラー");
       }
 
-      //仮通信
-      this.loading = true;
       setTimeout(() => {
         this.loading = false;
       }, 1000);
@@ -88,34 +85,10 @@ export default {
     async getPoints() {}
   },
   watch: {
-    src: {
-      immediate: true,
-      handler(newValue, oldValue) {
-        if (newValue !== oldValue) {
-          this.src = newValue;
-        }
-      }
-    },
     rect: {
       immediate: true,
       handler(newValue, oldValue) {
-        if (newValue !== oldValue) {
-          console.log("picture rect", newValue);
-          //フレーム
-          const rect = this.$refs.pictureFrame.getBoundingClientRect();
-          const frame = {
-            left: (WINDOW_WIDTH - rect.width) / 2
-          };
-          // this.$refs.pictureFrame.style.left = `${frame.left}px`;
-          this.$refs.image.style.left = `-${frame.left}px`;
-
-          //画像
-          const _width = newValue.width - newValue.x * 2;
-          this.canvas_rect = {
-            width: _width,
-            height: newValue.height
-          };
-        }
+        this.layoutUpdate();
       }
     }
   }
@@ -127,10 +100,17 @@ export default {
   position: absolute;
   width: 375px;
   height: 100%;
-  // height: 812px;
   overflow: hidden;
 }
-.overlay {
+
+.clopImage {
+  position: absolute;
+  width: 375px;
+  height: 100%;
+  left: 0;
+  top: 0;
+  transform: scale(-1, 1);
+  z-index: 2;
   &.is {
     filter: grayscale(0.5) blur(8px);
   }

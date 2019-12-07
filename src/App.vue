@@ -85,6 +85,7 @@ export default {
   mounted() {},
   methods: {
     readyVideo(value) {
+      console.log(value);
       this.rect = value.rect;
       this.src = value.src;
     },
