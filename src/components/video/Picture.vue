@@ -109,12 +109,15 @@ export default {
   height: 100%;
   left: 0;
   top: 0;
+  transition: filter 0.5s;
   transform: scale(-1, 1);
   z-index: 2;
+  filter: grayscale(0) blur(0);
   &.is {
     filter: grayscale(0.5) blur(8px);
   }
 }
+
 .btn {
   position: absolute;
   z-index: 3;

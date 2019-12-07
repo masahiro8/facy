@@ -66,7 +66,7 @@ export default {
   display: flex;
   align-items: center;
   padding: $padding-20;
-  height: 194px;
+  padding-top: 32px;
 }
 
 .list-item {

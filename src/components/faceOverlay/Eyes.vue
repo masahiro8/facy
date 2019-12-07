@@ -105,15 +105,25 @@ export default {
         lens.src = path;
       };
 
-      drawMask(this.$refs.canvas_left, left.eyelid);
-      drawCenter(this.$refs.canvas_left, left.pupil);
+      //黒目の半径は平均値を取得
+      const _left = { ...left };
+      const _right = { ...right };
+      //半径が小さい方を選択
+      const r =
+        _left.pupil[2] < _right.pupil[2] ? _left.pupil[2] : _right.pupil[2];
+      _left.pupil[2] = r;
+      _right.pupil[2] = r;
+
+      drawMask(this.$refs.canvas_left, _left.eyelid);
+      // drawCenter(this.$refs.canvas_left, _left.pupil);
       if (image) {
-        drawImage(this.$refs.canvas_left, left.pupil, image);
+        drawImage(this.$refs.canvas_left, _left.pupil, image);
       }
-      drawMask(this.$refs.canvas_right, right.eyelid);
-      drawCenter(this.$refs.canvas_right, right.pupil);
+
+      drawMask(this.$refs.canvas_right, _right.eyelid);
+      // drawCenter(this.$refs.canvas_right, _right.pupil);
       if (image) {
-        drawImage(this.$refs.canvas_right, right.pupil, image);
+        drawImage(this.$refs.canvas_right, _right.pupil, image);
       }
     },
     layoutUpdate() {
@@ -181,5 +191,6 @@ export default {
   z-index: 3;
   transform: scale(-1, 1);
   mix-blend-mode: soft-light;
+  mix-blend-mode: luminosity;
 }
 </style>

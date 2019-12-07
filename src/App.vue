@@ -20,15 +20,16 @@
     <!-- 撮影ボタン -->
     <Shoot v-if="!shooted" @shoot="shoot" />
     <!-- 商品リスト -->
-    <ProductFrame :rect="rect">
-      <div v-if="shooted" class="select-lens-area">
-        <ProductList :productType="PRODUCT_TYPE.LENS" @setProductId="setProductId" />
-        <!-- とりあえずカテゴリは非表示 -->
-        <!-- <ToggleButton @toggle="show = !show" :isOpen="show" /> -->
-        <transition name="slide-fade">
-          <CategoryList :items="categories" v-if="show" />
-        </transition>
-      </div>
+    <ProductFrame v-if="shooted" :rect="rect">
+      <transition name="product-fade">
+        <div v-if="shooted" class="products-list">
+          <ProductList :productType="PRODUCT_TYPE.LENS" @setProductId="setProductId" />
+          <!-- とりあえずカテゴリは非表示 -->
+          <transition name="slide-fade">
+            <CategoryList :items="categories" v-if="show" />
+          </transition>
+        </div>
+      </transition>
     </ProductFrame>
     <!-- フラッシュ -->
     <div v-if="onFlash" id="white"></div>
@@ -41,7 +42,6 @@ import Vid from "./components/video/Video";
 import Picture from "./components/video/Picture";
 import Shoot from "./components/shoot/Shoot";
 import ProductList from "./components/products/ProductList.vue";
-// import ToggleButton from "./components/button/CategoryToggleButton.vue";
 import CategoryList from "./components/category/CategoryList.vue";
 import { wait } from "./util/wait";
 import { FACE_STORE_CONTEXT_KEYS } from "./services/faceStore";
@@ -77,7 +77,6 @@ export default {
     Shoot,
     Picture,
     ProductList,
-    // ToggleButton,
     CategoryList,
     ContextConsumer,
     Eyes
@@ -135,10 +134,10 @@ body {
   z-index: 99;
 }
 
-.select-lens-area {
+.products-list {
   z-index: 10;
   position: absolute;
-  bottom: 0;
+  bottom: 24px;
   width: 100%;
 }
 
@@ -153,5 +152,13 @@ body {
 /* .slide-fade-leave-active below version 2.1.8 */ {
   transform: translateY(10px);
   opacity: 0;
+}
+
+.product-fade-enter-active,
+.product-fade-leave-active {
+  transition: transform 0.1s;
+}
+.product-fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  transform: translateY(64px);
 }
 </style>

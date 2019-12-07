@@ -1,13 +1,15 @@
 <template>
-  <div ref="appframe" class="appframe">
-    <div ref="inner" class="inner">
+  <div ref="productframe" class="productframe">
+    <div ref="inner" class="inner" :class="isMove?'isMove':''">
       <slot />
+      <!-- AreaSwipe -->
+      <AreaSwipe @callback="getGesture">
+        <!-- ここにスワイプしたコンポーネントを入れる -->
+        <div class="area">
+          <ToggleButton @toggle="toggle()" :isOpen="isOpen" />
+        </div>
+      </AreaSwipe>
     </div>
-    <!-- AreaSwipe -->
-    <AreaSwipe @callback="getGesture">
-      <!-- ここにスワイプしたコンポーネントを入れる -->
-      <div class="area" />
-    </AreaSwipe>
   </div>
 </template>
 <script>
@@ -18,39 +20,84 @@
 import * as _ from "lodash";
 import AreaSwipe, { GESTURE } from "../areaswipe/AreaSwipe";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
+import ToggleButton from "../../components/button/CategoryToggleButton";
 export default {
   data: () => {
     return {
+      isMove: false,
       frame_rect: null,
       bottom: 0,
       limitTop: 64,
-      limitBottom: -64
+      limitBottom: 0,
+      forceUp: 30, //時移動で動く
+      forceDown: 29,
+      tmp_y: 0,
+      isOpen: false
     };
   },
   props: {
     rect: Object
   },
   components: {
-    AreaSwipe
+    AreaSwipe,
+    ToggleButton
   },
   mounted() {
-    this.frame_rect = this.$refs.appframe.getBoundingClientRect();
+    this.frame_rect = this.$refs.productframe.getBoundingClientRect();
     this.layoutUpdate();
   },
   methods: {
+    toggle() {
+      this.isOpen = !this.isOpen;
+      this.bottom = this.isOpen ? this.limitTop : this.limitBottom;
+      console.log("toggle", this.isOpen, this.bottom);
+      this.$refs.inner.style.transform = `translateY(${-this.bottom}px)`;
+    },
     //レイアウトを更新
     layoutUpdate() {
       if (this.rect && this.frame_rect) {
         const shift_left = (WINDOW_WIDTH - this.frame_rect.width) / 2;
-        this.$refs.appframe.style.left = `${shift_left}px`;
+        this.$refs.productframe.style.left = `${shift_left}px`;
       }
     },
     getGesture({ gesture, position }) {
-      console.log(gesture, position.y);
+      console.log(gesture, this.bottom);
+      //開始
+      if (gesture === GESTURE.START) {
+        this.tmp_y = 0;
+        this.isMove = true;
+      }
+      //停止
+      if (gesture === GESTURE.END) {
+        this.isMove = false;
+      }
+
       //移動
-      if (gesture === GESTURE.MOVING) {
-        this.bottom = position.y;
-        this.$refs.inner.style.bottom = `${this.bottom}px`;
+      if (
+        gesture === GESTURE.MOVING &&
+        this.bottom < this.limitTop &&
+        this.bottom > this.limitBottom
+      ) {
+        const move = position.y - this.tmp_y;
+        this.bottom += move;
+        // this.$refs.inner.style.transform = `translateY(30px)`;
+        this.$refs.inner.style.transform = `translateY(${-this.bottom}px)`;
+        // this.$refs.inner.style.bottom = `${this.bottom}px`;
+        this.tmp_y = position.y;
+      }
+      if (this.bottom <= this.limitBottom) this.bottom = this.limitBottom + 1;
+      if (this.bottom >= this.limitTop) this.bottom = this.limitTop - 1;
+
+      // //強制てkに開く
+      if (!this.isMove && this.bottom > this.forceUp) {
+        this.bottom = this.limitTop - 1;
+        this.$refs.inner.style.transform = `translateY(${-this.bottom}px)`;
+        this.isOpen = true;
+      }
+      if (!this.isMove && this.bottom < this.forceDown) {
+        this.bottom = this.limitBottom + 1;
+        this.$refs.inner.style.transform = `translateY(${-this.bottom}px)`;
+        this.isOpen = false;
       }
     }
   },
@@ -65,7 +112,7 @@ export default {
 };
 </script>
 <style lang="scss">
-.appframe {
+.productframe {
   position: absolute;
   width: 375px;
   height: 100%;
@@ -73,16 +120,23 @@ export default {
   overflow: hidden;
   .inner {
     position: relative;
+    z-index: 99;
     height: 100%;
+    transition: transform 0.2s ease-out;
+    &.isMove {
+      transition: none;
+    }
   }
   .area {
     position: absolute;
     left: 0;
     bottom: 0;
     width: 100%;
-    height: 120px;
-    z-index: 2;
+    height: 32px;
     // background-color: red;
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 </style>

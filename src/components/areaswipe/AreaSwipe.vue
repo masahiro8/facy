@@ -1,50 +1,51 @@
 <template>
-  <div
-    class="area"
-    v-touch:tap="tapHandler"
-    v-touch:longtap="longtapHandler"
-    v-touch:start="startHandler"
-    v-touch:end="endHandler"
-    v-touch:swipe.top="swipeTopHandler"
-    v-touch:swipe.bottom="swipeBottomHandler"
-    v-touch:swipe.left="swipeLeftHandler"
-    v-touch:swipe.right="swipeRightHandler"
-  >
+  <div ref="area" class="area">
     <slot />
   </div>
 </template>
 <script>
-// vue2-touch-eventsをインポート
+// vue2-touch-eventsは使えないので却下
 import Vue from "vue";
-import Vue2TouchEvents from "vue2-touch-events";
-Vue.use(Vue2TouchEvents);
 
 export const GESTURE = {
   START: "start",
   END: "end",
-  TAP: "tap",
-  LONG_TAP: "long_tap",
-  SWIPE_LEFT: "swipe_left",
-  SWIPE_RIGHT: "swipe_right",
-  SWIPE_TOP: "swipe_top",
-  SWIPE_BOTTOM: "swipe_bottom",
   MOVING: "moving"
 };
 
-const moveEvent = func => {
-  const moveStart = () => {
+const moveEvent = initFunc => {
+  let func = initFunc;
+
+  const moveStart = _func => {
+    window.addEventListener("mousedown", _func);
+    window.addEventListener("touchstart", _func);
+  };
+
+  const moveUpdate = () => {
     window.addEventListener("mousemove", func);
     window.addEventListener("touchmove", func);
   };
 
-  const moveEnd = () => {
+  //領域外での終了を検出
+  const moveEndAll = _func => {
+    const end = () => {
+      func = null;
+      _func();
+    };
+    window.addEventListener("mouseup", end);
+    window.addEventListener("touchend", end);
+  };
+
+  const moveRelease = () => {
     window.removeEventListener("mousemove", func);
     window.removeEventListener("touchmove", func);
   };
 
   return {
     moveStart,
-    moveEnd
+    moveRelease,
+    moveEndAll,
+    moveUpdate
   };
 };
 
@@ -59,45 +60,59 @@ export default {
     };
   },
   mounted() {
-    this.pointer = moveEvent(this.update);
+    this.pointer = moveEvent(this.updateHandler);
+    this.initHandler();
   },
   methods: {
-    update(e) {
+    initHandler() {
+      this.pointer.moveStart(e => {
+        // console.log("Start");
+        const point = { x: e.pageX, y: e.pageY };
+        if (this.getRectHit(point)) {
+          this.startHandler();
+          this.isMove = true;
+          this.startPoint = { x: e.pageX, y: e.pageY };
+        }
+      });
+      this.pointer.moveUpdate();
+      this.pointer.moveEndAll(() => {
+        this.isMove = false;
+        this.callback(GESTURE.END);
+      });
+    },
+
+    startHandler() {
+      this.callback(GESTURE.START);
+    },
+
+    updateHandler(e) {
+      if (!this.isMove) return;
       this.movePoint = {
         x: e.pageX - this.startPoint.x,
         y: this.startPoint.y - e.pageY
       };
       this.callback(GESTURE.MOVING);
     },
-    startHandler(e) {
-      this.startPoint = { x: e.pageX, y: e.pageY };
-      this.callback(GESTURE.START);
-      this.pointer.moveStart();
-    },
+
     endHandler() {
       this.callback(GESTURE.END);
-      this.pointer.moveEnd();
     },
-    tapHandler() {
-      this.callback(GESTURE.TAP);
-    },
-    longtapHandler() {
-      this.callback(GESTURE.LONG_TAP);
-    },
-    swipeLeftHandler() {
-      this.callback(GESTURE.SWIPE_LEFT);
-    },
-    swipeRightHandler() {
-      this.callback(GESTURE.SWIPE_RIGHT);
-    },
-    swipeTopHandler() {
-      this.callback(GESTURE.SWIPE_TOP);
-    },
-    swipeBottomHandler() {
-      this.callback(GESTURE.SWIPE_BOTTOM);
-    },
+
     callback(gesture) {
       this.$emit("callback", { gesture, position: this.movePoint });
+    },
+    getRectHit(point) {
+      const rect = this.$refs.area.getBoundingClientRect();
+      console.log("area", rect, point);
+      if (
+        rect.x < point.x &&
+        rect.y < point.y &&
+        rect.y + rect.height > point.y &&
+        rect.x + rect.width > point.x
+      ) {
+        return true;
+      }
+      return false;
     }
   }
 };
