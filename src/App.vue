@@ -1,18 +1,23 @@
 <template>
   <div id="app">
-    <Header />
+    <Header>
+      <template v-slot:left></template>
+      <template v-slot:right></template>
+    </Header>
     <AppFrame :rect="rect">
       <!-- 動画 -->
       <Vid @ready="readyVideo" />
       <!-- 撮影した写真を表示 -->
-      <Picture ref="picture" :src="src" :rect="rect" @callbackPoints="getPoints" />
-      <ContextConsumer :contextKey="[POINTS_KEY,'PRODUCT_ID','PRODUCTS']" v-slot="{ context }">
+      <Picture ref="picture" :src="src" :rect="rect" />
+      <ContextConsumer :contextKey="[POINTS_KEY.EYES,'PRODUCT_ID','PRODUCTS']" v-slot="{ context }">
         <!-- 目 -->
         <Eyes
+          v-if="shooted"
+          ref="eyes"
           :rect="rect"
           :products="context['PRODUCTS']"
-          :points="context[POINTS_KEY]"
           :productId="context['PRODUCT_ID']"
+          :points="context[POINTS_KEY.EYES]"
           :zIndex="4"
         />
       </ContextConsumer>
@@ -23,7 +28,13 @@
     <ProductFrame v-if="shooted" :rect="rect">
       <transition name="product-fade">
         <div v-if="shooted" class="products-list">
-          <ProductList :productType="PRODUCT_TYPE.LENS" @setProductId="setProductId" />
+          <ContextConsumer :contextKey="['PRODUCTS']" v-slot="{ context }">
+            <ProductList
+              :productType="PRODUCT_TYPE.LENS"
+              :products="context['PRODUCTS']"
+              @setProductId="setProductId"
+            />
+          </ContextConsumer>
           <!-- とりあえずカテゴリは非表示 -->
           <transition name="slide-fade">
             <CategoryList :items="categories" v-if="show" />
@@ -31,6 +42,10 @@
         </div>
       </transition>
     </ProductFrame>
+    <AppFrame rect="rect">
+      <!-- 写真消すボタン -->
+      <Clear v-if="shooted" @action="clearPicture" />
+    </AppFrame>
     <!-- フラッシュ -->
     <div v-if="onFlash" id="white"></div>
   </div>
@@ -40,7 +55,8 @@
 import Header from "./components/header/Header.vue";
 import Vid from "./components/video/Video";
 import Picture from "./components/video/Picture";
-import Shoot from "./components/shoot/Shoot";
+import Shoot from "./components/button/Shoot";
+import Clear from "./components/button/Clear";
 import ProductList from "./components/products/ProductList.vue";
 import CategoryList from "./components/category/CategoryList.vue";
 import { wait } from "./util/wait";
@@ -51,6 +67,7 @@ import Eyes from "./components/faceOverlay/Eyes.vue";
 import AppFrame from "./components/frame/AppFrame";
 import ProductFrame from "./components/frame/ProductFrame";
 import { PRODUCT_TYPE } from "./constants";
+import { productapi } from "./services/api";
 
 export default {
   name: "app",
@@ -65,7 +82,7 @@ export default {
       lensColor: null,
       products: [],
       categories: [],
-      POINTS_KEY: FACE_STORE_CONTEXT_KEYS.EYES,
+      POINTS_KEY: FACE_STORE_CONTEXT_KEYS,
       PRODUCT_TYPE: PRODUCT_TYPE
     };
   },
@@ -75,13 +92,16 @@ export default {
     ProductFrame,
     Vid,
     Shoot,
+    Clear,
     Picture,
     ProductList,
     CategoryList,
     ContextConsumer,
     Eyes
   },
-  mounted() {},
+  mounted() {
+    this.getProducts();
+  },
   methods: {
     readyVideo(value) {
       console.log(value);
@@ -97,6 +117,15 @@ export default {
       this.onFlash = false;
       this.shooted = true;
     },
+    //画像を非表示
+    clearPicture() {
+      this.shooted = false;
+      //選択を解除
+      ContextStore.setContext("PRODUCT_ID", { productId: null });
+      //各コンポーネントをprops経由でリセットするとworkしないので直接メソッドからリセット
+      this.$refs.picture.clearCanvas();
+      this.$refs.eyes.clearCanvas();
+    },
     //ここで両目の頂点情報を取得
     getPoints(points, face_eyes_data) {
       this.points = {
@@ -108,6 +137,10 @@ export default {
     },
     setProductId({ productId, productType }) {
       ContextStore.setContext("PRODUCT_ID", { productId });
+    },
+    async getProducts() {
+      const result = await productapi.get("", {});
+      ContextStore.setContext("PRODUCTS", result.data);
     }
   }
 };
@@ -141,15 +174,21 @@ body {
   width: 100%;
 }
 
+.list {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 64px;
+  widows: 100%;
+  background-color: red;
+}
+
 .slide-fade-enter-active,
 .slide-fade-leave-active {
   transition: all 0.4s ease;
 }
-// .slide-fade-leave-active {
-//   transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 0.5);
-// }
-.slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active below version 2.1.8 */ {
+.slide-fade-enter,
+.slide-fade-leave-to {
   transform: translateY(10px);
   opacity: 0;
 }

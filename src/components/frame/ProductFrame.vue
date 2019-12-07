@@ -14,13 +14,13 @@
 </template>
 <script>
 /**
- * [[実装中]]
  * スワイプして全体をスライドさせるコンポーネント
  */
 import * as _ from "lodash";
 import AreaSwipe, { GESTURE } from "../areaswipe/AreaSwipe";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
 import ToggleButton from "../../components/button/CategoryToggleButton";
+
 export default {
   data: () => {
     return {
@@ -50,7 +50,6 @@ export default {
     toggle() {
       this.isOpen = !this.isOpen;
       this.bottom = this.isOpen ? this.limitTop : this.limitBottom;
-      console.log("toggle", this.isOpen, this.bottom);
       this.$refs.inner.style.transform = `translateY(${-this.bottom}px)`;
     },
     //レイアウトを更新
@@ -80,20 +79,20 @@ export default {
       ) {
         const move = position.y - this.tmp_y;
         this.bottom += move;
-        // this.$refs.inner.style.transform = `translateY(30px)`;
         this.$refs.inner.style.transform = `translateY(${-this.bottom}px)`;
-        // this.$refs.inner.style.bottom = `${this.bottom}px`;
         this.tmp_y = position.y;
       }
       if (this.bottom <= this.limitBottom) this.bottom = this.limitBottom + 1;
       if (this.bottom >= this.limitTop) this.bottom = this.limitTop - 1;
 
-      // //強制てkに開く
+      //強制的に開く
       if (!this.isMove && this.bottom > this.forceUp) {
         this.bottom = this.limitTop - 1;
         this.$refs.inner.style.transform = `translateY(${-this.bottom}px)`;
         this.isOpen = true;
       }
+
+      //強制的に閉じる
       if (!this.isMove && this.bottom < this.forceDown) {
         this.bottom = this.limitBottom + 1;
         this.$refs.inner.style.transform = `translateY(${-this.bottom}px)`;

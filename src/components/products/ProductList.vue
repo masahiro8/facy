@@ -8,9 +8,6 @@
 
 <script>
 import Product from "./Product.vue";
-import { productapi } from "../../services/api";
-import { PRODUCT_TYPE } from "../../constants";
-import { ContextStore } from "../../context/Store";
 
 export default {
   data: () => {
@@ -20,8 +17,8 @@ export default {
     };
   },
   props: {
-    items: {
-      type: Array
+    products: {
+      type: Object
     },
     productType: {
       type: String
@@ -30,9 +27,7 @@ export default {
   components: {
     Product
   },
-  mounted() {
-    this.loadProducts();
-  },
+  mounted() {},
   methods: {
     setProductId(id) {
       this.selected = id;
@@ -48,10 +43,28 @@ export default {
         productType: this.productType
       });
     },
-    async loadProducts() {
-      const result = await productapi.get("", {});
-      this.items = result.data[this.productType].products;
-      ContextStore.setContext("PRODUCTS", this.items);
+    setItems() {
+      if (this.products && this.productType) {
+        this.items = this.products[this.productType].products;
+      }
+    }
+  },
+  watch: {
+    products: {
+      immediate: true,
+      handler(newValue) {
+        this.$nextTick(() => {
+          this.setItems();
+        });
+      }
+    },
+    productType: {
+      immediate: true,
+      handler(newValue) {
+        this.$nextTick(() => {
+          this.setItems();
+        });
+      }
     }
   }
 };

@@ -1,7 +1,14 @@
 <template>
   <div ref="pictureFrame" class="pictureFrame">
     <LoadingOverlay :loading="loading" v-slot="{ context }">
-      <canvas ref="image2" class="clopImage" :class="context" id="image2" width="375" height="652" />
+      <canvas
+        ref="image2"
+        class="clopImage"
+        :class="context"
+        id="image2"
+        :width="frame_rect.width"
+        :height="frame_rect.height"
+      />
     </LoadingOverlay>
   </div>
 </template>
@@ -9,7 +16,8 @@
 import * as _ from "lodash";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
 import { adjustVideoSize } from "../../util/adjustVideoSize";
-import { faceStore } from "../../services/faceStore";
+import { faceStore, FACE_STORE_CONTEXT_KEYS } from "../../services/faceStore";
+import { ContextStore } from "../../context/Store";
 import LoadingOverlay from "../loadingOverlay/LoadingOverlay";
 
 export default {
@@ -37,8 +45,15 @@ export default {
         this.frame_rect.shift_left = (WINDOW_WIDTH - this.frame_rect.width) / 2;
       }
     },
+    clearCanvas() {
+      const ctx_img2 = this.$refs.image2.getContext("2d");
+      ctx_img2.clearRect(0, 0, this.frame_rect.width, this.frame_rect.height);
+    },
     //撮影
     async shoot() {
+      //頂点情報を削除
+      ContextStore.setContext(FACE_STORE_CONTEXT_KEYS.EYES, {});
+
       //仮通信
       this.loading = true;
 
@@ -81,13 +96,12 @@ export default {
       setTimeout(() => {
         this.loading = false;
       }, 1000);
-    },
-    async getPoints() {}
+    }
   },
   watch: {
     rect: {
       immediate: true,
-      handler(newValue, oldValue) {
+      handler(newValue) {
         this.layoutUpdate();
       }
     }

@@ -1,5 +1,13 @@
 <template>
-  <header class="global-header"><h1 class="logo">facy</h1></header>
+  <header class="global-header">
+    <div>
+      <slot name="left" />
+    </div>
+    <h1 class="logo">facy</h1>
+    <div>
+      <slot name="right" />
+    </div>
+  </header>
 </template>
 
 <style lang="scss" scoped>
@@ -13,6 +21,9 @@
   padding: $padding-15;
   width: 100%;
   background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .logo {

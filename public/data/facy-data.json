@@ -3,7 +3,7 @@
     "products": [
       {
         "id": 1,
-        "type": "eyes",
+        "type": "lens",
         "category": 2222827381,
         "name": "brown mariage",
         "image": "lens01_brownmariage.png",
@@ -11,7 +11,7 @@
       },
       {
         "id": 2,
-        "type": "eyes",
+        "type": "lens",
         "category": 2222827381,
         "name": "sheer lueur",
         "image": "lens02_sheerlueur.png",

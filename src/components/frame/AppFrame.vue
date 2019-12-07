@@ -7,8 +7,7 @@
 </template>
 <script>
 /**
- * [[実装中]]
- * スワイプして全体をスライドさせるコンポーネント
+ * 汎用的なアプリの外枠
  */
 import * as _ from "lodash";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
@@ -16,9 +15,7 @@ export default {
   data: () => {
     return {
       frame_rect: null,
-      bottom: 0,
-      limitTop: 64,
-      limitBottom: -64
+      bottom: 0
     };
   },
   props: {

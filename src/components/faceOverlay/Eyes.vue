@@ -4,20 +4,21 @@
       ref="canvas_left"
       class="overlay"
       :style="getStyle"
-      :width="frame_rect.width + 'px'"
-      :height="frame_rect.height + 'px'"
+      :width="frame_rect.width"
+      :height="frame_rect.height"
     />
     <canvas
       ref="canvas_right"
       class="overlay"
       :style="getStyle"
-      :width="frame_rect.width + 'px'"
-      :height="frame_rect.height + 'px'"
+      :width="frame_rect.width"
+      :height="frame_rect.height"
     />
   </div>
 </template>
 <script>
 import * as _ from "lodash";
+import { PRODUCT_TYPE } from "../../constants";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
 
 export default {
@@ -28,6 +29,7 @@ export default {
         height: 0
       },
       product: null,
+      productType: PRODUCT_TYPE.LENS,
       lens_image: "",
       canvas_rect: {}
     };
@@ -36,6 +38,9 @@ export default {
   mounted() {
     this.frame_rect = this.$refs.overlayFrame.getBoundingClientRect();
     this.layoutUpdate();
+    this.$nextTick(() => {
+      this.clearCanvas();
+    });
   },
 
   props: {
@@ -115,16 +120,31 @@ export default {
       _right.pupil[2] = r;
 
       drawMask(this.$refs.canvas_left, _left.eyelid);
-      // drawCenter(this.$refs.canvas_left, _left.pupil);
+      drawCenter(this.$refs.canvas_left, _left.pupil);
       if (image) {
         drawImage(this.$refs.canvas_left, _left.pupil, image);
       }
 
       drawMask(this.$refs.canvas_right, _right.eyelid);
-      // drawCenter(this.$refs.canvas_right, _right.pupil);
+      drawCenter(this.$refs.canvas_right, _right.pupil);
       if (image) {
         drawImage(this.$refs.canvas_right, _right.pupil, image);
       }
+    },
+    //キャンバスクリア
+    clearCanvas() {
+      const clearCanvasRect = canvas => {
+        const ctx = canvas.getContext("2d");
+        ctx.restore();
+        console.log("clear", this.frame_rect.width, this.frame_rect.height);
+        ctx.clearRect(0, 0, this.frame_rect.width, this.frame_rect.height);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, 0);
+        ctx.stroke();
+      };
+      clearCanvasRect(this.$refs.canvas_left);
+      clearCanvasRect(this.$refs.canvas_right);
     },
     layoutUpdate() {
       if (this.rect && this.frame_rect.width && this.frame_rect.height) {
@@ -150,9 +170,15 @@ export default {
     productId: {
       immediate: true,
       handler(newValue, oldValue) {
-        const product = _.find(this.products, product => {
-          return product.id === newValue.productId;
-        });
+        if (!newValue) {
+          this.clearCanvas();
+        }
+        const product = _.find(
+          this.products[this.productType].products,
+          product => {
+            return product.id === newValue.productId;
+          }
+        );
         if (product) {
           this.product = product;
           this.lens_image = `${window.location.origin}/images/${product.category}/${product.image}`;
@@ -162,7 +188,7 @@ export default {
     },
     rect: {
       immediate: true,
-      handler(newValue, oldValue) {
+      handler() {
         this.layoutUpdate();
       }
     }

@@ -7,7 +7,7 @@ export const FACE_STORE_CONTEXT_KEYS = {
 };
 
 const _faceStore = () => {
-  let images = [];
+  // let images = [];
 
   //形式
   let formats = {
@@ -30,7 +30,7 @@ const _faceStore = () => {
         data.base64 = params.face_image;
         data.id = _.random(9999999999);
         console.log("data", data);
-        images.push(data);
+        // images.push(data);
         ContextStore.setContext(FACE_STORE_CONTEXT_KEYS.EYES, data.points);
         resolved({ result: true });
       } else {
