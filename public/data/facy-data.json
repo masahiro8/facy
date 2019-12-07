@@ -3,23 +3,30 @@
     "products": [
       {
         "id": 1,
-        "category": "candy",
-        "color": "brown mariage",
+        "type": "eyes",
+        "category": 2222827381,
+        "name": "brown mariage",
         "image": "lens01_brownmariage.png",
         "url": "http://backham.me/"
       },
       {
         "id": 2,
-        "category": "candy",
-        "color": "sheer lueur",
+        "type": "eyes",
+        "category": 2222827381,
+        "name": "sheer lueur",
         "image": "lens02_sheerlueur.png",
         "url": "http://backham.me/"
       }
     ],
     "category": [
       {
-        "id": 1,
-        "category": "candy",
+        "id": 9232874627,
+        "name": "candy",
+        "image": "tough2_bt.png"
+      },
+      {
+        "id": 2222827381,
+        "name": "yummy",
         "image": "tough2_bt.png"
       }
     ]

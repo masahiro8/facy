@@ -6,7 +6,7 @@
     <div class="product-image">
       <img :src="getImagePath(item)" />
     </div>
-    <p class="description">{{ item.color }}</p>
+    <p class="description">{{ item.name }}</p>
     <transition name="slide-fade">
       <a class="shop-link" :href="item.url" target="_blank" v-if="selectSelf">Buy now !</a>
     </transition>
