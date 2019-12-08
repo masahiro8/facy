@@ -12,6 +12,22 @@
       {
         "id": 2,
         "type": "lens",
+        "category": 9232874627,
+        "name": "sheer lueur",
+        "image": "lens05_01_antiquebeige.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 3,
+        "type": "lens",
+        "category": 9232874627,
+        "name": "chiff on brown",
+        "image": "lens05_02_chiffonbrown.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 4,
+        "type": "lens",
         "category": 2222827381,
         "name": "sheer lueur",
         "image": "lens02_sheerlueur.png",

@@ -28,11 +28,12 @@
     <ProductFrame v-if="shooted" :rect="rect">
       <transition name="product-fade">
         <div v-if="shooted" class="products-list">
-          <ContextConsumer :contextKey="['PRODUCTS']" v-slot="{ context }">
+          <ContextConsumer :contextKey="['PRODUCTS','CATEGORY']" v-slot="{ context }">
             <!-- プロダクト -->
             <ProductList
               :productType="PRODUCT_TYPE.LENS"
               :products="context['PRODUCTS']"
+              :categoryId="context['CATEGORY']"
               @setProductId="setProductId"
             />
             <!-- カテゴリ -->
@@ -122,6 +123,7 @@ export default {
     clearPicture() {
       this.shooted = false;
       //選択を解除
+      ContextStore.setContext("CATEGORY", { id: null });
       ContextStore.setContext("PRODUCT_ID", { productId: null });
       //各コンポーネントをprops経由でリセットするとworkしないので直接メソッドからリセット
       this.$refs.picture.clearCanvas();
@@ -141,6 +143,7 @@ export default {
     },
     async getProducts() {
       const result = await productapi.get("", {});
+      console.log("getProducts", result.data);
       ContextStore.setContext("PRODUCTS", result.data);
     }
   }

@@ -1,12 +1,13 @@
 <template>
   <ul class="product-list">
-    <li class="list-item" v-for="item in items" :key="item.id">
+    <li class="list-item" v-for="item in itemList" :key="item.id">
       <Product :item="item" @setProductId="setProductId" :selected="selected" />
     </li>
   </ul>
 </template>
 
 <script>
+import * as _ from "lodash";
 import Product from "./Product.vue";
 
 export default {
@@ -22,6 +23,10 @@ export default {
     },
     productType: {
       type: String
+    },
+    categoryId: {
+      type: Object,
+      default: null
     }
   },
   components: {
@@ -42,29 +47,17 @@ export default {
         productId: this.selected,
         productType: this.productType
       });
-    },
-    setItems() {
-      if (this.products && this.productType) {
-        this.items = this.products[this.productType].products;
-      }
     }
   },
-  watch: {
-    products: {
-      immediate: true,
-      handler(newValue) {
-        this.$nextTick(() => {
-          this.setItems();
+  computed: {
+    itemList() {
+      if (this.products && this.productType && this.categoryId) {
+        // return this.products[this.productType].products;
+        return _.filter(this.products[this.productType].products, item => {
+          return item.category === this.categoryId.id;
         });
       }
-    },
-    productType: {
-      immediate: true,
-      handler(newValue) {
-        this.$nextTick(() => {
-          this.setItems();
-        });
-      }
+      return [];
     }
   }
 };

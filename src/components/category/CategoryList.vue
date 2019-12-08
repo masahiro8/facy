@@ -1,12 +1,13 @@
 <template>
   <ul class="category-list">
-    <li class="list-item" v-for="item in categories" :key="item.id">
-      <Category :item="item" />
+    <li class="list-item" v-for="item in itemList" :key="item.id">
+      <Category :item="item" @clickHandler="setCategory" />
     </li>
   </ul>
 </template>
 <script>
 import Category from "./Category.vue";
+import { ContextStore } from "../../context/Store";
 export default {
   data: () => {
     return {
@@ -18,33 +19,24 @@ export default {
       type: String
     },
     items: {
-      type: Array
+      type: Object
     }
   },
   components: {
     Category
   },
   methods: {
-    setCategories() {
-      this.categories = this.items[this.productType].category;
+    setCategory(id) {
+      ContextStore.setContext("CATEGORY", { id });
     }
   },
-  watch: {
-    productType: {
-      immediate: true,
-      handler(newValue) {
-        this.$nextTick(() => {
-          this.setCategories();
-        });
+  //computedで返したいけど、なぜか駄目
+  computed: {
+    itemList() {
+      if (this.items && this.productType) {
+        return this.items[this.productType].category;
       }
-    },
-    items: {
-      immediate: true,
-      handler(newValue) {
-        this.$nextTick(() => {
-          this.setCategories();
-        });
-      }
+      return [];
     }
   }
 };

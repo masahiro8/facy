@@ -31,8 +31,8 @@ export default {
       bottom: 0,
       limitTop: 86, //スライド上限
       limitBottom: 0, //スライド下限
-      forceUp: 30, //強制的に開く値
-      forceDown: 29, //強制的に閉じる値
+      forceUp: 40, //強制的に開く値
+      forceDown: 39, //強制的に閉じる値
       tmp_y: 0,
       isOpen: false
     };
@@ -62,7 +62,7 @@ export default {
       }
     },
     getGesture({ gesture, position }) {
-      console.log(gesture, this.bottom);
+      // console.log(gesture, this.bottom);
       //開始
       if (gesture === GESTURE.START) {
         this.tmp_y = 0;
