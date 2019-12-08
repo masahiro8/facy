@@ -1,6 +1,6 @@
 <template>
   <ul class="category-list">
-    <li class="list-item" v-for="item in items" :key="item.id">
+    <li class="list-item" v-for="item in categories" :key="item.id">
       <Category :item="item" />
     </li>
   </ul>
@@ -8,13 +8,44 @@
 <script>
 import Category from "./Category.vue";
 export default {
+  data: () => {
+    return {
+      categories: []
+    };
+  },
   props: {
+    productType: {
+      type: String
+    },
     items: {
       type: Array
     }
   },
   components: {
     Category
+  },
+  methods: {
+    setCategories() {
+      this.categories = this.items[this.productType].category;
+    }
+  },
+  watch: {
+    productType: {
+      immediate: true,
+      handler(newValue) {
+        this.$nextTick(() => {
+          this.setCategories();
+        });
+      }
+    },
+    items: {
+      immediate: true,
+      handler(newValue) {
+        this.$nextTick(() => {
+          this.setCategories();
+        });
+      }
+    }
   }
 };
 </script>

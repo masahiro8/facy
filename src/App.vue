@@ -34,15 +34,15 @@
               :products="context['PRODUCTS']"
               @setProductId="setProductId"
             />
+            <!-- とりあえずカテゴリは非表示 -->
+            <transition name="slide-fade">
+              <CategoryList :productType="PRODUCT_TYPE.LENS" :items="context['PRODUCTS']" />
+            </transition>
           </ContextConsumer>
-          <!-- とりあえずカテゴリは非表示 -->
-          <transition name="slide-fade">
-            <CategoryList :items="categories" v-if="show" />
-          </transition>
         </div>
       </transition>
     </ProductFrame>
-    <AppFrame rect="rect">
+    <AppFrame :rect="rect">
       <!-- 写真消すボタン -->
       <Clear v-if="shooted" @action="clearPicture" />
     </AppFrame>
