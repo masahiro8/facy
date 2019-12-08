@@ -1,11 +1,13 @@
 <template>
   <div ref="productframe" class="productframe">
     <div ref="inner" class="inner" :class="isMove?'isMove':''">
-      <slot />
       <!-- AreaSwipe -->
       <AreaSwipe @callback="getGesture">
         <!-- ここにスワイプしたコンポーネントを入れる -->
         <div class="area">
+          <div class="products">
+            <slot />
+          </div>
           <ToggleButton @toggle="toggle()" :isOpen="isOpen" />
         </div>
       </AreaSwipe>
@@ -19,7 +21,7 @@
 import * as _ from "lodash";
 import AreaSwipe, { GESTURE } from "../areaswipe/AreaSwipe";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
-import ToggleButton from "../../components/button/CategoryToggleButton";
+import ToggleButton from "./CategoryToggleButton";
 
 export default {
   data: () => {
@@ -27,10 +29,10 @@ export default {
       isMove: false,
       frame_rect: null,
       bottom: 0,
-      limitTop: 64,
-      limitBottom: 0,
-      forceUp: 30, //時移動で動く
-      forceDown: 29,
+      limitTop: 86, //スライド上限
+      limitBottom: 0, //スライド下限
+      forceUp: 30, //強制的に開く値
+      forceDown: 29, //強制的に閉じる値
       tmp_y: 0,
       isOpen: false
     };
@@ -115,8 +117,8 @@ export default {
   position: absolute;
   width: 375px;
   height: 100%;
-  // height: 812px;
   overflow: hidden;
+
   .inner {
     position: relative;
     z-index: 99;
@@ -136,6 +138,13 @@ export default {
     &:hover {
       cursor: pointer;
     }
+  }
+
+  .products {
+    position: relative;
+    width: 100%;
+    height: auto;
+    bottom: 160px;
   }
 }
 </style>

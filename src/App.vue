@@ -29,12 +29,13 @@
       <transition name="product-fade">
         <div v-if="shooted" class="products-list">
           <ContextConsumer :contextKey="['PRODUCTS']" v-slot="{ context }">
+            <!-- プロダクト -->
             <ProductList
               :productType="PRODUCT_TYPE.LENS"
               :products="context['PRODUCTS']"
               @setProductId="setProductId"
             />
-            <!-- とりあえずカテゴリは非表示 -->
+            <!-- カテゴリ -->
             <transition name="slide-fade">
               <CategoryList :productType="PRODUCT_TYPE.LENS" :items="context['PRODUCTS']" />
             </transition>
@@ -168,10 +169,10 @@ body {
 }
 
 .products-list {
-  z-index: 10;
   position: absolute;
-  bottom: 24px;
   width: 100%;
+  // z-index: 10;
+  // bottom: -84px;
 }
 
 .list {

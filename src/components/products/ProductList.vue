@@ -74,12 +74,15 @@ export default {
 @import "@/style/config.scss";
 
 .product-list {
+  position: relative;
+  bottom: 24px;
   overflow: scroll;
   list-style-type: none;
   display: flex;
   align-items: center;
   padding: $padding-20;
   padding-top: 32px;
+  height: 194px;
 }
 
 .list-item {

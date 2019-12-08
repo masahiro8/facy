@@ -20,6 +20,8 @@ export default {
 @import "../../style/config.scss";
 
 .category-toggle-button {
+  position: relative;
+  z-index: 99;
   padding: $padding-5;
   width: 40px;
   height: 40px;
