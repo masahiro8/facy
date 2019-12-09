@@ -1,13 +1,11 @@
 <template>
-  <div class="face">
-    <canvas
-      ref="face"
-      class="overlay face"
-      id="face"
-      :width="canvas_rect.width"
-      :height="canvas_rect.height"
-    />
-  </div>
+  <canvas
+    ref="face"
+    class="overlay face"
+    id="face"
+    :width="canvas_rect.width"
+    :height="canvas_rect.height"
+  />
 </template>
 <script>
 import * as _ from "lodash";
@@ -68,8 +66,8 @@ export default {
 
           const boxWidth = newValue.eyes.result.landmarks.imageWidth;
           const boxHeight = newValue.eyes.result.landmarks.imageHeight;
-          const textureImg = "wireframe.png";
-          //この関数はpublic/js/faceModel.jsにある
+          const textureImg = "eyeshadow01.png";
+          //drawFaceMask は public/js/faceModel.js から
           drawFaceMask(points, shift, boxWidth, boxHeight, textureImg); // eslint-disable-line
         }
       }
