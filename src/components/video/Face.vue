@@ -11,7 +11,6 @@
 </template>
 <script>
 import * as _ from "lodash";
-// import { drawFaceMask } from "../../util/faceModel";
 
 export default {
   data: () => {
@@ -69,10 +68,9 @@ export default {
 
           const boxWidth = newValue.eyes.result.landmarks.imageWidth;
           const boxHeight = newValue.eyes.result.landmarks.imageHeight;
-
-          console.log(boxWidth, boxHeight);
-
-          drawFaceMask(points, shift, boxWidth, boxHeight); // eslint-disable-line
+          const textureImg = "wireframe.png";
+          //この関数はpublic/js/faceModel.jsにある
+          drawFaceMask(points, shift, boxWidth, boxHeight, textureImg); // eslint-disable-line
         }
       }
     }

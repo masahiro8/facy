@@ -12,8 +12,6 @@
 import * as _ from "lodash";
 import { houghTransform } from "../../util/houghTransform";
 import { drawLense, clearLense, maskDraw } from "../../util/drawLense";
-// import faceModel from "../../../public/js/faceModel";s
-import { drawFaceMask } from "../../util/faceModel";
 
 export default {
   data: () => {

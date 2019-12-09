@@ -1,6 +1,7 @@
-function drawFaceMask(points, shift, boxWidth, boxHeight) {
+function drawFaceMask(points, shift, boxWidth, boxHeight, textureImg) {
   console.log("points", points);
   console.log("shift", shift);
+  console.log(boxWidth, boxHeight);
 
   //中点を求める
   const getMidPoint = (startPoint, endPoint) => {
@@ -80,7 +81,7 @@ function drawFaceMask(points, shift, boxWidth, boxHeight) {
       -500,
       500
     );
-    camera.position.set(0, 0, 1);
+    // camera.position.set(0, 0, 1);
     camera.lookAt(scene.position);
 
     //軸オブジェクトの生成
@@ -829,7 +830,7 @@ function drawFaceMask(points, shift, boxWidth, boxHeight) {
 
     //テクスチャの読み込み
     const loader = new THREE.TextureLoader();
-    const texture = loader.load("../img/eyeshadow01.png");
+    const texture = loader.load("../img/" + textureImg);
     texture.minFilter = THREE.LinearFilter;
     texture.magFilter = THREE.LinearFilter;
 
@@ -851,6 +852,7 @@ function drawFaceMask(points, shift, boxWidth, boxHeight) {
 
     //オブジェクト生成
     const face = new THREE.Mesh(geometry, material);
+    //オブジェクトの位置
     face.position.set(
       -w / 2 + shift.x + centerPoint.x * boxWidth,
       h / 2 - shift.y - centerPoint.y * boxHeight,
