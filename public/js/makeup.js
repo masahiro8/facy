@@ -1,8 +1,5 @@
-function drawFaceMask(points, shift, boxWidth, boxHeight, textureImg) {
-  console.log("points", points);
-  console.log("shift", shift);
-  console.log(boxWidth, boxHeight);
-
+function drawFaceMask(points, rect, textureImg) {
+  console.log("width", rect.width, "height", rect.height);
   //中点を求める
   const getMidPoint = (startPoint, endPoint) => {
     let newPoint = {};
@@ -10,6 +7,11 @@ function drawFaceMask(points, shift, boxWidth, boxHeight, textureImg) {
     newPoint.y = (startPoint.y + endPoint.y) / 2;
     return newPoint;
   };
+
+  if (points.length < 68) {
+    points.push(getMidPoint(points[32], points[33]));
+  }
+  console.log("points", points);
   //鼻の右端から目の下側、輪郭への中点をpointsに追加
   points.push(getMidPoint(points[31], points[27]));
   points.push(getMidPoint(points[31], points[39]));
@@ -55,11 +57,11 @@ function drawFaceMask(points, shift, boxWidth, boxHeight, textureImg) {
 
   function init(vs, fs, points) {
     // サイズを取得
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    const w = rect.width;
+    const h = rect.height;
 
     const renderer = new THREE.WebGLRenderer({
-      canvas: document.querySelector("#face"),
+      canvas: document.querySelector("#mesh"),
       antialias: true,
       //描画背景を透明にする
       alpha: true
@@ -83,13 +85,6 @@ function drawFaceMask(points, shift, boxWidth, boxHeight, textureImg) {
     );
     // camera.position.set(0, 0, 1);
     camera.lookAt(scene.position);
-
-    //軸オブジェクトの生成
-    let axis = new THREE.AxesHelper(100);
-    //軸オブジェクトのシーンへの追加
-    // scene.add(axis);
-    //軸オブジェクトの位置座標を設定
-    axis.position.set(0, 0, 0);
 
     let n = 128; //三角形の数
     let v = 86; //頂点数
@@ -830,7 +825,7 @@ function drawFaceMask(points, shift, boxWidth, boxHeight, textureImg) {
 
     //テクスチャの読み込み
     const loader = new THREE.TextureLoader();
-    const texture = loader.load("../img/" + textureImg);
+    const texture = loader.load("../images/" + textureImg);
     texture.minFilter = THREE.LinearFilter;
     texture.magFilter = THREE.LinearFilter;
 
@@ -853,11 +848,7 @@ function drawFaceMask(points, shift, boxWidth, boxHeight, textureImg) {
     //オブジェクト生成
     const face = new THREE.Mesh(geometry, material);
     //オブジェクトの位置
-    face.position.set(
-      -w / 2 + shift.x + centerPoint.x * boxWidth,
-      h / 2 - shift.y - centerPoint.y * boxHeight,
-      0
-    );
+    face.position.set(-w / 2 + centerPoint.x, h / 2 - centerPoint.y, 0);
 
     //オブジェクトをシーンへ追加
     scene.add(face);
@@ -868,7 +859,6 @@ function drawFaceMask(points, shift, boxWidth, boxHeight, textureImg) {
     function tick() {
       // face.rotation.y += 0.02;
       renderer.render(scene, camera); // レンダリング
-      const sec = performance.now() / 1000;
       requestAnimationFrame(tick);
     }
   }

@@ -1,18 +1,17 @@
 <template>
-  <div ref="overlayFrame" class="overlayFrame">
+  <div ref="overlayFrame" class="overlayFrame mesh">
     <canvas
       ref="mesh"
-      class="overlay mesh"
+      id="mesh"
+      class="overlay"
       :style="getStyle"
       :width="frame_rect.width"
       :height="frame_rect.height"
     />
-    <p>{{ points.face }}</p>
   </div>
 </template>
 <script>
 import * as _ from "lodash";
-import { PRODUCT_TYPE } from "../../constants";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
 
 export default {
@@ -21,8 +20,7 @@ export default {
       frame_rect: {
         width: 0,
         height: 0
-      },
-      canvas_rect: {}
+      }
     };
   },
   props: {
@@ -41,28 +39,28 @@ export default {
     this.frame_rect = this.$refs.overlayFrame.getBoundingClientRect();
     this.layoutUpdate();
     this.$nextTick(() => {
-      this.clearCanvas();
+      // this.clearCanvas();
     });
   },
 
   methods: {
     //キャンバスクリア
     clearCanvas() {
-      const clearCanvasRect = canvas => {
-        const ctx = canvas.getContext("2d");
-        ctx.restore();
-        console.log(
-          "clear mesh",
-          this.frame_rect.width,
-          this.frame_rect.height
-        );
-        ctx.clearRect(0, 0, this.frame_rect.width, this.frame_rect.height);
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(0, 0);
-        ctx.stroke();
-      };
-      clearCanvasRect(this.$refs.mesh);
+      // const clearCanvasRect = canvas => {
+      //   const ctx = canvas.getContext("2d");
+      //   ctx.restore();
+      //   console.log(
+      //     "clear mesh",
+      //     this.frame_rect.width,
+      //     this.frame_rect.height
+      //   );
+      //   ctx.clearRect(0, 0, this.frame_rect.width, this.frame_rect.height);
+      //   ctx.beginPath();
+      //   ctx.moveTo(0, 0);
+      //   ctx.lineTo(0, 0);
+      //   ctx.stroke();
+      // };
+      // clearCanvasRect(this.$refs.mesh);
     },
     layoutUpdate() {
       if (this.rect && this.frame_rect.width && this.frame_rect.height) {
@@ -71,13 +69,6 @@ export default {
         };
         this.$refs.mesh.style.width = `${this.frame_rect.width}px`;
         this.$refs.mesh.style.height = `${this.frame_rect.height}px`;
-
-        //画像
-        const _width = this.rect.width - this.rect.x * 2;
-        this.canvas_rect = {
-          width: _width,
-          height: this.rect.height
-        };
       }
     }
   },
@@ -91,10 +82,36 @@ export default {
     },
     points: {
       immediate: true,
-      handler() {
-        const textureImg = "eyeshadow01.png";
-        //drawFaceMask は public/js/faceModel.js から
-        // drawFaceMask(points, boxWidth, boxHeight, textureImg); // eslint-disable-line
+      deep: true,
+      handler(newValue, oldValue) {
+        if (
+          JSON.stringify(newValue) !== JSON.stringify(oldValue) &&
+          Object.keys(newValue).length > 0
+        ) {
+          const _face = newValue.face;
+          let _points = [
+            ..._face.jaw,
+            ..._face.right_eyebrow,
+            ..._face.left_eyebrow,
+            ..._face.nose,
+            ..._face.right_eye,
+            ..._face.left_eye,
+            ..._face.mouth
+          ];
+          for (let i = 0; i < _points.length; i++) {
+            _points[i] = {
+              x: _points[i][0],
+              y: _points[i][1],
+              z: 0
+            };
+          }
+          console.log("_points", _points);
+          const textureImg = "wireframe.png";
+          //drawFaceMask は public/js/makeup.js から
+          /* eslint-disable */
+          drawFaceMask(_points, this.frame_rect, textureImg);
+          /* eslint-enable */
+        }
       }
     }
   },
@@ -122,6 +139,6 @@ export default {
   z-index: 3;
   transform: scale(-1, 1);
   mix-blend-mode: soft-light;
-  mix-blend-mode: luminosity;
+  // mix-blend-mode: luminosity;
 }
 </style>
