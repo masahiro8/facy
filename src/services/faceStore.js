@@ -3,7 +3,8 @@ import { faceapi } from "./api";
 import { ContextStore } from "../context/Store";
 
 export const FACE_STORE_CONTEXT_KEYS = {
-  EYES: "eyes"
+  EYES: "eyes",
+  FACE: "face"
 };
 
 const _faceStore = () => {
