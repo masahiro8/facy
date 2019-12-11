@@ -107,7 +107,7 @@ export default {
           }
           console.log("_points", _points);
           const textureImg = "wireframe.png";
-          //drawFaceMask は public/js/makeup.js から
+
           /* eslint-disable */
           drawFaceMask(_points, this.frame_rect, textureImg);
           /* eslint-enable */
@@ -138,7 +138,7 @@ export default {
   left: 0;
   z-index: 3;
   transform: scale(-1, 1);
-  mix-blend-mode: soft-light;
+  // mix-blend-mode: soft-light;
   // mix-blend-mode: luminosity;
 }
 </style>

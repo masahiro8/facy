@@ -1,5 +1,6 @@
 function drawFaceMask(points, rect, textureImg) {
   console.log("width", rect.width, "height", rect.height);
+
   //中点を求める
   const getMidPoint = (startPoint, endPoint) => {
     let newPoint = {};
@@ -8,11 +9,15 @@ function drawFaceMask(points, rect, textureImg) {
     return newPoint;
   };
 
+  //pythonは鼻の部分の頂点が1つ少ない
+  //中点を追加する
   if (points.length < 68) {
-    points.push(getMidPoint(points[32], points[33]));
+    points.splice(32, 0, getMidPoint(points[32], points[33]));
   }
   console.log("points", points);
-  //鼻の右端から目の下側、輪郭への中点をpointsに追加
+
+  //頬の部分に中点を追加する
+  //右頬の中点 鼻の右端を中心に目の下側、輪郭との中点を追加する
   points.push(getMidPoint(points[31], points[27]));
   points.push(getMidPoint(points[31], points[39]));
   points.push(getMidPoint(points[31], points[40]));
@@ -22,7 +27,7 @@ function drawFaceMask(points, rect, textureImg) {
   points.push(getMidPoint(points[31], points[1]));
   points.push(getMidPoint(points[31], points[2]));
   points.push(getMidPoint(points[31], points[3]));
-  //鼻の左端から目の下側、輪郭への中点をpointsに追加
+  //左頬の中点 鼻の左端を中心に目の下側、輪郭との中点を追加する
   points.push(getMidPoint(points[35], points[27]));
   points.push(getMidPoint(points[35], points[42]));
   points.push(getMidPoint(points[35], points[47]));
@@ -33,17 +38,22 @@ function drawFaceMask(points, rect, textureImg) {
   points.push(getMidPoint(points[35], points[14]));
   points.push(getMidPoint(points[35], points[13]));
 
+  //受け取る座標は平面
+  //z軸座標は仮でゼロを入れておく
+  for (let i = 0; i < points.length; i++) {
+    points[i].x = points[i].x / 350;
+    points[i].y = points[i].y / 350;
+    points[i].z = 0;
+  }
+
+  //顔のモデルの中心を決める
   //左右の目と鼻の三角形の中心を求める
   const centerPoint = {
     x: (points[39].x + points[42].x + points[30].x) / 3,
     y: (points[39].y + points[42].y + points[30].y) / 3
   };
 
-  for (let i = 0; i < points.length; i++) {
-    points[i].z = 0;
-  }
-
-  //シェーダー
+  //シェーダーをロード
   SHADER_LOADER.load(
     // ロード完了後
     function(data) {
@@ -63,8 +73,7 @@ function drawFaceMask(points, rect, textureImg) {
     const renderer = new THREE.WebGLRenderer({
       canvas: document.querySelector("#mesh"),
       antialias: true,
-      //描画背景を透明にする
-      alpha: true
+      alpha: true //描画背景を透明にする
     });
     // レンダラーのサイズを調整する
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -83,7 +92,7 @@ function drawFaceMask(points, rect, textureImg) {
       -500,
       500
     );
-    // camera.position.set(0, 0, 1);
+    // camera.position.set(0, 0, 100);
     camera.lookAt(scene.position);
 
     let n = 128; //三角形の数
@@ -95,10 +104,10 @@ function drawFaceMask(points, rect, textureImg) {
     var uvs = new Float32Array(v * 2); //uv座標
 
     for (let i = 0; i < points.length; i++) {
-      positions[i * 3] = points[i].x - centerPoint.x;
-      positions[i * 3 + 1] = -(points[i].y - centerPoint.y);
-      // positions[i * 3] = points[i].x;
-      // positions[i * 3 + 1] = -points[i].y;
+      // positions[i * 3] = points[i].x - centerPoint.x;
+      // positions[i * 3 + 1] = -(points[i].y - centerPoint.y);
+      positions[i * 3] = points[i].x;
+      positions[i * 3 + 1] = -points[i].y;
       positions[i * 3 + 2] = points[i].z;
 
       colors[i * 3] = 1.0;
