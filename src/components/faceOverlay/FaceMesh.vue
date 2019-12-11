@@ -106,7 +106,7 @@ export default {
             };
           }
           console.log("_points", _points);
-          const textureImg = "wireframe.png";
+          const textureImg = "full-makeup.png";
 
           /* eslint-disable */
           drawFaceMask(_points, this.frame_rect, textureImg);
@@ -138,7 +138,7 @@ export default {
   left: 0;
   z-index: 3;
   transform: scale(-1, 1);
-  // mix-blend-mode: soft-light;
+  mix-blend-mode: multiply;
   // mix-blend-mode: luminosity;
 }
 </style>
