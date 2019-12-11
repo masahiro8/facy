@@ -53,6 +53,49 @@ function drawFaceMask(points, rect, textureImg) {
     y: (points[39].y + points[42].y + points[30].y) / 3
   };
 
+  //上まぶたの弧の半径rと中心座標(p,q)を求める
+  //右の上まぶたのindex　目尻から 36,37,38
+  //中点e
+  const e = getMidPoint(points[36], points[37]);
+  const f = getMidPoint(points[37], points[38]);
+  //36と37の垂直二等分線の傾き
+  const m1 =
+    (-1 * (points[37].x - points[36].x)) / (points[37].y - points[36].y);
+  //37と38の垂直二等分線の傾き
+  const m2 =
+    (-1 * (points[38].x - points[37].x)) / (points[38].y - points[37].y);
+
+  //垂直二等分線の切片
+  const intercept1 = e.y - m1 * e.x;
+  const intercept2 = f.y - m2 * f.x;
+
+  //TODO
+  //intercept2がInfinityになる場合どうするか
+  //場合分けするか、場合分けしなくて良い方法を考える
+
+  //円の中心座標(p,q)を求める
+  //２本の垂直二等分線の立方程式を解いて交点を求める
+  const p = (intercept2 - intercept1) / (m1 - m2);
+  const q = (m1 * intercept2 - intercept1 * m2) / (m1 - m2);
+
+  //円の半径を求める
+  //中心点(p,q)とpoints[36]の距離を求める
+  const eyelidCurveRadius = Math.sqrt(
+    Math.pow(points[36].x - p, 2) + Math.pow(points[36].y - q, 2)
+  );
+
+  console.log("1", [points[36].x, points[36].y]);
+  console.log("2", [points[37].x, points[37].y]);
+  console.log("3", [points[38].x, points[38].y]);
+  console.log("e", [e.x, e.y]);
+  console.log("f", [f.x, f.y]);
+  console.log("m1", m1);
+  console.log("m2", m2);
+  console.log("intercept1", intercept1);
+  console.log("intercept2", intercept2);
+  console.log("p,q", [p, q]);
+  console.log("curveRadius", eyelidCurveRadius);
+
   //シェーダーをロード
   SHADER_LOADER.load(
     // ロード完了後
