@@ -69,14 +69,17 @@ function drawFaceMask(points, rect, textureImg) {
   const intercept1 = e.y - m1 * e.x;
   const intercept2 = f.y - m2 * f.x;
 
-  //TODO
-  //intercept2がInfinityになる場合どうするか
-  //場合分けするか、場合分けしなくて良い方法を考える
-
   //円の中心座標(p,q)を求める
   //２本の垂直二等分線の立方程式を解いて交点を求める
-  const p = (intercept2 - intercept1) / (m1 - m2);
-  const q = (m1 * intercept2 - intercept1 * m2) / (m1 - m2);
+  let p = (intercept2 - intercept1) / (m1 - m2);
+  let q = (m1 * intercept2 - intercept1 * m2) / (m1 - m2);
+
+  //m2がInfinityになる場合
+  console.log("m2 bool", m2 == -Infinity);
+  if (m2 === -Infinity) {
+    p = f.x;
+    q = m1 * f.x + intercept1;
+  }
 
   //円の半径を求める
   //中心点(p,q)とpoints[36]の距離を求める
