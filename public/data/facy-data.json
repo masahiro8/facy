@@ -86,22 +86,22 @@
       {
         "id": 9000000001,
         "name": "eyeshadow",
-        "image": "eyeshadow-sample.png"
+        "image": "eyecolor.png"
       },
       {
         "id": 9000000002,
         "name": "cheek",
-        "image": "cheek-sample.png"
+        "image": "cheeks.png"
       },
       {
         "id": 9000000003,
         "name": "lip",
-        "image": "lip-sample.png"
+        "image": "lips.png"
       },
       {
         "id": 9000000000,
         "name": "full",
-        "image": "full-makeup.png"
+        "image": "special.png"
       }
     ]
   }
