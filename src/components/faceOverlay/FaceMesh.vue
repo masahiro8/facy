@@ -88,10 +88,10 @@ export default {
           this.frame_rect.height
         );
 
-        scene.remove(face);
-        geometry.dispose();
-        material.dispose();
-        texture.dispose();
+        // scene.remove(face);
+        // geometry.dispose();
+        // material.dispose();
+        // texture.dispose();
       };
       clearCanvasRect(this.$refs.mesh);
       /* eslint-enable */
