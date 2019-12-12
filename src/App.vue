@@ -9,28 +9,18 @@
       <Vid @ready="readyVideo" />
       <!-- 撮影した写真を表示 -->
       <Picture ref="picture" :src="src" :rect="rect" />
+
       <ContextConsumer
         :contextKey="[POINTS_KEY.EYES, 'PRODUCT_ID', 'PRODUCTS']"
         v-slot="{ context }"
       >
-        <!-- 目 -->
-        <Eyes
-          v-if="shooted"
-          ref="eyes"
-          :rect="rect"
-          :products="context['PRODUCTS']"
-          :productId="context['PRODUCT_ID']"
-          :points="context[POINTS_KEY.EYES]"
-          :zIndex="4"
-        />
-      </ContextConsumer>
-
-      <ContextConsumer :contextKey="[POINTS_KEY.EYES]" v-slot="{ context }">
         <!-- 顔のメッシュ -->
         <FaceMesh
           v-if="shooted"
           ref="mesh"
           :rect="rect"
+          :products="context['PRODUCTS']"
+          :productId="context['PRODUCT_ID']"
           :points="context[POINTS_KEY.EYES]"
           :zIndex="5"
         />
@@ -48,7 +38,7 @@
           >
             <!-- プロダクト -->
             <ProductList
-              :productType="PRODUCT_TYPE.LENS"
+              :productType="PRODUCT_TYPE.MAKEUP"
               :products="context['PRODUCTS']"
               :categoryId="context['CATEGORY']"
               @setProductId="setProductId"
@@ -56,7 +46,7 @@
             <!-- カテゴリ -->
             <transition name="slide-fade">
               <CategoryList
-                :productType="PRODUCT_TYPE.LENS"
+                :productType="PRODUCT_TYPE.MAKEUP"
                 :items="context['PRODUCTS']"
               />
             </transition>
@@ -120,7 +110,7 @@ export default {
     ProductList,
     CategoryList,
     ContextConsumer,
-    Eyes,
+    // Eyes,
     FaceMesh
   },
   mounted() {

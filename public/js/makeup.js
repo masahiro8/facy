@@ -881,7 +881,7 @@ function drawFaceMask(points, rect, textureImg) {
 
     //テクスチャの読み込み
     const loader = new THREE.TextureLoader();
-    const texture = loader.load("../images/texture/" + textureImg);
+    const texture = loader.load(textureImg);
     texture.minFilter = THREE.LinearFilter;
     texture.magFilter = THREE.LinearFilter;
 

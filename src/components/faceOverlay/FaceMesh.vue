@@ -12,6 +12,7 @@
 </template>
 <script>
 import * as _ from "lodash";
+import { PRODUCT_TYPE } from "../../constants";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
 
 export default {
@@ -20,7 +21,10 @@ export default {
       frame_rect: {
         width: 0,
         height: 0
-      }
+      },
+      product: null,
+      productType: PRODUCT_TYPE.MAKEUP,
+      item_image: ""
     };
   },
   props: {
@@ -29,6 +33,8 @@ export default {
       default: null
     },
     points: Object,
+    productId: Object,
+    products: Object,
     zIndex: {
       type: Number,
       default: 3
@@ -39,28 +45,56 @@ export default {
     this.frame_rect = this.$refs.overlayFrame.getBoundingClientRect();
     this.layoutUpdate();
     this.$nextTick(() => {
-      // this.clearCanvas();
+      this.clearCanvas();
     });
   },
 
   methods: {
+    draw(points, image) {
+      const _face = points;
+      let _points = [
+        ..._face.jaw,
+        ..._face.right_eyebrow,
+        ..._face.left_eyebrow,
+        ..._face.nose,
+        ..._face.right_eye,
+        ..._face.left_eye,
+        ..._face.mouth
+      ];
+      for (let i = 0; i < _points.length; i++) {
+        _points[i] = {
+          x: _points[i][0],
+          y: _points[i][1],
+          z: 0
+        };
+      }
+      console.log("_points", _points);
+
+      //テクスチャ画像の指定
+      const textureImg = image;
+
+      /* eslint-disable */
+      drawFaceMask(_points, this.frame_rect, textureImg);
+      /* eslint-enable */
+    },
     //キャンバスクリア
     clearCanvas() {
-      // const clearCanvasRect = canvas => {
-      //   const ctx = canvas.getContext("2d");
-      //   ctx.restore();
-      //   console.log(
-      //     "clear mesh",
-      //     this.frame_rect.width,
-      //     this.frame_rect.height
-      //   );
-      //   ctx.clearRect(0, 0, this.frame_rect.width, this.frame_rect.height);
-      //   ctx.beginPath();
-      //   ctx.moveTo(0, 0);
-      //   ctx.lineTo(0, 0);
-      //   ctx.stroke();
-      // };
-      // clearCanvasRect(this.$refs.mesh);
+      /* eslint-disable */
+
+      const clearCanvasRect = canvas => {
+        console.log(
+          "clear mesh",
+          this.frame_rect.width,
+          this.frame_rect.height
+        );
+
+        scene.remove(face);
+        geometry.dispose();
+        material.dispose();
+        texture.dispose();
+      };
+      clearCanvasRect(this.$refs.mesh);
+      /* eslint-enable */
     },
     layoutUpdate() {
       if (this.rect && this.frame_rect.width && this.frame_rect.height) {
@@ -74,44 +108,29 @@ export default {
   },
 
   watch: {
+    productId: {
+      immediate: true,
+      handler(newValue, oldValue) {
+        if (!newValue) {
+          this.clearCanvas();
+        }
+        const product = _.find(
+          this.products[this.productType].products,
+          product => {
+            return product.id === newValue.productId;
+          }
+        );
+        if (product) {
+          this.product = product;
+          this.item_image = `${window.location.origin}/images/${product.category}/${product.image}`;
+          this.draw(this.points.face, this.item_image);
+        }
+      }
+    },
     rect: {
       immediate: true,
       handler() {
         this.layoutUpdate();
-      }
-    },
-    points: {
-      immediate: true,
-      deep: true,
-      handler(newValue, oldValue) {
-        if (
-          JSON.stringify(newValue) !== JSON.stringify(oldValue) &&
-          Object.keys(newValue).length > 0
-        ) {
-          const _face = newValue.face;
-          let _points = [
-            ..._face.jaw,
-            ..._face.right_eyebrow,
-            ..._face.left_eyebrow,
-            ..._face.nose,
-            ..._face.right_eye,
-            ..._face.left_eye,
-            ..._face.mouth
-          ];
-          for (let i = 0; i < _points.length; i++) {
-            _points[i] = {
-              x: _points[i][0],
-              y: _points[i][1],
-              z: 0
-            };
-          }
-          console.log("_points", _points);
-          const textureImg = "wireframe.png";
-
-          /* eslint-disable */
-          drawFaceMask(_points, this.frame_rect, textureImg);
-          /* eslint-enable */
-        }
       }
     }
   },

@@ -1,3 +1,4 @@
 export const PRODUCT_TYPE = {
-  LENS: "lens"
+  LENS: "lens",
+  MAKEUP: "makeup"
 };

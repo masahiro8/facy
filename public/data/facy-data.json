@@ -46,5 +46,63 @@
         "image": "yummy_n2_bt.png"
       }
     ]
+  },
+  "makeup": {
+    "products": [
+      {
+        "id": 1,
+        "type": "makeup",
+        "category": 9000000001,
+        "name": "coral",
+        "image": "eyeshadow-sample.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 2,
+        "type": "makeup",
+        "category": 9000000002,
+        "name": "coral red",
+        "image": "cheek-sample.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 3,
+        "type": "makeup",
+        "category": 9000000003,
+        "name": "deep red",
+        "image": "lip-sample.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 4,
+        "type": "makeup",
+        "category": 9000000000,
+        "name": "winter special",
+        "image": "full-makeup.png",
+        "url": "http://backham.me/"
+      }
+    ],
+    "category": [
+      {
+        "id": 9000000001,
+        "name": "eyeshadow",
+        "image": "eyeshadow-sample.png"
+      },
+      {
+        "id": 9000000002,
+        "name": "cheek",
+        "image": "cheek-sample.png"
+      },
+      {
+        "id": 9000000003,
+        "name": "lip",
+        "image": "lip-sample.png"
+      },
+      {
+        "id": 9000000000,
+        "name": "full",
+        "image": "full-makeup.png"
+      }
+    ]
   }
 }
