@@ -53,51 +53,52 @@ function drawFaceMask(points, rect, textureImg) {
     y: (points[39].y + points[42].y + points[30].y) / 3
   };
 
-  //上まぶたの弧の半径rと中心座標(p,q)を求める
-  //右の上まぶたのindex　目尻から 36,37,38
-  //中点e
-  const e = getMidPoint(points[36], points[37]);
-  const f = getMidPoint(points[37], points[38]);
-  //36と37の垂直二等分線の傾き
-  const m1 =
-    (-1 * (points[37].x - points[36].x)) / (points[37].y - points[36].y);
-  //37と38の垂直二等分線の傾き
-  const m2 =
-    (-1 * (points[38].x - points[37].x)) / (points[38].y - points[37].y);
+  //3点を通る円の中心点と半径を求める
+  const getEyelidCurve = (point1, point2, point3) => {
+    console.log("in getEyelidCureve");
+    //円の中心座標
+    let centerPoint = { x: 0, y: 0 };
 
-  //垂直二等分線の切片
-  const intercept1 = e.y - m1 * e.x;
-  const intercept2 = f.y - m2 * f.x;
+    //point1とpoint2の垂直二等分線、point2とpoint3の垂直二等分線の交点から円の中心座標を求める
 
-  //円の中心座標(p,q)を求める
-  //２本の垂直二等分線の立方程式を解いて交点を求める
-  let p = (intercept2 - intercept1) / (m1 - m2);
-  let q = (m1 * intercept2 - intercept1 * m2) / (m1 - m2);
+    //point1とpoint2の中点midPoint1を求める
+    const midPoint1 = getMidPoint(point1, point2);
+    //point2とpoint3の中点midPoint2を求める
+    const midPoint2 = getMidPoint(point2, point3);
 
-  //m2がInfinityになる場合
-  console.log("m2 bool", m2 == -Infinity);
-  if (m2 === -Infinity) {
-    p = f.x;
-    q = m1 * f.x + intercept1;
-  }
+    //point1とpoint2の垂直二等分線の傾き
+    const slope1 = (-1 * (point2.x - point1.x)) / (point2.y - point1.y);
+    //point2とpoint3の垂直二等分線の傾き
+    const slope2 = (-1 * (point3.x - point2.x)) / (point3.y - point2.y);
 
-  //円の半径を求める
-  //中心点(p,q)とpoints[36]の距離を求める
-  const eyelidCurveRadius = Math.sqrt(
-    Math.pow(points[36].x - p, 2) + Math.pow(points[36].y - q, 2)
-  );
+    //各垂直二等分線の切片
+    const intercept1 = midPoint1.y - slope1 * midPoint1.x;
+    const intercept2 = midPoint2.y - slope2 * midPoint2.x;
 
-  console.log("1", [points[36].x, points[36].y]);
-  console.log("2", [points[37].x, points[37].y]);
-  console.log("3", [points[38].x, points[38].y]);
-  console.log("e", [e.x, e.y]);
-  console.log("f", [f.x, f.y]);
-  console.log("m1", m1);
-  console.log("m2", m2);
-  console.log("intercept1", intercept1);
-  console.log("intercept2", intercept2);
-  console.log("p,q", [p, q]);
-  console.log("curveRadius", eyelidCurveRadius);
+    //２本の垂直二等分線の立方程式を解いて交点を求める
+    //交点が円の中心点
+    if (slope2 === -Infinity) {
+      //slope2がInfinityになる場合
+      centerPoint.x = midPoint2.x;
+      centerPoint.y = slope1 * midPoint2.x + intercept1;
+    } else {
+      centerPoint.x = (intercept2 - intercept1) / (slope1 - slope2);
+      centerPoint.y =
+        (slope1 * intercept2 - intercept1 * slope2) / (slope1 - slope2);
+    }
+
+    //円の半径を求める
+    //円の中心点とpoint1の距離を求める
+    const curveRadius = Math.sqrt(
+      Math.pow(point1.x - centerPoint.x, 2) +
+        Math.pow(point1.y - centerPoint.y, 2)
+    );
+
+    return { centerPoint, curveRadius };
+  };
+
+  const eyelid = getEyelidCurve(points[36], points[37], points[38]);
+  console.log(eyelid);
 
   //シェーダーをロード
   SHADER_LOADER.load(
