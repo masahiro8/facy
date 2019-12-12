@@ -2,6 +2,7 @@
   <div ref="pictureFrame" class="pictureFrame">
     <LoadingOverlay :loading="loading" v-slot="{ context }">
       <canvas
+        v-if="frame_rect"
         ref="image2"
         class="clopImage"
         :class="context"
