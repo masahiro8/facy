@@ -109,7 +109,7 @@ export default {
 
   watch: {
     productId: {
-      immediate: true,
+      // immediate: true,
       handler(newValue, oldValue) {
         if (!newValue) {
           this.clearCanvas();
