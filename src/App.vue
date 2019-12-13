@@ -26,13 +26,24 @@
       </ContextConsumer>
 
       <ContextConsumer :contextKey="[POINTS_KEY.EYES]" v-slot="{ context }">
+        <!-- まつげ -->
+        <Eyelush
+          v-if="shooted"
+          ref="eyelush"
+          :rect="rect"
+          :points="context[POINTS_KEY.EYES]"
+          :zIndex="5"
+        />
+      </ContextConsumer>
+
+      <ContextConsumer :contextKey="[POINTS_KEY.EYES]" v-slot="{ context }">
         <!-- 顔のメッシュ -->
         <FaceMesh
           v-if="shooted"
           ref="mesh"
           :rect="rect"
           :points="context[POINTS_KEY.EYES]"
-          :zIndex="5"
+          :zIndex="6"
         />
       </ContextConsumer>
     </AppFrame>
@@ -42,10 +53,7 @@
     <ProductFrame v-if="shooted" :rect="rect">
       <transition name="product-fade">
         <div v-if="shooted" class="products-list">
-          <ContextConsumer
-            :contextKey="['PRODUCTS', 'CATEGORY']"
-            v-slot="{ context }"
-          >
+          <ContextConsumer :contextKey="['PRODUCTS', 'CATEGORY']" v-slot="{ context }">
             <!-- プロダクト -->
             <ProductList
               :productType="PRODUCT_TYPE.LENS"
@@ -55,10 +63,7 @@
             />
             <!-- カテゴリ -->
             <transition name="slide-fade">
-              <CategoryList
-                :productType="PRODUCT_TYPE.LENS"
-                :items="context['PRODUCTS']"
-              />
+              <CategoryList :productType="PRODUCT_TYPE.LENS" :items="context['PRODUCTS']" />
             </transition>
           </ContextConsumer>
         </div>
@@ -86,6 +91,7 @@ import { FACE_STORE_CONTEXT_KEYS } from "./services/faceStore";
 import ContextConsumer from "./context/Context";
 import { ContextStore } from "./context/Store";
 import Eyes from "./components/faceOverlay/Eyes.vue";
+import Eyelush from "./components/faceOverlay/Eyelush.vue";
 import FaceMesh from "./components/faceOverlay/FaceMesh.vue";
 import AppFrame from "./components/frame/AppFrame";
 import ProductFrame from "./components/frame/ProductFrame";
@@ -121,6 +127,7 @@ export default {
     CategoryList,
     ContextConsumer,
     Eyes,
+    Eyelush,
     FaceMesh
   },
   mounted() {

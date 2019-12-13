@@ -81,7 +81,7 @@ export default {
       }
     },
     points: {
-      immediate: true,
+      // immediate: true,
       deep: true,
       handler(newValue, oldValue) {
         if (
@@ -109,7 +109,7 @@ export default {
           const textureImg = "wireframe.png";
 
           /* eslint-disable */
-          drawFaceMask(_points, this.frame_rect, textureImg);
+          // drawFaceMask(_points, this.frame_rect, textureImg);
           /* eslint-enable */
         }
       }

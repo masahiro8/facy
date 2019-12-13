@@ -136,7 +136,7 @@ export default {
       const clearCanvasRect = canvas => {
         const ctx = canvas.getContext("2d");
         ctx.restore();
-        console.log("clear", this.frame_rect.width, this.frame_rect.height);
+        // console.log("clear", this.frame_rect.width, this.frame_rect.height);
         ctx.clearRect(0, 0, this.frame_rect.width, this.frame_rect.height);
         ctx.beginPath();
         ctx.moveTo(0, 0);
@@ -168,7 +168,7 @@ export default {
 
   watch: {
     productId: {
-      immediate: true,
+      // immediate: true,
       handler(newValue, oldValue) {
         if (!newValue) {
           this.clearCanvas();
