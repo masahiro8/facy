@@ -176,6 +176,7 @@ export default {
           })
           .value();
 
+        //交点
         const getMiddlePoint = ({ p1, p2, p3, p4 }) => {
           const s1 =
             ((p4.x - p2.x) * (p1.y - p2.y) - (p4.y - p2.y) * (p1.x - p2.x)) *
@@ -195,6 +196,7 @@ export default {
           p3: points[1],
           p4: points[3]
         });
+
         //uppointは補正
         const uppoint = {
           x: _uppoint.x,
@@ -208,16 +210,39 @@ export default {
           p4: points[0]
         });
 
+        //上瞼の中心と左右を曲線で結ぶ
+        const upMiddlePoint = {
+          x: (points[1].x + points[2].x) / 2,
+          y: (points[1].y + points[2].y) / 2
+        };
+        const rightCenterPoint = {
+          x: (points[0].x + upMiddlePoint.x) / 2.1,
+          y: (points[0].y + upMiddlePoint.y) / 2.04
+        };
+        const leftCenterPoint = {
+          x: (upMiddlePoint.x + points[3].x) / 1.9,
+          y: (upMiddlePoint.y + points[3].y) / 2.04
+        };
         const ctx = canvas.getContext("2d");
         ctx.fillStyle = "rgb(0,0,0)";
         ctx.save();
         ctx.globalCompositeOperation = "source-over";
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "rgb(0,0,0)";
         ctx.beginPath();
         ctx.moveTo(points[0].x, points[0].y);
-        ctx.lineTo(points[1].x, points[1].y);
-        ctx.quadraticCurveTo(uppoint.x, uppoint.y, points[2].x, points[2].y);
-        ctx.lineTo(points[3].x, points[3].y);
-        ctx.moveTo(points[3].x, points[3].y);
+        ctx.quadraticCurveTo(
+          rightCenterPoint.x,
+          rightCenterPoint.y,
+          upMiddlePoint.x,
+          upMiddlePoint.y
+        );
+        ctx.quadraticCurveTo(
+          leftCenterPoint.x,
+          leftCenterPoint.y,
+          points[3].x,
+          points[3].y
+        );
         ctx.lineTo(points[4].x, points[4].y);
         ctx.quadraticCurveTo(
           downpoint.x,
@@ -228,6 +253,45 @@ export default {
         ctx.lineTo(points[0].x, points[0].y);
         ctx.closePath();
         ctx.fill();
+
+        //上瞼中央を曲線
+        // const ctx = canvas.getContext("2d");
+        // ctx.fillStyle = "rgb(0,0,0)";
+        // ctx.save();
+        // ctx.globalCompositeOperation = "source-over";
+        // ctx.beginPath();
+        // ctx.moveTo(points[0].x, points[0].y);
+        // ctx.lineTo(points[1].x, points[1].y);
+        // ctx.quadraticCurveTo(uppoint.x, uppoint.y, points[2].x, points[2].y);
+        // ctx.lineTo(points[3].x, points[3].y);
+        // ctx.moveTo(points[3].x, points[3].y);
+        // ctx.lineTo(points[4].x, points[4].y);
+        // ctx.quadraticCurveTo(
+        //   downpoint.x,
+        //   downpoint.y,
+        //   points[5].x,
+        //   points[5].y
+        // );
+        // ctx.lineTo(points[0].x, points[0].y);
+        // ctx.closePath();
+        // ctx.fill();
+
+        //線を描画
+        // const ctx = canvas.getContext("2d");
+        // ctx.fillStyle = "rgb(0,0,0)";
+        // ctx.save();
+        // ctx.lineWidth = 2;
+        // ctx.strokeStyle = "rgb(0,0,0)";
+        // ctx.beginPath();
+        // ctx.moveTo(_points[0][0], _points[0][1]);
+        // for (let i = 1; i < _points.length; i++) {
+        //   if (i % 2 === 0) {
+        //     ctx.lineTo(_points[i][0], _points[i][1]);
+        //     console.log("points", _points[i]);
+        //   }
+        // }
+        // ctx.closePath();
+        // ctx.stroke();
 
         //頂点３つづつ取り出す
         // const max = points.length - 1;
