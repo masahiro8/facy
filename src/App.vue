@@ -36,16 +36,16 @@
         />
       </ContextConsumer>
 
-      <ContextConsumer :contextKey="[POINTS_KEY.EYES]" v-slot="{ context }">
-        <!-- 顔のメッシュ -->
-        <FaceMesh
+      <!-- <ContextConsumer :contextKey="[POINTS_KEY.EYES]" v-slot="{ context }"> -->
+      <!-- 顔のメッシュ -->
+      <!-- <FaceMesh
           v-if="shooted"
           ref="mesh"
           :rect="rect"
           :points="context[POINTS_KEY.EYES]"
           :zIndex="6"
-        />
-      </ContextConsumer>
+      />-->
+      <!-- </ContextConsumer> -->
     </AppFrame>
     <!-- 撮影ボタン -->
     <Shoot v-if="!shooted" @shoot="shoot" />
@@ -127,8 +127,8 @@ export default {
     CategoryList,
     ContextConsumer,
     Eyes,
-    Eyelush,
-    FaceMesh
+    Eyelush
+    // FaceMesh
   },
   mounted() {
     this.getProducts();

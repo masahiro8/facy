@@ -84,21 +84,21 @@ export default {
     },
     //キャンバスクリア
     clearCanvas() {
-      const clearCanvasRect = canvas => {
-        const ctx = canvas.getContext("2d");
-        ctx.restore();
-        console.log(
-          "clear eyelush",
-          this.frame_rect.width,
-          this.frame_rect.height
-        );
-        ctx.clearRect(0, 0, this.frame_rect.width, this.frame_rect.height);
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(0, 0);
-        ctx.stroke();
-      };
-      clearCanvasRect(this.$refs.eyelush);
+      // const clearCanvasRect = canvas => {
+      //   const ctx = canvas.getContext("2d");
+      //   ctx.restore();
+      //   console.log(
+      //     "clear eyelush",
+      //     this.frame_rect.width,
+      //     this.frame_rect.height
+      //   );
+      //   ctx.clearRect(0, 0, this.frame_rect.width, this.frame_rect.height);
+      //   ctx.beginPath();
+      //   ctx.moveTo(0, 0);
+      //   ctx.lineTo(0, 0);
+      //   ctx.stroke();
+      // };
+      // clearCanvasRect(this.$refs.eyelush);
     },
     layoutUpdate() {
       if (this.rect && this.frame_rect.width && this.frame_rect.height) {
@@ -128,33 +128,35 @@ export default {
         ) {
           const right = newValue.eyes.right.eyelid;
           const left = newValue.eyes.left.eyelid;
+          console.log(right);
+          console.log(left);
+
+          // const drawEyelid = (canvas, points) => {
+          //   console.log("points", points);
+
+          //   const rect = canvas.getBoundingClientRect();
+          //   const ctx = canvas.getContext("2d");
+          //   ctx.save();
+          //   ctx.globalCompositeOperation = "source-over";
+          //   ctx.strokeStyle = "rgb(200,200,200)";
+          //   ctx.beginPath();
+          //   for (let i = 0; i < points.length; i++) {
+          //     if (i == 0) {
+          //       ctx.moveTo(points[i][0], points[i][1]);
+          //     } else {
+          //       ctx.lineTo(points[i][0], points[i][1]);
+          //     }
+          //   }
+          //   ctx.closePath();
+          //   ctx.stroke();
+          // };
+          // drawEyelid(this.$refs.eyelush, right);
+          // drawEyelid(this.$refs.eyelush, left);
 
           const textureImg = "wireframe.png";
 
-          const drawEyelid = (canvas, points) => {
-            console.log("points", points);
-
-            const rect = canvas.getBoundingClientRect();
-            const ctx = canvas.getContext("2d");
-            ctx.save();
-            ctx.globalCompositeOperation = "source-over";
-            ctx.strokeStyle = "rgb(200,200,200)";
-            ctx.beginPath();
-            for (let i = 0; i < points.length; i++) {
-              if (i == 0) {
-                ctx.moveTo(points[i][0], points[i][1]);
-              } else {
-                ctx.lineTo(points[i][0], points[i][1]);
-              }
-            }
-            ctx.closePath();
-            ctx.stroke();
-          };
-          drawEyelid(this.$refs.eyelush, right);
-          drawEyelid(this.$refs.eyelush, left);
-
           /* eslint-disable */
-          // drawFaceMask(_points, this.frame_rect, textureImg);
+          drawEyelush(right, this.frame_rect, textureImg);
           /* eslint-enable */
         }
       }
