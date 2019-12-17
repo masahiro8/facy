@@ -9,16 +9,20 @@
       <Vid @ready="readyVideo" />
       <!-- 撮影した写真を表示 -->
       <Picture ref="picture" :src="src" :rect="rect" />
-      <ContextConsumer :contextKey="[POINTS_KEY.EYES,'PRODUCT_ID','PRODUCTS']" v-slot="{ context }">
-        <!-- 目 -->
-        <Eyes
+
+      <ContextConsumer
+        :contextKey="[POINTS_KEY.EYES, 'PRODUCT_ID', 'PRODUCTS']"
+        v-slot="{ context }"
+      >
+        <!-- 顔のメッシュ -->
+        <FaceMesh
           v-if="shooted"
-          ref="eyes"
+          ref="mesh"
           :rect="rect"
           :products="context['PRODUCTS']"
           :productId="context['PRODUCT_ID']"
           :points="context[POINTS_KEY.EYES]"
-          :zIndex="4"
+          :zIndex="5"
         />
       </ContextConsumer>
     </AppFrame>
@@ -28,17 +32,23 @@
     <ProductFrame v-if="shooted" :rect="rect">
       <transition name="product-fade">
         <div v-if="shooted" class="products-list">
-          <ContextConsumer :contextKey="['PRODUCTS','CATEGORY']" v-slot="{ context }">
+          <ContextConsumer
+            :contextKey="['PRODUCTS', 'CATEGORY']"
+            v-slot="{ context }"
+          >
             <!-- プロダクト -->
             <ProductList
-              :productType="PRODUCT_TYPE.LENS"
+              :productType="PRODUCT_TYPE.MAKEUP"
               :products="context['PRODUCTS']"
               :categoryId="context['CATEGORY']"
               @setProductId="setProductId"
             />
             <!-- カテゴリ -->
             <transition name="slide-fade">
-              <CategoryList :productType="PRODUCT_TYPE.LENS" :items="context['PRODUCTS']" />
+              <CategoryList
+                :productType="PRODUCT_TYPE.MAKEUP"
+                :items="context['PRODUCTS']"
+              />
             </transition>
           </ContextConsumer>
         </div>
@@ -66,6 +76,7 @@ import { FACE_STORE_CONTEXT_KEYS } from "./services/faceStore";
 import ContextConsumer from "./context/Context";
 import { ContextStore } from "./context/Store";
 import Eyes from "./components/faceOverlay/Eyes.vue";
+import FaceMesh from "./components/faceOverlay/FaceMesh.vue";
 import AppFrame from "./components/frame/AppFrame";
 import ProductFrame from "./components/frame/ProductFrame";
 import { PRODUCT_TYPE } from "./constants";
@@ -99,7 +110,8 @@ export default {
     ProductList,
     CategoryList,
     ContextConsumer,
-    Eyes
+    // Eyes,
+    FaceMesh
   },
   mounted() {
     this.getProducts();
@@ -128,15 +140,6 @@ export default {
       //各コンポーネントをprops経由でリセットするとworkしないので直接メソッドからリセット
       this.$refs.picture.clearCanvas();
       this.$refs.eyes.clearCanvas();
-    },
-    //ここで両目の頂点情報を取得
-    getPoints(points, face_eyes_data) {
-      this.points = {
-        eyes: points,
-        face: face_eyes_data.points,
-        shift: face_eyes_data.shift,
-        rate: face_eyes_data.rate
-      };
     },
     setProductId({ productId, productType }) {
       ContextStore.setContext("PRODUCT_ID", { productId });

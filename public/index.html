@@ -6,6 +6,26 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title>facy</title>
+    <script
+      data-src="./shader/vertex.js"
+      charset="utf-8"
+      data-name="myShader"
+      type="x-shader/x-vertex"
+    ></script>
+    <script
+      data-src="./shader/fragment.js"
+      charset="utf-8"
+      data-name="myShader"
+      type="x-shader/x-fragment"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <script src="./js/ShaderLoader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
+    <script src="./js/makeup.js"></script>
   </head>
   <body>
     <noscript>
