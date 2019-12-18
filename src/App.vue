@@ -24,6 +24,16 @@
           :points="context[POINTS_KEY.EYES]"
           :zIndex="5"
         />
+        <!-- 目 -->
+        <Eyes
+          v-if="shooted"
+          ref="eyes"
+          :rect="rect"
+          :products="context['PRODUCTS']"
+          :productId="context['PRODUCT_ID']"
+          :points="context[POINTS_KEY.EYES]"
+          :zIndex="4"
+        />
       </ContextConsumer>
     </AppFrame>
     <!-- 撮影ボタン -->
@@ -32,10 +42,7 @@
     <ProductFrame v-if="shooted" :rect="rect">
       <transition name="product-fade">
         <div v-if="shooted" class="products-list">
-          <ContextConsumer
-            :contextKey="['PRODUCTS', 'CATEGORY']"
-            v-slot="{ context }"
-          >
+          <ContextConsumer :contextKey="['PRODUCTS', 'CATEGORY']" v-slot="{ context }">
             <!-- プロダクト -->
             <ProductList
               :productType="PRODUCT_TYPE.MAKEUP"
@@ -45,10 +52,7 @@
             />
             <!-- カテゴリ -->
             <transition name="slide-fade">
-              <CategoryList
-                :productType="PRODUCT_TYPE.MAKEUP"
-                :items="context['PRODUCTS']"
-              />
+              <CategoryList :productType="PRODUCT_TYPE.MAKEUP" :items="context['PRODUCTS']" />
             </transition>
           </ContextConsumer>
         </div>
@@ -110,7 +114,7 @@ export default {
     ProductList,
     CategoryList,
     ContextConsumer,
-    // Eyes,
+    Eyes,
     FaceMesh
   },
   mounted() {
@@ -158,10 +162,25 @@ export default {
 @import "@/style/config.scss";
 @import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
 
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   text-align: center;
   font-family: "Roboto", sans-serif;
   color: $color-base-10;
+}
+
+#app {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
 }
 
 #white {

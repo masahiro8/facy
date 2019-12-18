@@ -1,6 +1,8 @@
 <template>
   <button class="shoot-button" @click="shoot">
-    <div class="icon"><Camera :size="20" /></div>
+    <div class="icon">
+      <Camera :size="48" />
+    </div>
   </button>
 </template>
 
@@ -46,7 +48,7 @@ export default {
 .shoot-button {
   z-index: 10;
   position: fixed;
-  bottom: 16px;
+  bottom: 56px;
   left: calc(50vw);
   transform: translateX(-50%);
   padding: $padding-20;
