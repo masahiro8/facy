@@ -20,6 +20,16 @@
           :points="context[POINTS_KEY.EYES]"
           :zIndex="4"
         />
+        <!-- 目 -->
+        <Eyes
+          v-if="shooted"
+          ref="eyes"
+          :rect="rect"
+          :products="context['PRODUCTS']"
+          :productId="context['PRODUCT_ID']"
+          :points="context[POINTS_KEY.EYES]"
+          :zIndex="4"
+        />
       </ContextConsumer>
     </AppFrame>
     <!-- 撮影ボタン -->
@@ -155,10 +165,25 @@ export default {
 @import "@/style/config.scss";
 @import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
 
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   text-align: center;
   font-family: "Roboto", sans-serif;
   color: $color-base-10;
+}
+
+#app {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
 }
 
 #white {
