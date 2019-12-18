@@ -1,0 +1,108 @@
+{
+  "lens": {
+    "products": [
+      {
+        "id": 1,
+        "type": "lens",
+        "category": 2222827381,
+        "name": "brown mariage",
+        "image": "lens01_brownmariage.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 2,
+        "type": "lens",
+        "category": 9232874627,
+        "name": "sheer lueur",
+        "image": "lens05_01_antiquebeige.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 3,
+        "type": "lens",
+        "category": 9232874627,
+        "name": "chiff on brown",
+        "image": "lens05_02_chiffonbrown.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 4,
+        "type": "lens",
+        "category": 2222827381,
+        "name": "sheer lueur",
+        "image": "lens02_sheerlueur.png",
+        "url": "http://backham.me/"
+      }
+    ],
+    "category": [
+      {
+        "id": 9232874627,
+        "name": "candy",
+        "image": "tough2_bt.png"
+      },
+      {
+        "id": 2222827381,
+        "name": "yummy",
+        "image": "yummy_n2_bt.png"
+      }
+    ]
+  },
+  "makeup": {
+    "products": [
+      {
+        "id": 1,
+        "type": "makeup",
+        "category": 9000000001,
+        "name": "coral",
+        "image": "eyeshadow-sample.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 2,
+        "type": "makeup",
+        "category": 9000000002,
+        "name": "coral red",
+        "image": "cheek-sample.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 3,
+        "type": "makeup",
+        "category": 9000000003,
+        "name": "deep red",
+        "image": "lip-sample.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 4,
+        "type": "makeup",
+        "category": 9000000000,
+        "name": "winter special",
+        "image": "full-makeup.png",
+        "url": "http://backham.me/"
+      }
+    ],
+    "category": [
+      {
+        "id": 9000000001,
+        "name": "eyeshadow",
+        "image": "eyecolor.png"
+      },
+      {
+        "id": 9000000002,
+        "name": "cheek",
+        "image": "cheeks.png"
+      },
+      {
+        "id": 9000000003,
+        "name": "lip",
+        "image": "lips.png"
+      },
+      {
+        "id": 9000000000,
+        "name": "full",
+        "image": "special.png"
+      }
+    ]
+  }
+}
