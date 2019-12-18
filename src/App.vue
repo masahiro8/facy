@@ -25,7 +25,7 @@
         />
       </ContextConsumer>
 
-      <ContextConsumer :contextKey="[POINTS_KEY.EYES]" v-slot="{ context }">
+       <ContextConsumer :contextKey="[POINTS_KEY.EYES]" v-slot="{ context }">
         <!-- 顔のメッシュ -->
         <FaceMesh
           v-if="shooted"
@@ -35,6 +35,40 @@
           :zIndex="5"
         />
       </ContextConsumer>
+
+      <ContextConsumer :contextKey="[POINTS_KEY.CHEEKS]" v-slot="{ context }">
+        <!-- チーク -->
+        <Cheeks
+          v-if="shooted"
+          ref="cheeks"
+          :rect="rect"
+          :points="context[POINTS_KEY.CHEEKS]"
+          :zIndex="6"
+        />
+      </ContextConsumer>
+      
+      <ContextConsumer :contextKey="[POINTS_KEY.EYESHADOWS]" v-slot="{ context }">
+        <!-- アイシャドウ -->
+        <Eyeshadows
+          v-if="shooted"
+          ref="eyeshadows"
+          :rect="rect"
+          :points="context[POINTS_KEY.EYESHADOWS]"
+          :zIndex="7"
+        />
+      </ContextConsumer>
+
+      <ContextConsumer :contextKey="[POINTS_KEY.LIPS]" v-slot="{ context }">
+        <!-- リップ -->
+        <Lips
+          v-if="shooted"
+          ref="lips"
+          :rect="rect"
+          :points="context[POINTS_KEY.LIPS]"
+          :zIndex="8"
+        />
+      </ContextConsumer>      
+
     </AppFrame>
     <!-- 撮影ボタン -->
     <Shoot v-if="!shooted" @shoot="shoot" />
@@ -87,6 +121,9 @@ import ContextConsumer from "./context/Context";
 import { ContextStore } from "./context/Store";
 import Eyes from "./components/faceOverlay/Eyes.vue";
 import FaceMesh from "./components/faceOverlay/FaceMesh.vue";
+import Cheeks from "./components/faceOverlay/Cheeks.vue";
+import Eyeshadows from "./components/faceOverlay/Eyeshadows.vue";
+import Lips from "./components/faceOverlay/Lips.vue";
 import AppFrame from "./components/frame/AppFrame";
 import ProductFrame from "./components/frame/ProductFrame";
 import { PRODUCT_TYPE } from "./constants";
@@ -121,7 +158,10 @@ export default {
     CategoryList,
     ContextConsumer,
     Eyes,
-    FaceMesh
+    FaceMesh,
+    Cheeks,
+    Eyeshadows,
+    Lips
   },
   mounted() {
     this.getProducts();
