@@ -153,7 +153,7 @@ export default {
           // drawEyelid(this.$refs.eyelush, right);
           // drawEyelid(this.$refs.eyelush, left);
 
-          const textureImg = "wireframe.png";
+          const textureImg = "wireframe_eyelush.png";
 
           /* eslint-disable */
           drawEyelush(right, this.frame_rect, textureImg);
