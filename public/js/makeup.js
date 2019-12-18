@@ -876,8 +876,8 @@ function drawFaceMask(points, rect, textureImg) {
 function drawEyelush(points, rect, textureImg) {
   console.log("eyelush");
 
-  // const rate = 350;
-  const rate = 1;
+  const rate = 350;
+  // const rate = 1;
 
   let _points = [];
 
@@ -1025,21 +1025,21 @@ function drawEyelush(points, rect, textureImg) {
     const scene = new THREE.Scene();
 
     // カメラを作成
-    const camera = new THREE.PerspectiveCamera(45, w / h, 1, 10000);
-    // const camera = new THREE.OrthographicCamera(
-    //   -w / 2,
-    //   w / 2,
-    //   h / 2,
-    //   -h / 2,
-    //   -500,
-    //   500
-    // );
-    camera.position.set(0, 0);
+    // const camera = new THREE.PerspectiveCamera(45, w / h, 1, 10000);
+    const camera = new THREE.OrthographicCamera(
+      -w / 2,
+      w / 2,
+      h / 2,
+      -h / 2,
+      -500,
+      500
+    );
+    // camera.position.set(0, 0, 100);
     camera.lookAt(scene.position);
 
     let n = 24; //三角形の数
     let v = 21; //頂点数
-    let indexes = new Uint32Array(n * 3); //インデックス配列
+    let indexes = new Uint32Array((n - 1) * 3); //インデックス配列
     let positions = new Float32Array(v * 3); //頂点座標
     let colors = new Float32Array(v * 3); //頂点色
     let normals = new Float32Array(v * 3); //頂点法線
@@ -1072,91 +1072,91 @@ function drawEyelush(points, rect, textureImg) {
     indexes[3] = 0;
     indexes[4] = 8;
     indexes[5] = 1;
-
+    //三角形3
     indexes[6] = 1;
     indexes[7] = 8;
     indexes[8] = 9;
-
+    //三角形4
     indexes[9] = 1;
     indexes[10] = 9;
     indexes[11] = 2;
-
+    //三角形5
     indexes[12] = 2;
     indexes[13] = 9;
     indexes[14] = 10;
-
+    //三角形6
     indexes[15] = 2;
     indexes[16] = 10;
     indexes[17] = 3;
-
+    //三角形7
     indexes[18] = 3;
     indexes[19] = 10;
     indexes[20] = 11;
-
+    //三角形8
     indexes[21] = 3;
     indexes[22] = 11;
     indexes[23] = 4;
-
+    //三角形9
     indexes[24] = 4;
     indexes[25] = 11;
     indexes[26] = 12;
-
+    //10
     indexes[27] = 4;
     indexes[28] = 12;
     indexes[29] = 5;
-
+    //11
     indexes[30] = 5;
     indexes[31] = 12;
     indexes[32] = 13;
-
+    //12
     indexes[33] = 5;
     indexes[34] = 13;
     indexes[35] = 6;
-
+    //13
     indexes[33] = 13;
     indexes[34] = 12;
     indexes[35] = 20;
-
+    //14
     indexes[36] = 20;
     indexes[37] = 12;
     indexes[38] = 19;
-
+    //15
     indexes[39] = 19;
     indexes[40] = 12;
     indexes[41] = 11;
-
+    //16
     indexes[42] = 19;
     indexes[43] = 11;
     indexes[44] = 18;
-
+    //17
     indexes[45] = 18;
     indexes[46] = 11;
     indexes[47] = 10;
-
+    //18
     indexes[48] = 18;
     indexes[49] = 10;
     indexes[50] = 17;
-
+    //19
     indexes[51] = 17;
     indexes[52] = 10;
     indexes[53] = 9;
-
+    //20
     indexes[54] = 17;
     indexes[55] = 9;
     indexes[56] = 16;
-
+    //21
     indexes[57] = 16;
     indexes[58] = 9;
     indexes[59] = 8;
-
+    //22
     indexes[60] = 16;
     indexes[61] = 8;
     indexes[62] = 15;
-
+    //23
     indexes[63] = 15;
     indexes[64] = 8;
     indexes[65] = 7;
-
+    //24
     indexes[66] = 15;
     indexes[67] = 7;
     indexes[68] = 14;
