@@ -31,7 +31,6 @@ export default {
         height: 0
       },
       product: null,
-      productType: PRODUCT_TYPE.LENS,
       lens_image: "",
       canvas_rect: {}
     };
@@ -56,7 +55,8 @@ export default {
     zIndex: {
       type: Number,
       default: 3
-    }
+    },
+    productType: String
   },
 
   methods: {
@@ -399,9 +399,16 @@ export default {
   },
 
   watch: {
+    products: {
+      immediate: true,
+      handler(newValue) {
+        console.log("products", newValue);
+      }
+    },
     productId: {
       immediate: true,
       handler(newValue, oldValue) {
+        console.log("productId", newValue);
         if (!newValue) {
           this.clearCanvas();
         }

@@ -14,7 +14,6 @@
 import * as _ from "lodash";
 import { PRODUCT_TYPE } from "../../constants";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
-
 export default {
   data: () => {
     return {
@@ -23,7 +22,6 @@ export default {
         height: 0
       },
       product: null,
-      productType: PRODUCT_TYPE.MAKEUP,
       item_image: ""
     };
   },
@@ -38,9 +36,9 @@ export default {
     zIndex: {
       type: Number,
       default: 3
-    }
+    },
+    productType: String
   },
-
   mounted() {
     this.frame_rect = this.$refs.overlayFrame.getBoundingClientRect();
     this.layoutUpdate();
@@ -48,7 +46,6 @@ export default {
       this.clearCanvas();
     });
   },
-
   methods: {
     draw(points, image) {
       const _face = points;
@@ -69,10 +66,8 @@ export default {
         };
       }
       console.log("_points", _points);
-
       //テクスチャ画像の指定
       const textureImg = image;
-
       /* eslint-disable */
       drawFaceMask(_points, this.frame_rect, textureImg);
       /* eslint-enable */
@@ -80,18 +75,16 @@ export default {
     //キャンバスクリア
     clearCanvas() {
       /* eslint-disable */
-
       const clearCanvasRect = canvas => {
         console.log(
           "clear mesh",
           this.frame_rect.width,
           this.frame_rect.height
         );
-
-        scene.remove(face);
-        geometry.dispose();
-        material.dispose();
-        texture.dispose();
+        // scene.remove(face);
+        // geometry.dispose();
+        // material.dispose();
+        // texture.dispose();
       };
       clearCanvasRect(this.$refs.mesh);
       /* eslint-enable */
@@ -106,10 +99,15 @@ export default {
       }
     }
   },
-
   watch: {
-    productId: {
+    products: {
       immediate: true,
+      handler(newValue) {
+        console.log("products", newValue);
+      }
+    },
+    productId: {
+      // immediate: true,
       handler(newValue, oldValue) {
         if (!newValue) {
           this.clearCanvas();
@@ -119,6 +117,11 @@ export default {
           product => {
             return product.id === newValue.productId;
           }
+        );
+        console.log(
+          "productId",
+          newValue,
+          this.products[this.productType].products
         );
         if (product) {
           this.product = product;
@@ -134,7 +137,6 @@ export default {
       }
     }
   },
-
   computed: {
     getStyle() {
       let style = "";

@@ -29,6 +29,7 @@
           v-if="shooted"
           ref="eyes"
           :rect="rect"
+          :productType="PRODUCT_TYPE.LENS"
           :products="context['PRODUCTS']"
           :productId="context['PRODUCT_ID']"
           :points="context[POINTS_KEY.EYES]"
@@ -40,32 +41,11 @@
           v-if="shooted"
           ref="cheeks"
           :rect="rect"
+          :productType="PRODUCT_TYPE.CHEEKS"
           :products="context['PRODUCTS']"
           :productId="context['PRODUCT_ID']"
           :points="context[POINTS_KEY.EYES]"
           :zIndex="5"
-        />
-
-        <!-- アイシャドウ -->
-        <Eyeshadows
-          v-if="shooted"
-          ref="eyeshadows"
-          :rect="rect"
-          :products="context['PRODUCTS']"
-          :productId="context['PRODUCT_ID']"
-          :points="context[POINTS_KEY.EYES]"
-          :zIndex="6"
-        />
-
-        <!-- リップ -->
-        <Lips
-          v-if="shooted"
-          ref="lips"
-          :rect="rect"
-          :products="context['PRODUCTS']"
-          :productId="context['PRODUCT_ID']"
-          :points="context[POINTS_KEY.EYES]"
-          :zIndex="7"
         />
       </ContextConsumer>
     </AppFrame>
@@ -121,8 +101,8 @@ import { ContextStore } from "./context/Store";
 // import FaceMesh from "./components/faceOverlay/FaceMesh.vue";
 import Eyes from "./components/faceOverlay/Eyes.vue";
 import Cheeks from "./components/faceOverlay/FaceMesh.vue";
-import Eyeshadows from "./components/faceOverlay/FaceMesh.vue";
-import Lips from "./components/faceOverlay/FaceMesh.vue";
+// import Eyeshadows from "./components/faceOverlay/FaceMesh.vue";
+// import Lips from "./components/faceOverlay/FaceMesh.vue";
 import AppFrame from "./components/frame/AppFrame";
 import ProductFrame from "./components/frame/ProductFrame";
 import { PRODUCT_TYPE } from "./constants";
@@ -159,9 +139,9 @@ export default {
     ContextConsumer,
     // FaceMesh,
     Eyes,
-    Cheeks,
-    Eyeshadows,
-    Lips
+    Cheeks
+    // Eyeshadows,
+    // Lips
   },
   mounted() {
     this.getProducts();
