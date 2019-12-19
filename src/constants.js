@@ -1,4 +1,6 @@
 export const PRODUCT_TYPE = {
   LENS: "lens",
-  MAKEUP: "makeup"
+  CHEEKS: "cheeks",
+  EYESHADOWS: "eyeshadows",
+  LIPS: "lips"
 };

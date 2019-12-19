@@ -34,34 +34,81 @@
           :points="context[POINTS_KEY.EYES]"
           :zIndex="4"
         />
-      </ContextConsumer>
+
+        <!-- 目 -->
+        <Cheeks
+          v-if="shooted"
+          ref="cheeks"
+          :rect="rect"
+          :products="context['PRODUCTS']"
+          :productId="context['PRODUCT_ID']"
+          :points="context[POINTS_KEY.EYES]"
+          :zIndex="5"
+        />
+
+        <!-- アイシャドウ -->
+        <Eyeshadows
+          v-if="shooted"
+          ref="eyeshadows"
+          :rect="rect"
+          :products="context['PRODUCTS']"
+          :productId="context['PRODUCT_ID']"
+          :points="context[POINTS_KEY.EYES]"
+          :zIndex="6"
+        />
+
+        <!-- リップ -->
+        <Lips
+          v-if="shooted"
+          ref="lips"
+          :rect="rect"
+          :products="context['PRODUCTS']"
+          :productId="context['PRODUCT_ID']"
+          :points="context[POINTS_KEY.EYES]"
+          :zIndex="7"
+        />
+
+      </ContextConsumer>      
+
     </AppFrame>
     <!-- 撮影ボタン -->
     <Shoot v-if="!shooted" @shoot="shoot" />
     <!-- 商品リスト -->
     <ProductFrame v-if="shooted" :rect="rect">
-      <transition name="product-fade">
-        <div v-if="shooted" class="products-list">
-          <ContextConsumer :contextKey="['PRODUCTS', 'CATEGORY']" v-slot="{ context }">
-            <!-- プロダクト -->
-            <ProductList
-              :productType="PRODUCT_TYPE.MAKEUP"
-              :products="context['PRODUCTS']"
-              :categoryId="context['CATEGORY']"
-              @setProductId="setProductId"
-            />
-            <!-- カテゴリ -->
-            <transition name="slide-fade">
-              <CategoryList :productType="PRODUCT_TYPE.MAKEUP" :items="context['PRODUCTS']" />
-            </transition>
-          </ContextConsumer>
-        </div>
-      </transition>
+      <!-- プロダクトリスト -->
+      <!-- cssで一つ分しか表示されていないが出力はされている -->
+      <div v-for="(_type, index) in PRODUCT_TYPE" v-bind:key="index">
+        <transition name="product-fade">
+          <div v-if="shooted" class="products-list">
+            <ContextConsumer
+              :contextKey="['PRODUCTS', 'CATEGORY']"
+              v-slot="{ context }"
+            >
+                <!-- プロダクト -->
+                <ProductList
+                  :productType="_type"
+                  :products="context['PRODUCTS']"
+                  :categoryId="context['CATEGORY']"
+                  @setProductId="setProductId"
+                />
+                <!-- カテゴリ -->
+                <transition name="slide-fade">
+                  <CategoryList
+                    :productType="_type"
+                    :items="context['PRODUCTS']"
+                  />
+                </transition>
+
+            </ContextConsumer>
+          </div>
+        </transition>
+      </div>
     </ProductFrame>
     <AppFrame :rect="rect">
       <!-- 写真消すボタン -->
       <Clear v-if="shooted" @action="clearPicture" />
     </AppFrame>
+
     <!-- フラッシュ -->
     <div v-if="onFlash" id="white"></div>
   </div>
@@ -81,6 +128,9 @@ import ContextConsumer from "./context/Context";
 import { ContextStore } from "./context/Store";
 import Eyes from "./components/faceOverlay/Eyes.vue";
 import FaceMesh from "./components/faceOverlay/FaceMesh.vue";
+import Cheeks from "./components/faceOverlay/Cheeks.vue";
+import Eyeshadows from "./components/faceOverlay/Eyeshadows.vue";
+import Lips from "./components/faceOverlay/Lips.vue";
 import AppFrame from "./components/frame/AppFrame";
 import ProductFrame from "./components/frame/ProductFrame";
 import { PRODUCT_TYPE } from "./constants";
@@ -115,7 +165,10 @@ export default {
     CategoryList,
     ContextConsumer,
     Eyes,
-    FaceMesh
+    FaceMesh,
+    Cheeks,
+    Eyeshadows,
+    Lips
   },
   mounted() {
     this.getProducts();
@@ -152,6 +205,9 @@ export default {
       const result = await productapi.get("", {});
       console.log("getProducts", result.data);
       ContextStore.setContext("PRODUCTS", result.data);
+    },
+    toggleShow(part) {
+      this.faceParts[part] = !this.faceParts[part];
     }
   }
 };
