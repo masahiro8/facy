@@ -15,7 +15,7 @@
         v-slot="{ context }"
       >
         <!-- 顔のメッシュ -->
-        <FaceMesh
+        <!-- <FaceMesh
           v-if="shooted"
           ref="mesh"
           :rect="rect"
@@ -23,7 +23,7 @@
           :productId="context['PRODUCT_ID']"
           :points="context[POINTS_KEY.EYES]"
           :zIndex="5"
-        />
+        />-->
         <!-- 目 -->
         <Eyes
           v-if="shooted"
@@ -35,7 +35,7 @@
           :zIndex="4"
         />
 
-        <!-- 目 -->
+        <!-- チーク -->
         <Cheeks
           v-if="shooted"
           ref="cheeks"
@@ -67,42 +67,33 @@
           :points="context[POINTS_KEY.EYES]"
           :zIndex="7"
         />
-
-      </ContextConsumer>      
-
+      </ContextConsumer>
     </AppFrame>
     <!-- 撮影ボタン -->
     <Shoot v-if="!shooted" @shoot="shoot" />
     <!-- 商品リスト -->
     <ProductFrame v-if="shooted" :rect="rect">
       <!-- プロダクトリスト -->
-      <!-- cssで一つ分しか表示されていないが出力はされている -->
-      <div v-for="(_type, index) in PRODUCT_TYPE" v-bind:key="index">
-        <transition name="product-fade">
-          <div v-if="shooted" class="products-list">
-            <ContextConsumer
-              :contextKey="['PRODUCTS', 'CATEGORY']"
-              v-slot="{ context }"
-            >
-                <!-- プロダクト -->
-                <ProductList
-                  :productType="_type"
-                  :products="context['PRODUCTS']"
-                  :categoryId="context['CATEGORY']"
-                  @setProductId="setProductId"
-                />
-                <!-- カテゴリ -->
-                <transition name="slide-fade">
-                  <CategoryList
-                    :productType="_type"
-                    :items="context['PRODUCTS']"
-                  />
-                </transition>
-
-            </ContextConsumer>
-          </div>
-        </transition>
-      </div>
+      <transition name="product-fade">
+        <div v-if="shooted" class="products-list">
+          <ContextConsumer :contextKey="['SEGMENT','CATEGORY','PRODUCTS']" v-slot="{ context }">
+            <!-- プロダクト -->
+            <ProductList
+              :segment="context['SEGMENT']"
+              :products="context['PRODUCTS']"
+              :categoryId="context['CATEGORY']"
+              @setProductId="setProductId"
+            />
+            <!-- カテゴリ -->
+            <transition name="slide-fade">
+              <div>
+                <SegmentList />
+                <CategoryList :segment="context['SEGMENT']" :items="context['PRODUCTS']" />
+              </div>
+            </transition>
+          </ContextConsumer>
+        </div>
+      </transition>
     </ProductFrame>
     <AppFrame :rect="rect">
       <!-- 写真消すボタン -->
@@ -122,12 +113,13 @@ import Shoot from "./components/button/Shoot";
 import Clear from "./components/button/Clear";
 import ProductList from "./components/products/ProductList.vue";
 import CategoryList from "./components/category/CategoryList.vue";
+import SegmentList from "./components/segment/SegmentList.vue";
 import { wait } from "./util/wait";
 import { FACE_STORE_CONTEXT_KEYS } from "./services/faceStore";
 import ContextConsumer from "./context/Context";
 import { ContextStore } from "./context/Store";
+// import FaceMesh from "./components/faceOverlay/FaceMesh.vue";
 import Eyes from "./components/faceOverlay/Eyes.vue";
-import FaceMesh from "./components/faceOverlay/FaceMesh.vue";
 import Cheeks from "./components/faceOverlay/Cheeks.vue";
 import Eyeshadows from "./components/faceOverlay/Eyeshadows.vue";
 import Lips from "./components/faceOverlay/Lips.vue";
@@ -163,9 +155,10 @@ export default {
     Picture,
     ProductList,
     CategoryList,
+    SegmentList,
     ContextConsumer,
+    // FaceMesh,
     Eyes,
-    FaceMesh,
     Cheeks,
     Eyeshadows,
     Lips
@@ -192,13 +185,14 @@ export default {
     clearPicture() {
       this.shooted = false;
       //選択を解除
+      ContextStore.setContext("SEGMENT", { id: null });
       ContextStore.setContext("CATEGORY", { id: null });
       ContextStore.setContext("PRODUCT_ID", { productId: null });
       //各コンポーネントをprops経由でリセットするとworkしないので直接メソッドからリセット
       this.$refs.picture.clearCanvas();
       this.$refs.eyes.clearCanvas();
     },
-    setProductId({ productId, productType }) {
+    setProductId({ productId }) {
       ContextStore.setContext("PRODUCT_ID", { productId });
     },
     async getProducts() {

@@ -1,19 +1,17 @@
 <template>
-  <button @click="clickHandler(item.id)" class="category">
-    <img :src="getImagePath(item)" />
-  </button>
+  <button @click="clickHandler(id)" class="segment">{{title}}</button>
 </template>
 <script>
 export default {
   props: {
-    item: {
-      type: Object
+    id: {
+      type: String
+    },
+    title: {
+      type: String
     }
   },
   methods: {
-    getImagePath: item => {
-      return `${window.location.origin}/images/category/${item.image}`;
-    },
     clickHandler(id) {
       this.$emit("clickHandler", id);
     }
@@ -24,7 +22,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/style/config.scss";
 
-.category {
+.segment {
   padding: $padding-5;
   width: 96px;
   height: 32px;

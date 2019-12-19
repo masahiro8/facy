@@ -21,8 +21,8 @@ export default {
     products: {
       type: Object
     },
-    productType: {
-      type: String
+    segment: {
+      type: Object
     },
     categoryId: {
       type: Object,
@@ -38,22 +38,19 @@ export default {
       this.selected = id;
       if (!id) {
         this.$emit("setProductId", {
-          productId: null,
-          productType: this.productType
+          productId: null
         });
         return;
       }
       this.$emit("setProductId", {
-        productId: this.selected,
-        productType: this.productType
+        productId: this.selected
       });
     }
   },
   computed: {
     itemList() {
-      if (this.products && this.productType && this.categoryId) {
-        // return this.products[this.productType].products;
-        return _.filter(this.products[this.productType].products, item => {
+      if (this.products && this.segment && this.categoryId) {
+        return _.filter(this.products[this.segment.id].products, item => {
           return item.category === this.categoryId.id;
         });
       }

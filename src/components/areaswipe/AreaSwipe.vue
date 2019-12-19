@@ -6,6 +6,7 @@
 <script>
 // vue2-touch-eventsは使えないので却下
 import Vue from "vue";
+import * as _ from "lodash";
 
 export const GESTURE = {
   START: "start",
@@ -102,6 +103,7 @@ export default {
       this.$emit("callback", { gesture, position: this.movePoint });
     },
     getRectHit(point) {
+      if (!_.has(this.$res, "area")) return false;
       const rect = this.$refs.area.getBoundingClientRect();
       console.log("area", rect, point);
       if (
