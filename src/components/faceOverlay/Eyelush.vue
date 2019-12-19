@@ -131,32 +131,11 @@ export default {
           console.log(right);
           console.log(left);
 
-          // const drawEyelid = (canvas, points) => {
-          //   console.log("points", points);
-
-          //   const rect = canvas.getBoundingClientRect();
-          //   const ctx = canvas.getContext("2d");
-          //   ctx.save();
-          //   ctx.globalCompositeOperation = "source-over";
-          //   ctx.strokeStyle = "rgb(200,200,200)";
-          //   ctx.beginPath();
-          //   for (let i = 0; i < points.length; i++) {
-          //     if (i == 0) {
-          //       ctx.moveTo(points[i][0], points[i][1]);
-          //     } else {
-          //       ctx.lineTo(points[i][0], points[i][1]);
-          //     }
-          //   }
-          //   ctx.closePath();
-          //   ctx.stroke();
-          // };
-          // drawEyelid(this.$refs.eyelush, right);
-          // drawEyelid(this.$refs.eyelush, left);
-
-          const textureImg = "wireframe_eyelush.png";
+          const textureImg = "eyelush01.png";
 
           /* eslint-disable */
-          drawEyelush(right, this.frame_rect, textureImg);
+          // drawEyelush(right, this.frame_rect, textureImg);
+          drawEyelush(left, this.frame_rect, textureImg);
           /* eslint-enable */
         }
       }

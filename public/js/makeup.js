@@ -876,7 +876,7 @@ function drawFaceMask(points, rect, textureImg) {
 function drawEyelush(points, rect, textureImg) {
   console.log("eyelush");
 
-  const rate = 350;
+  const rate = 1;
   // const rate = 1;
 
   let _points = [];
@@ -897,7 +897,7 @@ function drawEyelush(points, rect, textureImg) {
     return newPoint;
   };
 
-  const getEyelushVertex = points => {
+  const getEyelushPoints = points => {
     const getCircles = (point1, point2, point3) => {
       let x;
       let y;
@@ -958,41 +958,42 @@ function drawEyelush(points, rect, textureImg) {
     };
     getRadian(points[0]);
     getRadian(points[6]);
-    //points[0]とpoints[6]の間を6分割
+    //points[0]とpoints[6]のなす角を6分割
     const radStep = (getRadian(points[0]) - getRadian(points[6])) / 6;
 
     //上まぶたの上側にメッシュ用の座標を追加する
     const newPoints = [];
+    newPoints.length = 21;
 
-    for (let i = 0; i <= 6; i++) {
+    for (let i = 0; i < 7; i++) {
       const rad = getRadian(points[6]) + radStep * i;
       //上まぶたの円弧
-      newPoints.push({
+      newPoints[i] = {
         x: aveCircle.x + Math.sin(rad) * aveCircle.r,
         y: aveCircle.y + Math.cos(rad) * aveCircle.r,
         z: 0
-      });
+      };
       //上まぶたの円弧を元にまぶたの上側に同心円の座標を2段追加する
       //1段目
-      newPoints.push({
+      newPoints[i + 7] = {
         x: aveCircle.x + Math.sin(rad) * aveCircle.r * 1.2,
         y: aveCircle.y + Math.cos(rad) * aveCircle.r * 1.2,
-        z: 0
-      });
+        z: 0.02
+      };
       //2段目
-      newPoints.push({
+      newPoints[i + 14] = {
         x: aveCircle.x + Math.sin(rad) * aveCircle.r * 1.4,
         y: aveCircle.y + Math.cos(rad) * aveCircle.r * 1.4,
-        z: 0
-      });
+        z: 0.025
+      };
     }
-
+    console.log("newPoints", newPoints);
     return newPoints;
   };
-  getEyelushVertex(_points);
-  console.log(getEyelushVertex(_points));
+  getEyelushPoints(_points);
+  console.log(getEyelushPoints(_points));
 
-  const points_eyelush = getEyelushVertex(_points);
+  const points_eyelush = getEyelushPoints(_points);
 
   //シェーダーをロード
   SHADER_LOADER.load(
@@ -1066,150 +1067,114 @@ function drawEyelush(points, rect, textureImg) {
     //----------
     //三角形１
     indexes[0] = 0;
-    indexes[1] = 7;
-    indexes[2] = 8;
+    indexes[1] = 8;
+    indexes[2] = 7;
     //三角形２
     indexes[3] = 0;
-    indexes[4] = 8;
-    indexes[5] = 1;
+    indexes[4] = 1;
+    indexes[5] = 8;
     //三角形3
     indexes[6] = 1;
-    indexes[7] = 8;
-    indexes[8] = 9;
+    indexes[7] = 9;
+    indexes[8] = 8;
     //三角形4
     indexes[9] = 1;
-    indexes[10] = 9;
-    indexes[11] = 2;
+    indexes[10] = 2;
+    indexes[11] = 9;
     //三角形5
     indexes[12] = 2;
-    indexes[13] = 9;
-    indexes[14] = 10;
+    indexes[13] = 10;
+    indexes[14] = 9;
     //三角形6
     indexes[15] = 2;
-    indexes[16] = 10;
-    indexes[17] = 3;
+    indexes[16] = 3;
+    indexes[17] = 10;
     //三角形7
     indexes[18] = 3;
-    indexes[19] = 10;
-    indexes[20] = 11;
+    indexes[19] = 11;
+    indexes[20] = 10;
     //三角形8
     indexes[21] = 3;
-    indexes[22] = 11;
-    indexes[23] = 4;
+    indexes[22] = 4;
+    indexes[23] = 11;
     //三角形9
     indexes[24] = 4;
-    indexes[25] = 11;
-    indexes[26] = 12;
+    indexes[25] = 12;
+    indexes[26] = 11;
     //10
     indexes[27] = 4;
-    indexes[28] = 12;
-    indexes[29] = 5;
+    indexes[28] = 5;
+    indexes[29] = 12;
     //11
     indexes[30] = 5;
-    indexes[31] = 12;
-    indexes[32] = 13;
+    indexes[31] = 13;
+    indexes[32] = 12;
     //12
     indexes[33] = 5;
-    indexes[34] = 13;
-    indexes[35] = 6;
+    indexes[34] = 6;
+    indexes[35] = 13;
     //13
-    indexes[33] = 13;
-    indexes[34] = 12;
-    indexes[35] = 20;
+    indexes[36] = 13;
+    indexes[37] = 20;
+    indexes[38] = 12;
     //14
-    indexes[36] = 20;
-    indexes[37] = 12;
-    indexes[38] = 19;
+    indexes[39] = 20;
+    indexes[40] = 19;
+    indexes[41] = 12;
     //15
-    indexes[39] = 19;
-    indexes[40] = 12;
-    indexes[41] = 11;
-    //16
     indexes[42] = 19;
     indexes[43] = 11;
-    indexes[44] = 18;
+    indexes[44] = 12;
+    //16
+    indexes[45] = 19;
+    indexes[46] = 18;
+    indexes[47] = 11;
     //17
-    indexes[45] = 18;
-    indexes[46] = 11;
-    indexes[47] = 10;
-    //18
     indexes[48] = 18;
     indexes[49] = 10;
-    indexes[50] = 17;
+    indexes[50] = 11;
+    //18
+    indexes[51] = 18;
+    indexes[52] = 17;
+    indexes[53] = 10;
     //19
-    indexes[51] = 17;
-    indexes[52] = 10;
-    indexes[53] = 9;
-    //20
     indexes[54] = 17;
     indexes[55] = 9;
-    indexes[56] = 16;
+    indexes[56] = 10;
+    //20
+    indexes[57] = 17;
+    indexes[58] = 16;
+    indexes[59] = 9;
     //21
-    indexes[57] = 16;
-    indexes[58] = 9;
-    indexes[59] = 8;
-    //22
     indexes[60] = 16;
     indexes[61] = 8;
-    indexes[62] = 15;
+    indexes[62] = 9;
+    //22
+    indexes[63] = 16;
+    indexes[64] = 15;
+    indexes[65] = 8;
     //23
-    indexes[63] = 15;
-    indexes[64] = 8;
-    indexes[65] = 7;
-    //24
     indexes[66] = 15;
     indexes[67] = 7;
-    indexes[68] = 14;
+    indexes[68] = 8;
+    //24
+    indexes[69] = 15;
+    indexes[70] = 14;
+    indexes[71] = 17;
 
-    const uvsCoord = [
-      0.25,
-      0.01,
-      0.32,
-      0.09,
-      0.4,
-      0.14,
-      0.5,
-      0.16,
-      0.6,
-      0.14,
-      0.68,
-      0.09,
-      0.75,
-      0.01,
-      0.2,
-      0.04,
-      0.28,
-      0.14,
-      0.38,
-      0.2,
-      0.5,
-      0.22,
-      0.62,
-      0.2,
-      0.72,
-      0.14,
-      0.8,
-      0.04,
-      0.15,
-      0.07,
-      0.24,
-      0.19,
-      0.36,
-      0.26,
-      0.5,
-      0.28,
-      0.64,
-      0.26,
-      0.76,
-      0.19,
-      0.85,
-      0.07
-    ];
+    const uvsCoord = [];
+
+    for (let i = 0; i < v * 2; i++) {
+      uvsCoord[2 * i] = (1 / 6) * (i % 7);
+      uvsCoord[2 * i + 1] = (1 / 8) * Math.floor(i / 7);
+    }
 
     // 各頂点のテクスチャ座標
     for (let i = 0; i < uvsCoord.length; i++) {
       uvs[i] = uvsCoord[i];
     }
+
+    console.log("uvs", uvs);
 
     console.log(positions);
     const geometry = new THREE.BufferGeometry();
@@ -1253,11 +1218,16 @@ function drawEyelush(points, rect, textureImg) {
     //オブジェクトをシーンへ追加
     scene.add(eyelush);
 
+    // const geo = new THREE.PlaneGeometry(w / 2, h / 2, 1, 1);
+    // const mat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    // const plane = new THREE.Mesh(geo, mat);
+    // scene.add(plane);
+
     tick();
 
     // 毎フレーム時に実行されるループイベント
     function tick() {
-      eyelush.rotation.y += 0.02;
+      // eyelush.rotation.y += 0.02;
       renderer.render(scene, camera); // レンダリング
       requestAnimationFrame(tick);
     }
