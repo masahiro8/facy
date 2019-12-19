@@ -52,48 +52,59 @@
     "id": 2,
     "products": [
       {
-        "id": 101,
-        "type": "cheeks",
-        "category": 44444,
-        "name": "coral",
-        "image": "eyeshadow-sample.png",
-        "url": "http://backham.me/"
-      },
-      {
         "id": 102,
         "type": "cheeks",
-        "category": 44444,
+        "category": 9000000002,
         "name": "coral red",
         "image": "cheek-sample.png",
-        "url": "http://backham.me/"
-      },
-      {
-        "id": 103,
-        "type": "cheeks",
-        "category": 55555,
-        "name": "deep red",
-        "image": "lip-sample.png",
-        "url": "http://backham.me/"
-      },
-      {
-        "id": 104,
-        "type": "cheeks",
-        "category": 55555,
-        "name": "winter special",
-        "image": "full-makeup.png",
         "url": "http://backham.me/"
       }
     ],
     "category": [
       {
-        "id": 44444,
+        "id": 9000000002,
         "name": "cats",
-        "image": "cheek-category-sample.png"
-      },
+        "image": "cheeks.png"
+      }
+    ]
+  },
+  "eyeshadows": {
+    "id": 3,
+    "products": [
       {
-        "id": 55555,
-        "name": "dog",
-        "image": "cheek-category-sample.png"
+        "id": 103,
+        "type": "eyeshadows",
+        "category": 9000000001,
+        "name": "coral red",
+        "image": "eyeshadow-sample.png",
+        "url": "http://backham.me/"
+      }
+    ],
+    "category": [
+      {
+        "id": 9000000001,
+        "name": "cats",
+        "image": "eyecolor.png"
+      }
+    ]
+  },
+  "lips": {
+    "id": 4,
+    "products": [
+      {
+        "id": 104,
+        "type": "lips",
+        "category": 9000000003,
+        "name": "coral red",
+        "image": "lip-sample.png",
+        "url": "http://backham.me/"
+      }
+    ],
+    "category": [
+      {
+        "id": 9000000003,
+        "name": "cats",
+        "image": "lips.png"
       }
     ]
   }

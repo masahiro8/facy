@@ -2,7 +2,7 @@
   <div ref="overlayFrame" class="overlayFrame mesh">
     <canvas
       ref="mesh"
-      id="mesh"
+      :id="productType"
       class="overlay"
       :style="getStyle"
       :width="frame_rect.width"
@@ -69,7 +69,7 @@ export default {
       //テクスチャ画像の指定
       const textureImg = image;
       /* eslint-disable */
-      drawFaceMask(_points, this.frame_rect, textureImg);
+      drawFaceMask(this.productType, _points, this.frame_rect, textureImg);
       /* eslint-enable */
     },
     //キャンバスクリア

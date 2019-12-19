@@ -1,4 +1,4 @@
-function drawFaceMask(points, rect, textureImg) {
+function drawFaceMask(elemId, points, rect, textureImg) {
   console.log("width", rect.width, "height", rect.height);
 
   //中点を求める
@@ -118,7 +118,7 @@ function drawFaceMask(points, rect, textureImg) {
     const h = rect.height;
 
     const renderer = new THREE.WebGLRenderer({
-      canvas: document.querySelector("#mesh"),
+      canvas: document.querySelector(`#${elemId}`),
       antialias: true,
       alpha: true //描画背景を透明にする
     });
