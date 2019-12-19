@@ -53,17 +53,34 @@
     "products": [
       {
         "id": 1,
-        "category": 92328746271,
-        "name": "cheeks 01-01",
-        "image": "lens01_brownmariage.png",
+        "type": "makeup",
+        "category": 9000000001,
+        "name": "coral",
+        "image": "eyeshadow-sample.png",
         "url": "http://backham.me/"
       },
       {
         "id": 2,
-        "type": "cheeks",
-        "category": 22228273811,
-        "name": "cheek 02-01",
-        "image": "lens05_01_antiquebeige.png",
+        "type": "makeup",
+        "category": 9000000002,
+        "name": "coral red",
+        "image": "cheek-sample.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 3,
+        "type": "makeup",
+        "category": 9000000003,
+        "name": "deep red",
+        "image": "lip-sample.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 4,
+        "type": "makeup",
+        "category": 9000000000,
+        "name": "winter special",
+        "image": "full-makeup.png",
         "url": "http://backham.me/"
       }
     ],
