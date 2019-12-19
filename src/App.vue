@@ -13,6 +13,16 @@
         :contextKey="[POINTS_KEY.EYES, 'PRODUCT_ID', 'PRODUCTS']"
         v-slot="{ context }"
       >
+
+        <!-- 顔のメッシュ -->
+        <FaceMesh
+          v-if="shooted"
+          ref="mesh"
+          :rect="rect"
+          :points="context[POINTS_KEY.EYES]"
+          :zIndex="5"
+        />
+
         <!-- 目 -->
         <Eyes
           v-if="shooted"
@@ -23,50 +33,40 @@
           :points="context[POINTS_KEY.EYES]"
           :zIndex="4"
         />
-      </ContextConsumer>
 
-       <ContextConsumer :contextKey="[POINTS_KEY.EYES]" v-slot="{ context }">
-        <!-- 顔のメッシュ -->
-        <FaceMesh
-          v-if="shooted"
-          ref="mesh"
-          :rect="rect"
-          :points="context[POINTS_KEY.EYES]"
-          :zIndex="5"
-        />
-      </ContextConsumer>
-
-      <ContextConsumer :contextKey="[POINTS_KEY.CHEEKS]" v-slot="{ context }">
         <!-- チーク -->
         <Cheeks
           v-if="shooted"
           ref="cheeks"
           :rect="rect"
-          :points="context[POINTS_KEY.CHEEKS]"
+          :products="context['PRODUCTS']"
+          :productId="context['PRODUCT_ID']"
+          :points="context[POINTS_KEY.EYES]"
           :zIndex="6"
         />
-      </ContextConsumer>
-      
-      <ContextConsumer :contextKey="[POINTS_KEY.EYESHADOWS]" v-slot="{ context }">
+
         <!-- アイシャドウ -->
         <Eyeshadows
           v-if="shooted"
           ref="eyeshadows"
           :rect="rect"
-          :points="context[POINTS_KEY.EYESHADOWS]"
+          :products="context['PRODUCTS']"
+          :productId="context['PRODUCT_ID']"
+          :points="context[POINTS_KEY.EYES]"
           :zIndex="7"
         />
-      </ContextConsumer>
 
-      <ContextConsumer :contextKey="[POINTS_KEY.LIPS]" v-slot="{ context }">
         <!-- リップ -->
         <Lips
           v-if="shooted"
           ref="lips"
           :rect="rect"
-          :points="context[POINTS_KEY.LIPS]"
+          :products="context['PRODUCTS']"
+          :productId="context['PRODUCT_ID']"
+          :points="context[POINTS_KEY.EYES]"
           :zIndex="8"
         />
+
       </ContextConsumer>      
 
     </AppFrame>
@@ -74,34 +74,40 @@
     <Shoot v-if="!shooted" @shoot="shoot" />
     <!-- 商品リスト -->
     <ProductFrame v-if="shooted" :rect="rect">
-      <transition name="product-fade">
-        <div v-if="shooted" class="products-list">
-          <ContextConsumer
-            :contextKey="['PRODUCTS', 'CATEGORY']"
-            v-slot="{ context }"
-          >
-            <!-- プロダクト -->
-            <ProductList
-              :productType="PRODUCT_TYPE.LENS"
-              :products="context['PRODUCTS']"
-              :categoryId="context['CATEGORY']"
-              @setProductId="setProductId"
-            />
-            <!-- カテゴリ -->
-            <transition name="slide-fade">
-              <CategoryList
-                :productType="PRODUCT_TYPE.LENS"
-                :items="context['PRODUCTS']"
-              />
-            </transition>
-          </ContextConsumer>
-        </div>
-      </transition>
+      <!-- プロダクトリスト -->
+      <!-- cssで一つ分しか表示されていないが出力はされている -->
+      <div v-for="(_type, index) in PRODUCT_TYPE" v-bind:key="index">
+        <transition name="product-fade">
+          <div v-if="shooted" class="products-list">
+            <ContextConsumer
+              :contextKey="['PRODUCTS', 'CATEGORY']"
+              v-slot="{ context }"
+            >
+                <!-- プロダクト -->
+                <ProductList
+                  :productType="_type"
+                  :products="context['PRODUCTS']"
+                  :categoryId="context['CATEGORY']"
+                  @setProductId="setProductId"
+                />
+                <!-- カテゴリ -->
+                <transition name="slide-fade">
+                  <CategoryList
+                    :productType="_type"
+                    :items="context['PRODUCTS']"
+                  />
+                </transition>
+
+            </ContextConsumer>
+          </div>
+        </transition>
+      </div>
     </ProductFrame>
     <AppFrame :rect="rect">
       <!-- 写真消すボタン -->
       <Clear v-if="shooted" @action="clearPicture" />
     </AppFrame>
+
     <!-- フラッシュ -->
     <div v-if="onFlash" id="white"></div>
   </div>
@@ -198,6 +204,9 @@ export default {
       const result = await productapi.get("", {});
       console.log("getProducts", result.data);
       ContextStore.setContext("PRODUCTS", result.data);
+    },
+    toggleShow(part) {
+      this.faceParts[part] = !this.faceParts[part];
     }
   }
 };

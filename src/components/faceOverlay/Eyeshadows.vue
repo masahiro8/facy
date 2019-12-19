@@ -49,9 +49,11 @@ export default {
     displayTest() {
       const drawTest = canvas => {
         const ctx = canvas.getContext("2d");
-        ctx.fillStyle = 'rgb(255,00,00)'; 
+        ctx.fillStyle = 'rgb(255,00,00)';
         ctx.fillRect(80,360,60,20);
         ctx.fillRect(260,360,60,20);
+        ctx.font = "20px Arial";
+        ctx.fillText("Eyeshadows", 80,360);
       };
       drawTest(this.$refs.eyeshadows);
     },

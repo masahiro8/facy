@@ -46,5 +46,100 @@
         "image": "yummy_n2_bt.png"
       }
     ]
+  },
+  "cheeks": {
+    "products": [
+      {
+        "id": 1,
+        "category": 92328746271,
+        "name": "cheeks 01-01",
+        "image": "lens01_brownmariage.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 2,
+        "type": "cheeks",
+        "category": 22228273811,
+        "name": "cheek 02-01",
+        "image": "lens05_01_antiquebeige.png",
+        "url": "http://backham.me/"
+      }
+    ],
+    "category": [
+      {
+        "id": 92328746271,
+        "name": "cats",
+        "image": "cheek-category-sample.png"
+      },
+      {
+        "id": 22228273811,
+        "name": "dog",
+        "image": "cheek-category-sample.png"
+      }
+    ]
+  },
+  "eyeshadows": {
+    "products": [
+      {
+        "id": 1,
+        "type": "eyeshadows",
+        "category": 923287462711,
+        "name": "eyeshadows mariage",
+        "image": "lens01_brownmariage.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 2,
+        "type": "eyeshadows",
+        "category": 222282738111,
+        "name": "eyeshadows lueur",
+        "image": "lens05_01_antiquebeige.png",
+        "url": "http://backham.me/"
+      }
+    ],
+    "category": [
+      {
+        "id": 923287462711,
+        "name": "sunny",
+        "image": "tough2_bt.png"
+      },
+      {
+        "id": 222282738111,
+        "name": "rainy",
+        "image": "yummy_n2_bt.png"
+      }
+    ]
+  },
+  "lips": {
+    "products": [
+      {
+        "id": 1,
+        "type": "lips",
+        "category": 92328746271111,
+        "name": "lips name 01",
+        "image": "lens01_brownmariage.png",
+        "url": "http://backham.me/"
+      },
+      {
+        "id": 2,
+        "type": "lips",
+        "category": 2222827381211,
+        "name": "lips name 02",
+        "image": "lens05_01_antiquebeige.png",
+        "url": "http://backham.me/"
+      }
+    ],
+    "category": [
+      {
+        "id": 92328746271111,
+        "name": "earth",
+        "image": "tough2_bt.png"
+      },
+      {
+        "id": 2222827381211,
+        "name": "mars",
+        "image": "yummy_n2_bt.png"
+      }
+    ]
   }
 }

@@ -51,6 +51,8 @@ export default {
         const ctx = canvas.getContext("2d");
         ctx.fillStyle = 'rgb(00,00,255)'; 
         ctx.fillRect(160,560,100,30);
+        ctx.font = "20px Arial";
+        ctx.fillText("Lips", 160,560);
       };
       drawTest(this.$refs.lips);
     },

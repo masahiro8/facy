@@ -52,6 +52,8 @@ export default {
         ctx.fillStyle = 'rgb(00,255,00)'; 
         ctx.fillRect(40,430,60,60);
         ctx.fillRect(280,430,60,60);
+        ctx.font = "20px Arial";
+        ctx.fillText("Cheeks", 40,430);
       };
       drawTest(this.$refs.cheeks);
     },
