@@ -9,13 +9,12 @@ const Formatter = store => {
 
   const initFormat = (keyName, format) => {
     formats[keyName] = format;
-    console.log("Formatter init", formats);
+    store.setContext(keyName, formats[keyName]);
   };
 
   const setContext = (keyName, params) => {
     if (formats[keyName]) {
       formats[keyName] = _.assign(formats[keyName], params);
-      // console.log("Formatter update", formats[keyName]);
       store.setContext(keyName, formats[keyName]);
     } else {
       store.setContext(keyName, params);
@@ -36,6 +35,7 @@ const _ContextStore = () => {
 
   const subscribe = () => {
     _.each(callbacks, callback => {
+      // console.log("----- subscribe", data);
       callback(data);
     });
   };
@@ -48,6 +48,7 @@ const _ContextStore = () => {
   };
 
   const setContext = (keyName, params) => {
+    // console.log("----- setContext", keyName);
     data[keyName] = params;
     subscribe();
   };
@@ -58,5 +59,5 @@ const _ContextStore = () => {
     setContext
   };
 };
-// export const ContextStore = _ContextStore();
-export const ContextStore = Formatter(_ContextStore());
+export const WrappedContextStore = _ContextStore();
+export const ContextStore = Formatter(WrappedContextStore);

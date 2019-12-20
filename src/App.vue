@@ -135,13 +135,13 @@ import { PRODUCT_TYPE } from "./constants";
 import { productapi } from "./services/api";
 
 //CONTENTSを初期化
-ContextStore.initFormat("CONTENTS", {
-  [PRODUCT_TYPE.LENS]: { categoryId: null, productId: null },
-  [PRODUCT_TYPE.CHEEKS]: { categoryId: null, productId: null },
-  [PRODUCT_TYPE.EYESHADOWS]: { categoryId: null, productId: null },
-  [PRODUCT_TYPE.LIPS]: { categoryId: null, productId: null },
-  [PRODUCT_TYPE.EYELUSH]: { categoryId: null, productId: null }
-});
+// ContextStore.initFormat("CONTENTS", {
+//   [PRODUCT_TYPE.LENS]: { categoryId: null, productId: null },
+//   [PRODUCT_TYPE.CHEEKS]: { categoryId: null, productId: null },
+//   [PRODUCT_TYPE.EYESHADOWS]: { categoryId: null, productId: null },
+//   [PRODUCT_TYPE.LIPS]: { categoryId: null, productId: null },
+//   [PRODUCT_TYPE.EYELUSH]: { categoryId: null, productId: null }
+// });
 
 export default {
   name: "app",
@@ -217,9 +217,10 @@ export default {
       };
       ContextStore.setContext("CONTENTS", product);
     },
+    //プロダクト一覧取得
     async getProducts() {
       const result = await productapi.get("", {});
-      // console.log("getProducts", result.data);
+      console.log("getProducts", result.data);
       ContextStore.setContext("PRODUCTS", result.data);
     },
     toggleShow(part) {

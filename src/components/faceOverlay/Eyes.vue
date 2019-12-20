@@ -424,6 +424,8 @@ export default {
           this.product = product;
           this.lens_image = `${window.location.origin}/images/${product.category}/${product.image}`;
           this.draw(this.points.eyes, this.lens_image);
+        } else {
+          this.clearCanvas();
         }
       }
     },

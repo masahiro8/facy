@@ -105,6 +105,7 @@ export default {
       handler(newValue, oldValue) {
         if (!newValue) {
           this.clearCanvas();
+          return;
         }
         const product = _.find(
           this.products[this.productType].products,
@@ -121,6 +122,8 @@ export default {
           this.product = product;
           this.item_image = `${window.location.origin}/images/${product.category}/${product.image}`;
           this.draw(this.points.face, this.item_image);
+        } else {
+          this.clearCanvas();
         }
       }
     },
