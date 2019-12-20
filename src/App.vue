@@ -14,16 +14,6 @@
         :contextKey="[POINTS_KEY.EYES, 'PRODUCT_ID', 'PRODUCTS']"
         v-slot="{ context }"
       >
-        <!-- 顔のメッシュ -->
-        <!-- <FaceMesh
-          v-if="shooted"
-          ref="mesh"
-          :rect="rect"
-          :products="context['PRODUCTS']"
-          :productId="context['PRODUCT_ID']"
-          :points="context[POINTS_KEY.EYES]"
-          :zIndex="5"
-        />-->
         <!-- 目 -->
         <Eyes
           v-if="shooted"
@@ -67,6 +57,17 @@
           :productId="context['PRODUCT_ID']"
           :points="context[POINTS_KEY.EYES]"
           :zIndex="7"
+        />
+        <!-- まつげ -->
+        <Eyelush
+          v-if="shooted"
+          ref="eyelush"
+          :rect="rect"
+          :productType="PRODUCT_TYPE.EYELUSH"
+          :products="context['PRODUCTS']"
+          :productId="context['PRODUCT_ID']"
+          :points="context[POINTS_KEY.EYES]"
+          :zIndex="8"
         />
       </ContextConsumer>
     </AppFrame>
@@ -123,6 +124,8 @@ import Eyes from "./components/faceOverlay/Eyes.vue";
 import Cheeks from "./components/faceOverlay/FaceMesh.vue";
 import Eyeshadows from "./components/faceOverlay/FaceMesh.vue";
 import Lips from "./components/faceOverlay/FaceMesh.vue";
+import Eyelush from "./components/faceOverlay/Eyelush.vue";
+// import FaceMesh from "./components/faceOverlay/FaceMesh.vue";
 import AppFrame from "./components/frame/AppFrame";
 import ProductFrame from "./components/frame/ProductFrame";
 import { PRODUCT_TYPE } from "./constants";
@@ -160,7 +163,8 @@ export default {
     Eyes,
     Cheeks,
     Eyeshadows,
-    Lips
+    Lips,
+    Eyelush
   },
   mounted() {
     this.getProducts();
