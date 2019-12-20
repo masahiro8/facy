@@ -44,62 +44,9 @@ export default {
   },
 
   methods: {
-    draw(points) {
-      const drawMask = (canvas, points) => {
-        const rect = canvas.getBoundingClientRect();
-        const ctx = canvas.getContext("2d");
-        ctx.save();
-        ctx.globalCompositeOperation = "source-over";
-        ctx.fillStyle = "rgb(0,0,0)";
-        ctx.beginPath();
-        for (let i = 0; i < points.length; i++) {
-          if (i == 0) {
-            ctx.moveTo(points[i][0], points[i][1]);
-          } else {
-            ctx.lineTo(points[i][0], points[i][1]);
-          }
-        }
-        ctx.closePath();
-        ctx.fill();
-      };
-
-      const drawCenter = (canvas, arr) => {
-        const center = {
-          x: arr[0],
-          y: arr[1]
-        };
-        var circle = new Path2D();
-        circle.moveTo(arr[0], arr[1]);
-        circle.arc(arr[0], arr[1], arr[2], 0, 2 * Math.PI);
-        const ctx = canvas.getContext("2d");
-        ctx.globalCompositeOperation = "source-in";
-        ctx.fillStyle = "rgb(255,0,0)";
-        ctx.beginPath();
-        ctx.fill(circle);
-        ctx.restore();
-      };
-
-      drawMask(this.$refs.eyelush);
-      drawCenter(this.$refs.eyelush);
-    },
+    draw(points) {},
     //キャンバスクリア
-    clearCanvas() {
-      // const clearCanvasRect = canvas => {
-      //   const ctx = canvas.getContext("2d");
-      //   ctx.restore();
-      //   console.log(
-      //     "clear eyelush",
-      //     this.frame_rect.width,
-      //     this.frame_rect.height
-      //   );
-      //   ctx.clearRect(0, 0, this.frame_rect.width, this.frame_rect.height);
-      //   ctx.beginPath();
-      //   ctx.moveTo(0, 0);
-      //   ctx.lineTo(0, 0);
-      //   ctx.stroke();
-      // };
-      // clearCanvasRect(this.$refs.eyelush);
-    },
+    clearCanvas() {},
     layoutUpdate() {
       if (this.rect && this.frame_rect.width && this.frame_rect.height) {
         const frame = {
@@ -131,11 +78,11 @@ export default {
           console.log(right);
           console.log(left);
 
-          const textureImg = "eyelush01.png";
+          const textureImg = "wireframe_eyelush.png";
 
           /* eslint-disable */
           // drawEyelush(right, this.frame_rect, textureImg);
-          drawEyelush(left, this.frame_rect, textureImg);
+          drawEyelush({ right, left }, this.frame_rect, textureImg);
           /* eslint-enable */
         }
       }
