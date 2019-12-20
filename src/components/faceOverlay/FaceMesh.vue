@@ -65,7 +65,7 @@ export default {
           z: 0
         };
       }
-      console.log("_points", _points);
+      // console.log("_points", _points);
       //テクスチャ画像の指定
       const textureImg = image;
       /* eslint-disable */
@@ -76,11 +76,11 @@ export default {
     clearCanvas() {
       /* eslint-disable */
       const clearCanvasRect = canvas => {
-        console.log(
-          "clear mesh",
-          this.frame_rect.width,
-          this.frame_rect.height
-        );
+        // console.log(
+        //   "clear mesh",
+        //   this.frame_rect.width,
+        //   this.frame_rect.height
+        // );
         // scene.remove(face);
         // geometry.dispose();
         // material.dispose();
@@ -100,12 +100,6 @@ export default {
     }
   },
   watch: {
-    products: {
-      immediate: true,
-      handler(newValue) {
-        console.log("products", newValue);
-      }
-    },
     productId: {
       // immediate: true,
       handler(newValue, oldValue) {
@@ -118,11 +112,11 @@ export default {
             return product.id === newValue.productId;
           }
         );
-        console.log(
-          "productId",
-          newValue,
-          this.products[this.productType].products
-        );
+        // console.log(
+        //   "productId",
+        //   newValue,
+        //   this.products[this.productType].products
+        // );
         if (product) {
           this.product = product;
           this.item_image = `${window.location.origin}/images/${product.category}/${product.image}`;

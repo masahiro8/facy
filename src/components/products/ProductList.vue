@@ -38,12 +38,16 @@ export default {
       this.selected = id;
       if (!id) {
         this.$emit("setProductId", {
-          productId: null
+          productId: null,
+          categoryId: this.categoryId.id,
+          segmentId: this.segment.id
         });
         return;
       }
       this.$emit("setProductId", {
-        productId: this.selected
+        productId: this.selected,
+        categoryId: this.categoryId.id,
+        segmentId: this.segment.id
       });
     }
   },

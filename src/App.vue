@@ -11,7 +11,7 @@
       <Picture ref="picture" :src="src" :rect="rect" />
 
       <ContextConsumer
-        :contextKey="[POINTS_KEY.EYES, 'PRODUCT_ID', 'PRODUCTS']"
+        :contextKey="[POINTS_KEY.EYES, 'PRODUCT_ID', 'PRODUCTS','CONTENTS']"
         v-slot="{ context }"
       >
         <!-- 目 -->
@@ -21,7 +21,7 @@
           :rect="rect"
           :productType="PRODUCT_TYPE.LENS"
           :products="context['PRODUCTS']"
-          :productId="context['PRODUCT_ID']"
+          :productId="context['CONTENTS'][PRODUCT_TYPE.LENS]"
           :points="context[POINTS_KEY.EYES]"
           :zIndex="4"
         />
@@ -32,7 +32,7 @@
           :rect="rect"
           :productType="PRODUCT_TYPE.CHEEKS"
           :products="context['PRODUCTS']"
-          :productId="context['PRODUCT_ID']"
+          :productId="context['CONTENTS'][PRODUCT_TYPE.CHEEKS]"
           :points="context[POINTS_KEY.EYES]"
           :zIndex="5"
         />
@@ -43,7 +43,7 @@
           :rect="rect"
           :productType="PRODUCT_TYPE.EYESHADOWS"
           :products="context['PRODUCTS']"
-          :productId="context['PRODUCT_ID']"
+          :productId="context['CONTENTS'][PRODUCT_TYPE.EYESHADOWS]"
           :points="context[POINTS_KEY.EYES]"
           :zIndex="6"
         />
@@ -54,7 +54,7 @@
           :rect="rect"
           :productType="PRODUCT_TYPE.LIPS"
           :products="context['PRODUCTS']"
-          :productId="context['PRODUCT_ID']"
+          :productId="context['CONTENTS'][PRODUCT_TYPE.LIPS]"
           :points="context[POINTS_KEY.EYES]"
           :zIndex="7"
         />
@@ -78,7 +78,10 @@
       <!-- プロダクトリスト -->
       <transition name="product-fade">
         <div v-if="shooted" class="products-list">
-          <ContextConsumer :contextKey="['SEGMENT','CATEGORY','PRODUCTS']" v-slot="{ context }">
+          <ContextConsumer
+            :contextKey="['SEGMENT','CATEGORY','PRODUCTS','CONTENTS']"
+            v-slot="{ context }"
+          >
             <!-- プロダクト -->
             <ProductList
               :segment="context['SEGMENT']"
@@ -131,6 +134,15 @@ import ProductFrame from "./components/frame/ProductFrame";
 import { PRODUCT_TYPE } from "./constants";
 import { productapi } from "./services/api";
 
+//CONTENTSを初期化
+ContextStore.initFormat("CONTENTS", {
+  [PRODUCT_TYPE.LENS]: { categoryId: null, productId: null },
+  [PRODUCT_TYPE.CHEEKS]: { categoryId: null, productId: null },
+  [PRODUCT_TYPE.EYESHADOWS]: { categoryId: null, productId: null },
+  [PRODUCT_TYPE.LIPS]: { categoryId: null, productId: null },
+  [PRODUCT_TYPE.EYELUSH]: { categoryId: null, productId: null }
+});
+
 export default {
   name: "app",
   data: () => {
@@ -171,7 +183,7 @@ export default {
   },
   methods: {
     readyVideo(value) {
-      console.log(value);
+      // console.log(value);
       this.rect = value.rect;
       this.src = value.src;
     },
@@ -195,12 +207,19 @@ export default {
       this.$refs.picture.clearCanvas();
       this.$refs.eyes.clearCanvas();
     },
-    setProductId({ productId }) {
+    setProductId({ productId, categoryId, segmentId }) {
+      console.log("setProductId", productId, categoryId, segmentId);
       ContextStore.setContext("PRODUCT_ID", { productId });
+
+      //CONTENTS
+      const product = {
+        [segmentId]: { categoryId, productId }
+      };
+      ContextStore.setContext("CONTENTS", product);
     },
     async getProducts() {
       const result = await productapi.get("", {});
-      console.log("getProducts", result.data);
+      // console.log("getProducts", result.data);
       ContextStore.setContext("PRODUCTS", result.data);
     },
     toggleShow(part) {

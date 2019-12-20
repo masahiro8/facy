@@ -34,13 +34,13 @@ export default {
     segment: {
       immediate: true,
       handler(newValue) {
-        console.log("segmentType -----", newValue);
+        // console.log("segmentType -----", newValue);
       }
     },
     items: {
       immediate: true,
       handler(newValue) {
-        console.log("items -----", newValue);
+        // console.log("items -----", newValue);
       }
     }
   },

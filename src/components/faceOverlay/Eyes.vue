@@ -109,7 +109,7 @@ export default {
           const z =
             Math.round((1 / (Math.floor(-1 * l1.rot.x) + l2.rot.x)) * 1000) /
             1000; // z = 1/(-a+c)
-          console.log("垂直線", l1.rot, l2.rot, z);
+          // console.log("垂直線", l1.rot, l2.rot, z);
 
           //交点
           const y1 = -l2.rot.x * (-1 * l1.rot.y);
@@ -121,7 +121,7 @@ export default {
           //半径
           const radius = distance(center, l1.center);
           circlePoints.push({ center, radius, point: l1.center });
-          console.log("円の半径と中心点", radius, center);
+          // console.log("円の半径と中心点", radius, center);
         }
 
         //角度
@@ -134,7 +134,7 @@ export default {
           const radius = circlePoints[i].radius;
           const p1 = { x: points[i][0] - center.x, y: points[i][1] - center.y };
           const p2 = { x: next.x - center.x, y: next.y - center.y };
-          console.log("p1,p2= ", p1, p2);
+          // console.log("p1,p2= ", p1, p2);
           //p1のラジアン
           const p1_radian = theta({ x: radius, y: 0 }, p1);
           const diff_radian = theta(p1, p2);
@@ -145,7 +145,7 @@ export default {
               y: Math.sin(p1_radian) * radius + center.y
             };
             newPoints.push(_p1);
-            console.log("R= ", _p1, points[i]);
+            // console.log("R= ", _p1, points[i]);
             // console.log("R= ", diff_radian, p1_radian, p1, p);
           }
         }
@@ -399,18 +399,19 @@ export default {
   },
 
   watch: {
-    products: {
-      immediate: true,
-      handler(newValue) {
-        console.log("products", newValue);
-      }
-    },
+    // products: {
+    //   immediate: true,
+    //   handler(newValue) {
+    //     console.log("products", newValue);
+    //   }
+    // },
     productId: {
       // immediate: true,
       handler(newValue, oldValue) {
         console.log("productId", newValue);
         if (!newValue) {
           this.clearCanvas();
+          return;
         }
         const product = _.find(
           this.products[this.productType].products,
@@ -419,6 +420,7 @@ export default {
           }
         );
         if (product) {
+          console.log("productId", newValue, product);
           this.product = product;
           this.lens_image = `${window.location.origin}/images/${product.category}/${product.image}`;
           this.draw(this.points.eyes, this.lens_image);
