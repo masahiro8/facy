@@ -1276,12 +1276,12 @@ function drawEyelush(points, rect, textureImg) {
 
     //右目 0-41
     for (let i = 0; i < v / 2; i++) {
-      uvsCoord[2 * i] = (1 / 6 / 2) * (i % 7) + 1 / 2;
+      uvsCoord[2 * i] = (1 / 12) * (i % 7) + 1 / 2;
       uvsCoord[2 * i + 1] = (1 / 8) * Math.floor(i / 7);
     }
     //左目 42-84
     for (let i = v / 2; i < v; i++) {
-      uvsCoord[2 * i] = (1 / 6 / 2) * (i % 7);
+      uvsCoord[2 * i] = (1 / 12) * (i % 7);
       uvsCoord[2 * i + 1] = (1 / 8) * Math.floor(i / 7) - (1 / 8) * 3;
     }
 
