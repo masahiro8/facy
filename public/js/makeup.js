@@ -876,7 +876,7 @@ function drawFaceMask(elemId, points, rect, textureImg) {
 function drawEyelush(points, rect, textureImg) {
   console.log("eyelush");
 
-  const rate = 1;
+  const rate = 350;
   // const rate = 1;
 
   let _points = [];
