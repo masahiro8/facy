@@ -14,16 +14,6 @@
         :contextKey="[POINTS_KEY.EYES, 'PRODUCT_ID', 'PRODUCTS']"
         v-slot="{ context }"
       >
-        <!-- 顔のメッシュ -->
-        <!-- <FaceMesh
-          v-if="shooted"
-          ref="mesh"
-          :rect="rect"
-          :products="context['PRODUCTS']"
-          :productId="context['PRODUCT_ID']"
-          :points="context[POINTS_KEY.EYES]"
-          :zIndex="5"
-        />-->
         <!-- 目 -->
         <Eyes
           v-if="shooted"
@@ -80,17 +70,6 @@
           :zIndex="8"
         />
       </ContextConsumer>
-
-      <!-- <ContextConsumer :contextKey="[POINTS_KEY.EYES]" v-slot="{ context }"> -->
-      <!-- 顔のメッシュ -->
-      <!-- <FaceMesh
-          v-if="shooted"
-          ref="mesh"
-          :rect="rect"
-          :points="context[POINTS_KEY.EYES]"
-          :zIndex="6"
-      />-->
-      <!-- </ContextConsumer> -->
     </AppFrame>
     <!-- 撮影ボタン -->
     <Shoot v-if="!shooted" @shoot="shoot" />
