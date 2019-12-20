@@ -53,53 +53,6 @@ function drawFaceMask(elemId, points, rect, textureImg) {
     y: (points[39].y + points[42].y + points[30].y) / 3
   };
 
-  //3点を通る円の中心点と半径を求める
-  const getEyelidCurve = (point1, point2, point3) => {
-    console.log("in getEyelidCureve");
-    //円の中心座標
-    let centerPoint = { x: 0, y: 0 };
-
-    //point1とpoint2の垂直二等分線、point2とpoint3の垂直二等分線の交点から円の中心座標を求める
-
-    //point1とpoint2の中点midPoint1を求める
-    const midPoint1 = getMidPoint(point1, point2);
-    //point2とpoint3の中点midPoint2を求める
-    const midPoint2 = getMidPoint(point2, point3);
-
-    //point1とpoint2の垂直二等分線の傾き
-    const slope1 = (-1 * (point2.x - point1.x)) / (point2.y - point1.y);
-    //point2とpoint3の垂直二等分線の傾き
-    const slope2 = (-1 * (point3.x - point2.x)) / (point3.y - point2.y);
-
-    //各垂直二等分線の切片
-    const intercept1 = midPoint1.y - slope1 * midPoint1.x;
-    const intercept2 = midPoint2.y - slope2 * midPoint2.x;
-
-    //２本の垂直二等分線の立方程式を解いて交点を求める
-    //交点が円の中心点
-    if (slope2 === -Infinity) {
-      //slope2がInfinityになる場合
-      centerPoint.x = midPoint2.x;
-      centerPoint.y = slope1 * midPoint2.x + intercept1;
-    } else {
-      centerPoint.x = (intercept2 - intercept1) / (slope1 - slope2);
-      centerPoint.y =
-        (slope1 * intercept2 - intercept1 * slope2) / (slope1 - slope2);
-    }
-
-    //円の半径を求める
-    //円の中心点とpoint1の距離を求める
-    const curveRadius = Math.sqrt(
-      Math.pow(point1.x - centerPoint.x, 2) +
-        Math.pow(point1.y - centerPoint.y, 2)
-    );
-
-    return { centerPoint, curveRadius };
-  };
-
-  const eyelid = getEyelidCurve(points[36], points[37], points[38]);
-  console.log(eyelid);
-
   //シェーダーをロード
   SHADER_LOADER.load(
     // ロード完了後
@@ -914,6 +867,367 @@ function drawFaceMask(elemId, points, rect, textureImg) {
     // 毎フレーム時に実行されるループイベント
     function tick() {
       // face.rotation.y += 0.02;
+      renderer.render(scene, camera); // レンダリング
+      requestAnimationFrame(tick);
+    }
+  }
+}
+
+function drawEyelush(points, rect, textureImg) {
+  console.log("eyelush");
+
+  const rate = 1;
+  // const rate = 1;
+
+  let _points = [];
+
+  for (let i = 0; i < points.length; i++) {
+    _points[i] = {
+      x: points[i][0] / rate,
+      y: points[i][1] / rate,
+      z: 0
+    };
+  }
+
+  //中点を求める
+  const getMidPoint = (startPoint, endPoint) => {
+    let newPoint = {};
+    newPoint.x = (startPoint.x + endPoint.x) / 2;
+    newPoint.y = (startPoint.y + endPoint.y) / 2;
+    return newPoint;
+  };
+
+  const getEyelushPoints = points => {
+    const getCircles = (point1, point2, point3) => {
+      let x;
+      let y;
+      //point1とpoint2の垂直二等分線、point2とpoint3の垂直二等分線の交点から円の中心座標を求める
+
+      //point1とpoint2の中点midPoint1を求める
+      const midPoint1 = getMidPoint(point1, point2);
+      //point2とpoint3の中点midPoint2を求める
+      const midPoint2 = getMidPoint(point2, point3);
+
+      //point1とpoint2の垂直二等分線の傾き
+      const slope1 = (-1 * (point2.x - point1.x)) / (point2.y - point1.y);
+      //point2とpoint3の垂直二等分線の傾き
+      const slope2 = (-1 * (point3.x - point2.x)) / (point3.y - point2.y);
+
+      //各垂直二等分線の切片
+      const intercept1 = midPoint1.y - slope1 * midPoint1.x;
+      const intercept2 = midPoint2.y - slope2 * midPoint2.x;
+
+      //２本の垂直二等分線の立方程式を解いて交点を求める
+      //交点が円の中心点
+      if (slope2 === -Infinity || slope2 === Infinity) {
+        //slope2がInfinityになる場合
+        x = midPoint2.x;
+        y = slope1 * midPoint2.x + intercept1;
+      } else {
+        x = (intercept2 - intercept1) / (slope1 - slope2);
+        y = (slope1 * intercept2 - intercept1 * slope2) / (slope1 - slope2);
+      }
+
+      //円の半径を求める
+      //円の中心点とpoint1の距離を求める
+      const r = Math.sqrt(
+        Math.pow(point1.x - x, 2) + Math.pow(point1.y - y, 2)
+      );
+
+      return { x, y, r };
+    };
+
+    const circles = [];
+    for (let i = 2; i <= 4; i++) {
+      circles.push(getCircles(points[0], points[i], points[6]));
+    }
+
+    const aveCircle = {
+      x: (circles[0].x + circles[1].x + circles[2].x) / 3,
+      y: (circles[0].y + circles[1].y + circles[2].y) / 3,
+      r: (circles[0].r + circles[1].r + circles[2].r) / 3
+    };
+
+    //原点とpoints[n]の角度
+    const getRadian = point => {
+      let radian = Math.atan2(point.x - aveCircle.x, point.y - aveCircle.y);
+      if (radian < 0) {
+        radian = radian + 2 * Math.PI;
+      }
+      return radian;
+    };
+    getRadian(points[0]);
+    getRadian(points[6]);
+    //points[0]とpoints[6]のなす角を6分割
+    const radStep = (getRadian(points[0]) - getRadian(points[6])) / 6;
+
+    //上まぶたの上側にメッシュ用の座標を追加する
+    const newPoints = [];
+    newPoints.length = 21;
+
+    for (let i = 0; i < 7; i++) {
+      const rad = getRadian(points[6]) + radStep * i;
+      //上まぶたの円弧
+      newPoints[i] = {
+        x: aveCircle.x + Math.sin(rad) * aveCircle.r,
+        y: aveCircle.y + Math.cos(rad) * aveCircle.r,
+        z: 0
+      };
+      //上まぶたの円弧を元にまぶたの上側に同心円の座標を2段追加する
+      //1段目
+      newPoints[i + 7] = {
+        x: aveCircle.x + Math.sin(rad) * aveCircle.r * 1.2,
+        y: aveCircle.y + Math.cos(rad) * aveCircle.r * 1.2,
+        z: 0.02
+      };
+      //2段目
+      newPoints[i + 14] = {
+        x: aveCircle.x + Math.sin(rad) * aveCircle.r * 1.4,
+        y: aveCircle.y + Math.cos(rad) * aveCircle.r * 1.4,
+        z: 0.025
+      };
+    }
+    console.log("newPoints", newPoints);
+    return newPoints;
+  };
+  getEyelushPoints(_points);
+  console.log(getEyelushPoints(_points));
+
+  const points_eyelush = getEyelushPoints(_points);
+
+  //シェーダーをロード
+  SHADER_LOADER.load(
+    // ロード完了後
+    function(data) {
+      // 頂点シェーダー
+      let vs = data.myShader.vertex;
+      // フラグメントシェーダー
+      let fs = data.myShader.fragment;
+      init(vs, fs, points_eyelush);
+    }
+  );
+
+  function init(vs, fs, points) {
+    console.log("init points", points);
+    // サイズを取得
+    const w = rect.width;
+    const h = rect.height;
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas: document.querySelector("#eyelush"),
+      antialias: true,
+      alpha: true //描画背景を透明にする
+    });
+    // レンダラーのサイズを調整する
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(w, h);
+
+    // シーンを作成
+    const scene = new THREE.Scene();
+
+    // カメラを作成
+    // const camera = new THREE.PerspectiveCamera(45, w / h, 1, 10000);
+    const camera = new THREE.OrthographicCamera(
+      -w / 2,
+      w / 2,
+      h / 2,
+      -h / 2,
+      -500,
+      500
+    );
+    // camera.position.set(0, 0, 100);
+    camera.lookAt(scene.position);
+
+    let n = 24; //三角形の数
+    let v = 21; //頂点数
+    let indexes = new Uint32Array((n - 1) * 3); //インデックス配列
+    let positions = new Float32Array(v * 3); //頂点座標
+    let colors = new Float32Array(v * 3); //頂点色
+    let normals = new Float32Array(v * 3); //頂点法線
+    var uvs = new Float32Array(v * 2); //uv座標
+
+    for (let i = 0; i < points.length; i++) {
+      // positions[i * 3] = points[i].x - centerPoint.x;
+      // positions[i * 3 + 1] = -(points[i].y - centerPoint.y);
+      positions[i * 3] = points[i].x;
+      positions[i * 3 + 1] = -points[i].y;
+      positions[i * 3 + 2] = points[i].z;
+
+      colors[i * 3] = 1.0;
+      colors[i * 3 + 1] = 1.0;
+      colors[i * 3 + 2] = 1.0;
+
+      normals[i * 3] = 0.0;
+      normals[i * 3 + 1] = 0.0;
+      normals[i * 3 + 2] = 1.0;
+    }
+
+    //----------
+    // ポリゴン
+    //----------
+    //三角形１
+    indexes[0] = 0;
+    indexes[1] = 8;
+    indexes[2] = 7;
+    //三角形２
+    indexes[3] = 0;
+    indexes[4] = 1;
+    indexes[5] = 8;
+    //三角形3
+    indexes[6] = 1;
+    indexes[7] = 9;
+    indexes[8] = 8;
+    //三角形4
+    indexes[9] = 1;
+    indexes[10] = 2;
+    indexes[11] = 9;
+    //三角形5
+    indexes[12] = 2;
+    indexes[13] = 10;
+    indexes[14] = 9;
+    //三角形6
+    indexes[15] = 2;
+    indexes[16] = 3;
+    indexes[17] = 10;
+    //三角形7
+    indexes[18] = 3;
+    indexes[19] = 11;
+    indexes[20] = 10;
+    //三角形8
+    indexes[21] = 3;
+    indexes[22] = 4;
+    indexes[23] = 11;
+    //三角形9
+    indexes[24] = 4;
+    indexes[25] = 12;
+    indexes[26] = 11;
+    //10
+    indexes[27] = 4;
+    indexes[28] = 5;
+    indexes[29] = 12;
+    //11
+    indexes[30] = 5;
+    indexes[31] = 13;
+    indexes[32] = 12;
+    //12
+    indexes[33] = 5;
+    indexes[34] = 6;
+    indexes[35] = 13;
+    //13
+    indexes[36] = 13;
+    indexes[37] = 20;
+    indexes[38] = 12;
+    //14
+    indexes[39] = 20;
+    indexes[40] = 19;
+    indexes[41] = 12;
+    //15
+    indexes[42] = 19;
+    indexes[43] = 11;
+    indexes[44] = 12;
+    //16
+    indexes[45] = 19;
+    indexes[46] = 18;
+    indexes[47] = 11;
+    //17
+    indexes[48] = 18;
+    indexes[49] = 10;
+    indexes[50] = 11;
+    //18
+    indexes[51] = 18;
+    indexes[52] = 17;
+    indexes[53] = 10;
+    //19
+    indexes[54] = 17;
+    indexes[55] = 9;
+    indexes[56] = 10;
+    //20
+    indexes[57] = 17;
+    indexes[58] = 16;
+    indexes[59] = 9;
+    //21
+    indexes[60] = 16;
+    indexes[61] = 8;
+    indexes[62] = 9;
+    //22
+    indexes[63] = 16;
+    indexes[64] = 15;
+    indexes[65] = 8;
+    //23
+    indexes[66] = 15;
+    indexes[67] = 7;
+    indexes[68] = 8;
+    //24
+    indexes[69] = 15;
+    indexes[70] = 14;
+    indexes[71] = 17;
+
+    const uvsCoord = [];
+
+    for (let i = 0; i < v * 2; i++) {
+      uvsCoord[2 * i] = (1 / 6) * (i % 7);
+      uvsCoord[2 * i + 1] = (1 / 8) * Math.floor(i / 7);
+    }
+
+    // 各頂点のテクスチャ座標
+    for (let i = 0; i < uvsCoord.length; i++) {
+      uvs[i] = uvsCoord[i];
+    }
+
+    console.log("uvs", uvs);
+
+    console.log(positions);
+    const geometry = new THREE.BufferGeometry();
+    //attribute変数に登録
+
+    geometry.setIndex(new THREE.BufferAttribute(indexes, 1));
+
+    geometry.addAttribute("position", new THREE.BufferAttribute(positions, 3));
+    // geometry.addAttribute("color", new THREE.BufferAttribute(colors, 3));
+    geometry.addAttribute("normal", new THREE.BufferAttribute(normals, 3));
+    geometry.addAttribute("uv", new THREE.BufferAttribute(uvs, 2));
+
+    //テクスチャの読み込み
+    const loader = new THREE.TextureLoader();
+    const texture = loader.load("../images/texture/" + textureImg);
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+
+    //ユニフォーム型変数の定義
+    let uniforms = {
+      texture: { type: "t", value: texture }
+    };
+
+    //マテリアルの生成
+    const material = new THREE.ShaderMaterial({
+      vertexShader: vs,
+      fragmentShader: fs,
+      uniforms: uniforms,
+      blending: THREE.AdditiveBlending,
+      depthWrite: true,
+      transparent: true,
+      side: THREE.DoubleSide
+    });
+
+    //オブジェクト生成
+    const eyelush = new THREE.Mesh(geometry, material);
+    //オブジェクトの位置
+    // face.position.set(-w / 2 + centerPoint.x, h / 2 - centerPoint.y, 0);
+    eyelush.position.set(-w / 2, h / 2, 0);
+
+    //オブジェクトをシーンへ追加
+    scene.add(eyelush);
+
+    // const geo = new THREE.PlaneGeometry(w / 2, h / 2, 1, 1);
+    // const mat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    // const plane = new THREE.Mesh(geo, mat);
+    // scene.add(plane);
+
+    tick();
+
+    // 毎フレーム時に実行されるループイベント
+    function tick() {
+      // eyelush.rotation.y += 0.02;
       renderer.render(scene, camera); // レンダリング
       requestAnimationFrame(tick);
     }
