@@ -1334,11 +1334,6 @@ function drawEyelush(points, rect, textureImg) {
     //オブジェクトをシーンへ追加
     scene.add(eyelush);
 
-    // const geo = new THREE.PlaneGeometry(w / 2, h / 2, 1, 1);
-    // const mat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    // const plane = new THREE.Mesh(geo, mat);
-    // scene.add(plane);
-
     tick();
 
     // 毎フレーム時に実行されるループイベント
