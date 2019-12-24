@@ -78,7 +78,7 @@ export default {
           console.log(right);
           console.log(left);
 
-          const textureImg = "wireframe_eyelush.png";
+          const textureImg = "eyelush01.png";
 
           /* eslint-disable */
           // drawEyelush(right, this.frame_rect, textureImg);
@@ -111,7 +111,7 @@ export default {
   left: 0;
   z-index: 3;
   transform: scale(-1, 1);
-  // mix-blend-mode: multiply;
+  mix-blend-mode: multiply;
   // mix-blend-mode: luminosity;
 }
 </style>
