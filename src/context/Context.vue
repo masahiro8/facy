@@ -10,8 +10,7 @@ import { ContextStore } from "./Store";
 export default {
   data: () => {
     return {
-      data: {},
-      get: ContextStore.getContext.bind(this)
+      data: {}
     };
   },
   props: {
@@ -34,11 +33,12 @@ export default {
       _.map(this.contextKey, key => {
         if (_.has(value, key)) {
           let _data = { ...this.data };
-          // _data[key] = _.cloneDeep(value[key]);
           _data[key] = { ...value[key] };
           this.data = _data;
         }
       });
+
+      console.log("connect CONTENTS", this.data["CONTENTS"]);
     });
   }
 };

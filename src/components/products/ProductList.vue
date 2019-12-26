@@ -53,8 +53,15 @@ export default {
   },
   computed: {
     itemList() {
-      if (this.products && this.segment && this.categoryId) {
-        return _.filter(this.products[this.segment.id].products, item => {
+      if (
+        this.products &&
+        this.categoryId &&
+        this.segment &&
+        _.has(this.segment, "id") &&
+        _.has(this.products, this.segment.id) &&
+        _.has(this.products[this.segment.id], "products")
+      ) {
+        return _.filter(this.products[this.segment.id]["products"], item => {
           return item.category === this.categoryId.id;
         });
       }

@@ -54,13 +54,10 @@ export default {
 
 .product {
   position: relative;
-  // overflow: hidden;
   display: flex;
   flex-direction: column;
-  // justify-content: center;
   align-items: center;
   width: 94px;
-  // height: 110px;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);

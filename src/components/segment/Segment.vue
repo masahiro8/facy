@@ -1,5 +1,5 @@
 <template>
-  <button @click="clickHandler(id)" class="segment">{{title}}</button>
+  <button @click="clickHandler(id)" class="segment" :class="selected?'selected':null">{{title}}</button>
 </template>
 <script>
 export default {
@@ -9,6 +9,9 @@ export default {
     },
     title: {
       type: String
+    },
+    selected: {
+      type: Boolean
     }
   },
   methods: {
@@ -24,16 +27,18 @@ export default {
 
 .segment {
   padding: $padding-5;
-  width: 96px;
+  max-width: 96px;
   height: 32px;
   background: white;
   border: 0;
   border-radius: 10px;
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  outline: none;
+  font-size: $padding-15;
+  color: $color-gray-30;
 
-  img {
-    width: auto;
-    height: 100%;
+  &.selected {
+    color: $color-base-10;
+    font-weight: bold;
   }
 }
 </style>

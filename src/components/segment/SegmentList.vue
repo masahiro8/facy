@@ -1,14 +1,20 @@
 <template>
   <ul class="segment-list">
     <li class="list-item" v-for="(item,index) in PRODUCT_TYPE" :key="index">
-      <Segment :title="item" :id="item" @clickHandler="setSegment" />
+      <SegmentItem
+        :selected="getSelected(item)"
+        :title="getTitle(item)"
+        :id="item"
+        @clickHandler="setSegment"
+      />
     </li>
   </ul>
 </template>
 <script>
+import * as _ from "lodash";
 import { PRODUCT_TYPE } from "../../constants";
 import { ContextStore } from "../../context/Store";
-import Segment from "./Segment";
+import SegmentItem from "./Segment";
 
 export default {
   data: () => {
@@ -16,15 +22,51 @@ export default {
       PRODUCT_TYPE
     };
   },
+  props: {
+    segment: {
+      type: Object,
+      default: () => {
+        return {
+          id: null
+        };
+      }
+    },
+    products: {
+      type: Object
+    }
+  },
   components: {
-    Segment
+    SegmentItem
+  },
+  watch: {
+    segment: {
+      immediate: true,
+      handler(newValue) {
+        console.log("segment", newValue);
+      }
+    },
+    products: {
+      immediate: true,
+      handler(newValue) {
+        console.log("products", newValue);
+      }
+    }
   },
   methods: {
     setSegment(id) {
-      // console.log("setSegment", id);
+      console.log("setSegment", id);
       ContextStore.setContext("SEGMENT", { id });
+    },
+    getTitle(id) {
+      if (!_.has(this.products, id)) return null;
+      return this.products[id].info.title;
+    },
+    getSelected(id) {
+      if (!this.segment.id) return null;
+      return this.segment.id === id;
     }
-  }
+  },
+  computed: {}
 };
 </script>
 

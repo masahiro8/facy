@@ -1,6 +1,7 @@
 {
   "lens": {
     "id": 1,
+    "info": { "title": "レンズ" },
     "products": [
       {
         "id": 1,
@@ -50,6 +51,7 @@
   },
   "cheeks": {
     "id": 2,
+    "info": { "title": "チーク" },
     "products": [
       {
         "id": 102,
@@ -70,6 +72,7 @@
   },
   "eyeshadows": {
     "id": 3,
+    "info": { "title": "アイシャドウ" },
     "products": [
       {
         "id": 103,
@@ -90,6 +93,7 @@
   },
   "lips": {
     "id": 4,
+    "info": { "title": "リップ" },
     "products": [
       {
         "id": 104,

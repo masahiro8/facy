@@ -92,7 +92,7 @@
             <!-- カテゴリ -->
             <transition name="slide-fade">
               <div>
-                <SegmentList />
+                <SegmentList :segment="context['SEGMENT']" :products="context['PRODUCTS']" />
                 <CategoryList :segment="context['SEGMENT']" :items="context['PRODUCTS']" />
               </div>
             </transition>
