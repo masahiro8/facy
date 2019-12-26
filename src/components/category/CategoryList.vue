@@ -1,7 +1,7 @@
 <template>
   <ul class="category-list">
     <li class="list-item" v-for="item in itemList" :key="item.id">
-      <Category :item="item" @clickHandler="setCategory" />
+      <Category :selected="getSelected(item)" :item="item" @clickHandler="setCategory" />
     </li>
   </ul>
 </template>
@@ -18,7 +18,10 @@ export default {
     segment: {
       type: Object
     },
-    items: {
+    products: {
+      type: Object
+    },
+    categoryId: {
       type: Object
     }
   },
@@ -28,27 +31,17 @@ export default {
   methods: {
     setCategory(id) {
       ContextStore.setContext("CATEGORY", { id });
-    }
-  },
-  watch: {
-    segment: {
-      immediate: true,
-      handler(newValue) {
-        // console.log("segmentType -----", newValue);
-      }
     },
-    items: {
-      immediate: true,
-      handler(newValue) {
-        // console.log("items -----", newValue);
-      }
+    getSelected(category) {
+      if (!this.categoryId || !this.categoryId.id) return null;
+      return this.categoryId.id === category.id;
     }
   },
   //computedで返したいけど、なぜか駄目
   computed: {
     itemList() {
-      if (this.items && this.segment) {
-        return this.items[this.segment.id].category;
+      if (this.products && this.segment) {
+        return this.products[this.segment.id].category;
       }
       return [];
     }

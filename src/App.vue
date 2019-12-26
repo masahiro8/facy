@@ -93,7 +93,11 @@
             <transition name="slide-fade">
               <div>
                 <SegmentList :segment="context['SEGMENT']" :products="context['PRODUCTS']" />
-                <CategoryList :segment="context['SEGMENT']" :items="context['PRODUCTS']" />
+                <CategoryList
+                  :segment="context['SEGMENT']"
+                  :categoryId="context['CATEGORY']"
+                  :products="context['PRODUCTS']"
+                />
               </div>
             </transition>
           </ContextConsumer>

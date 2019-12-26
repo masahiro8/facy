@@ -38,23 +38,8 @@ export default {
   components: {
     SegmentItem
   },
-  watch: {
-    segment: {
-      immediate: true,
-      handler(newValue) {
-        console.log("segment", newValue);
-      }
-    },
-    products: {
-      immediate: true,
-      handler(newValue) {
-        console.log("products", newValue);
-      }
-    }
-  },
   methods: {
     setSegment(id) {
-      console.log("setSegment", id);
       ContextStore.setContext("SEGMENT", { id });
     },
     getTitle(id) {

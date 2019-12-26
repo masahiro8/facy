@@ -1,5 +1,5 @@
 <template>
-  <button @click="clickHandler(item.id)" class="category">
+  <button @click="clickHandler(item.id)" class="category" :class="selected?'selected':null">
     <img :src="getImagePath(item)" />
   </button>
 </template>
@@ -8,6 +8,9 @@ export default {
   props: {
     item: {
       type: Object
+    },
+    selected: {
+      type: Boolean
     }
   },
   methods: {
@@ -31,11 +34,20 @@ export default {
   background: white;
   border: 0;
   border-radius: 10px;
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);
+  outline: none;
 
   img {
     width: auto;
     height: 100%;
+    opacity: 0.3;
+  }
+
+  &.selected {
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    img {
+      opacity: 1;
+    }
   }
 }
 </style>
