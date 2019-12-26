@@ -1,11 +1,12 @@
 <template>
   <ul class="category-list">
     <li class="list-item" v-for="item in itemList" :key="item.id">
-      <Category :selected="getSelected(item)" :item="item" @clickHandler="setCategory" />
+      <Category :item="item" @clickHandler="setCategory" />
     </li>
   </ul>
 </template>
 <script>
+import * as _ from "lodash";
 import Category from "./Category.vue";
 import { ContextStore } from "../../context/Store";
 export default {
@@ -18,10 +19,7 @@ export default {
     segment: {
       type: Object
     },
-    products: {
-      type: Object
-    },
-    categoryId: {
+    items: {
       type: Object
     }
   },
@@ -31,17 +29,26 @@ export default {
   methods: {
     setCategory(id) {
       ContextStore.setContext("CATEGORY", { id });
-    },
-    getSelected(category) {
-      if (!this.categoryId || !this.categoryId.id) return null;
-      return this.categoryId.id === category.id;
     }
   },
-  //computedで返したいけど、なぜか駄目
+  watch: {
+    segment: {
+      immediate: true,
+      handler(newValue) {
+        console.log("segmentType -----", newValue);
+      }
+    },
+    items: {
+      immediate: true,
+      handler(newValue) {
+        console.log("items -----", newValue);
+      }
+    }
+  },
   computed: {
     itemList() {
-      if (this.products && this.segment) {
-        return this.products[this.segment.id].category;
+      if (this.items && this.segment && _.has(this.items, this.segment.id)) {
+        return this.items[this.segment.id].category;
       }
       return [];
     }
