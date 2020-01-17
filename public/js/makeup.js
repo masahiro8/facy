@@ -874,9 +874,8 @@ function drawFaceMask(elemId, points, rect, textureImg) {
 }
 
 function drawEyelush(elemId, points, rect, textureImg) {
-  console.log("eyelush");
-  console.log("points.right", points.right);
-  console.log("points.left", points.left);
+  // console.log("points.right", points.right);
+  // console.log("points.left", points.left);
 
   const rate = 350;
 
@@ -896,9 +895,6 @@ function drawEyelush(elemId, points, rect, textureImg) {
       z: 0
     };
   }
-
-  // console.log("right", right);
-  // console.log("left", left);
 
   //中点を求める
   const getMidPoint = (startPoint, endPoint) => {
@@ -1039,7 +1035,6 @@ function drawEyelush(elemId, points, rect, textureImg) {
     const scene = new THREE.Scene();
 
     // カメラを作成
-    // const camera = new THREE.PerspectiveCamera(45, w / h, 1, 10000);
     const camera = new THREE.OrthographicCamera(
       -w / 2,
       w / 2,
@@ -1048,7 +1043,6 @@ function drawEyelush(elemId, points, rect, textureImg) {
       -500,
       500
     );
-    // camera.position.set(0, 0, 100);
     camera.lookAt(scene.position);
 
     let n = 48; //三角形の数
@@ -1060,8 +1054,6 @@ function drawEyelush(elemId, points, rect, textureImg) {
     var uvs = new Float32Array(v * 2); //uv座標
 
     for (let i = 0; i < points.length; i++) {
-      // positions[i * 3] = points[i].x - centerPoint.x;
-      // positions[i * 3 + 1] = -(points[i].y - centerPoint.y);
       positions[i * 3] = points[i].x;
       positions[i * 3 + 1] = -points[i].y;
       positions[i * 3 + 2] = points[i].z;
@@ -1289,9 +1281,6 @@ function drawEyelush(elemId, points, rect, textureImg) {
       uvs[i] = uvsCoord[i];
     }
 
-    // console.log("uvs", uvs);
-
-    // console.log(positions);
     const geometry = new THREE.BufferGeometry();
     //attribute変数に登録
 

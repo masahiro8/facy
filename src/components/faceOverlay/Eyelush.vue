@@ -101,7 +101,6 @@ export default {
         if (product) {
           this.product = product;
           this.item_image = `${window.location.origin}/images/${product.category}/${product.image}`;
-          // this.draw(this.points.face, this.item_image);
           const right = this.points.eyes.right.eyelid;
           const left = this.points.eyes.left.eyelid;
           this.draw(right, left, this.item_image);
