@@ -2,7 +2,7 @@
   <div ref="overlayFrame" class="overlayFrame eyelush">
     <canvas
       ref="eyelush"
-      id="eyelush"
+      :id="productType"
       class="overlay"
       :style="getStyle"
       :width="frame_rect.width"
@@ -12,6 +12,7 @@
 </template>
 <script>
 import * as _ from "lodash";
+import { PRODUCT_TYPE } from "../../constants";
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from "../../config";
 
 export default {
@@ -20,7 +21,9 @@ export default {
       frame_rect: {
         width: 0,
         height: 0
-      }
+      },
+      product: null,
+      item_image: ""
     };
   },
   props: {
@@ -29,6 +32,9 @@ export default {
       default: null
     },
     points: Object,
+    productId: Object,
+    products: Object,
+    productType: String,
     zIndex: {
       type: Number,
       default: 3
@@ -44,7 +50,18 @@ export default {
   },
 
   methods: {
-    draw(points) {},
+    draw(right, left, image) {
+      //テクスチャ画像の指定
+      const textureImg = image;
+      /* eslint-disable */
+      drawEyelush(
+        this.productType,
+        { right, left },
+        this.frame_rect,
+        textureImg
+      );
+      /* eslint-enable */
+    },
     //キャンバスクリア
     clearCanvas() {},
     layoutUpdate() {
@@ -57,38 +74,47 @@ export default {
       }
     }
   },
-
   watch: {
+    products: {
+      immediate: true,
+      handler(newValue) {
+        console.log("products", newValue);
+      }
+    },
+    productId: {
+      // immediate: true,
+      handler(newValue, oldValue) {
+        if (!newValue) {
+          this.clearCanvas();
+        }
+        const product = _.find(
+          this.products[this.productType].products,
+          product => {
+            return product.id === newValue.productId;
+          }
+        );
+        console.log(
+          "productId",
+          newValue,
+          this.products[this.productType].products
+        );
+        if (product) {
+          this.product = product;
+          this.item_image = `${window.location.origin}/images/${product.category}/${product.image}`;
+          // this.draw(this.points.face, this.item_image);
+          const right = this.points.eyes.right.eyelid;
+          const left = this.points.eyes.left.eyelid;
+          this.draw(right, left, this.item_image);
+        }
+      }
+    },
     rect: {
       immediate: true,
       handler() {
         this.layoutUpdate();
       }
-    },
-    points: {
-      // immediate: true,
-      deep: true,
-      handler(newValue, oldValue) {
-        if (
-          JSON.stringify(newValue) !== JSON.stringify(oldValue) &&
-          Object.keys(newValue).length > 0
-        ) {
-          const right = newValue.eyes.right.eyelid;
-          const left = newValue.eyes.left.eyelid;
-          console.log(right);
-          console.log(left);
-
-          const textureImg = "eyelush01.png";
-
-          /* eslint-disable */
-          // drawEyelush(right, this.frame_rect, textureImg);
-          drawEyelush({ right, left }, this.frame_rect, textureImg);
-          /* eslint-enable */
-        }
-      }
     }
   },
-
   computed: {
     getStyle() {
       let style = "";

@@ -873,7 +873,7 @@ function drawFaceMask(elemId, points, rect, textureImg) {
   }
 }
 
-function drawEyelush(points, rect, textureImg) {
+function drawEyelush(elemId, points, rect, textureImg) {
   console.log("eyelush");
   console.log("points.right", points.right);
   console.log("points.left", points.left);
@@ -897,8 +897,8 @@ function drawEyelush(points, rect, textureImg) {
     };
   }
 
-  console.log("right", right);
-  console.log("left", left);
+  // console.log("right", right);
+  // console.log("left", left);
 
   //中点を求める
   const getMidPoint = (startPoint, endPoint) => {
@@ -999,7 +999,6 @@ function drawEyelush(points, rect, textureImg) {
         z: 0.025
       };
     }
-    console.log("newPoints", newPoints);
     return newPoints;
   };
 
@@ -1022,13 +1021,13 @@ function drawEyelush(points, rect, textureImg) {
   );
 
   function init(vs, fs, points) {
-    console.log("init points", points);
+    // console.log("init points", points);
     // サイズを取得
     const w = rect.width;
     const h = rect.height;
 
     const renderer = new THREE.WebGLRenderer({
-      canvas: document.querySelector("#eyelush"),
+      canvas: document.querySelector(`#${elemId}`),
       antialias: true,
       alpha: true //描画背景を透明にする
     });
@@ -1290,9 +1289,9 @@ function drawEyelush(points, rect, textureImg) {
       uvs[i] = uvsCoord[i];
     }
 
-    console.log("uvs", uvs);
+    // console.log("uvs", uvs);
 
-    console.log(positions);
+    // console.log(positions);
     const geometry = new THREE.BufferGeometry();
     //attribute変数に登録
 
@@ -1305,7 +1304,7 @@ function drawEyelush(points, rect, textureImg) {
 
     //テクスチャの読み込み
     const loader = new THREE.TextureLoader();
-    const texture = loader.load("../images/texture/" + textureImg);
+    const texture = loader.load(textureImg);
     texture.minFilter = THREE.LinearFilter;
     texture.magFilter = THREE.LinearFilter;
 
@@ -1319,7 +1318,6 @@ function drawEyelush(points, rect, textureImg) {
       vertexShader: vs,
       fragmentShader: fs,
       uniforms: uniforms,
-      blending: THREE.AdditiveBlending,
       depthWrite: true,
       transparent: true,
       side: THREE.DoubleSide
@@ -1328,7 +1326,6 @@ function drawEyelush(points, rect, textureImg) {
     //オブジェクト生成
     const eyelush = new THREE.Mesh(geometry, material);
     //オブジェクトの位置
-    // face.position.set(-w / 2 + centerPoint.x, h / 2 - centerPoint.y, 0);
     eyelush.position.set(-w / 2, h / 2, 0);
 
     //オブジェクトをシーンへ追加
